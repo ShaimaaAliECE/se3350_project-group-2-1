@@ -1,11 +1,37 @@
 import { Component } from 'react';
 import { Grid, FormControlLabel, FormControl, RadioGroup, Radio, FormLabel, Button, TextField } from '@mui/material';
 import createArray from '../utils/numberGenerator'
+import store from '../utils/Reducer'
 
-const ArrayBox = (props) => {
+const EmptyBox = (props) => {
+
+}
+
+const FilledBox = (props) => {
     return (
         <div>
-            {props.value}
+            <div style={{ display: 'inline-grid' }}>
+                {props.array.map((element, i) => {
+                    return <div> {element} </div>
+                })}
+            </div>
+        </div>
+    )
+}
+
+const GridContainer = () => {
+    let filled = new Array(store.getState().currentStep + 1)
+    let obj = store.getState().obj
+
+    filled.map(() => {
+        return obj[new String(filled.length)].map((element) => {
+            return (<FilledBox array={element} />)
+        })
+    })
+
+    return (
+        <div>
+            {filled}
         </div>
     )
 }
@@ -15,31 +41,29 @@ export default class Game extends Component {
         super()
         this.state = {
             algorithm: 'mergesort',
-            array: [],
             size: '',
             range: '',
             gameIsActive: false
         }
     }
 
-    generateArray = () => {
-        console.log(createArray(this.state.size, this.state.range))
+    startGame = () => {
+        store.dispatch({
+            type: "LoadNew",
+            payload: {
+                array: createArray(this.state.size, this.state.range)
+            }
+        })
+
+        console.log(store.getState())
+
         this.setState({
-            array: createArray(this.state.size, this.state.range),
             gameIsActive: true
         })
     }
 
+
     render() {
-        let array = <></>
-
-        if (this.state.gameIsActive) {
-            array = this.state.array.map((element, i) => {
-                console.log(element)
-                return <ArrayBox key={i} value={element} />
-            })
-        }
-
         return (
             <div id="game">
                 <div id="game-controls">
@@ -63,7 +87,8 @@ export default class Game extends Component {
                                     this.setState({
                                         range: event.target.value
                                     })
-                                }}></TextField>
+                                }}>
+                            </TextField>
                             <TextField
                                 placeholder='size'
                                 value={this.state.size}
@@ -71,15 +96,18 @@ export default class Game extends Component {
                                     this.setState({
                                         size: event.target.value
                                     })
-                                }}></TextField>
+                                }}>
+                            </TextField>
                         </Grid>
                         <Button onClick={() => {
-                            this.generateArray()
-                        }}> Start Game</Button>
+                            this.startGame()
+                        }}> Start Game </Button>
                     </Grid>
                 </div>
-                <div style={{display: 'flex', }}>
-                    {array}
+                <div style={{ display: 'grid' }}>
+                    {(this.state.gameIsActive) ? (
+                        <GridContainer />
+                    ) : (<></>)}
                 </div>
             </div>
         )
