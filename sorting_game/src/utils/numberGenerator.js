@@ -13,4 +13,4 @@ function createArray(size, range) {
     return a;
 }
 //export function
-export default createArray;
+module.exports =  createArray;
