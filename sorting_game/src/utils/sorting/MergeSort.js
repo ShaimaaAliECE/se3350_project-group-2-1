@@ -6,20 +6,16 @@ const steps = [];
 // Second subarray is arr[m+1..r]
 function merge(arr1, arr2)
 {
+    //output merging arrays
     steps.push(['Merge:', arr1, arr2]);
-
     // Create temp array
     var arr = []; 
   
-    // Merge the temp arrays back into arr[l..r]
-  
     // Initial index of first subarray
-    var i = 0;
-  
     // Initial index of second subarray
-    var j = 0;
-  
     // Initial index of merged subarray
+    var i = 0;
+    var j = 0;
     var k = 0;
   
     while (i < arr1.length && j < arr2.length) {
