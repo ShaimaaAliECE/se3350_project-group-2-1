@@ -83,8 +83,9 @@ function run(size,range){
 
     const result = mergeSort(generatedArray, 0, generatedArray.length -1);
     steps.push(['Result', result]);
+
+    return steps;
 }
 
-run(10,10);
-console.log(steps);
-//console.log(counter);
+const output = run(10,10);
+
