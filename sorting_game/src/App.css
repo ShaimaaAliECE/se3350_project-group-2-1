@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 }
+
+.grid{
+  margin: auto;
+  width: 42%;
+  padding: 10px;
+  display: flex;
+}
+
+.grid .cell {
+  padding: 5px;
+  margin: 1px;
+  min-width: 100px;
+  min-height: 100px;
+  border: 1px solid lightblue;
+}

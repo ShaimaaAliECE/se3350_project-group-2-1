@@ -1,7 +1,5 @@
 //function
 function createArray(size, range) {
-   console.log(size + "," + range)
-   
     //declare array
     var a=[];
     //for loop to iterate over array
@@ -12,7 +10,6 @@ function createArray(size, range) {
     }
     //return array
 
-    console.log(a)
     return a;
 }
 //export function

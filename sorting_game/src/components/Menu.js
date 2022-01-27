@@ -1,37 +1,68 @@
-import { Component } from 'react';
+import { Component, useEffect, useState } from 'react';
 import { Grid, FormControlLabel, FormControl, RadioGroup, Radio, FormLabel, Button, TextField } from '@mui/material';
 import createArray from '../utils/numberGenerator'
 import store from '../utils/Reducer'
+import '../App.css'
 
 const EmptyBox = (props) => {
-
+    return (
+        <></>
+    )
 }
 
-const FilledBox = (props) => {
+const Box = (props) => {
+    const [isClicked, setClicked] = useState(false)
+    
+    const click = () => {
+        setClicked((isClicked) ? (false) : (true))
+        
+        if(props.clickedArray.includes(props.element)){
+            props.setClickedArray(props.clickedArray.filter(element => props.element !== element))
+        }
+        else{
+            props.setClickedArray([...props.clickedArray, props.element])
+        }
+    }
+
     return (
-        <div>
-            <div style={{ display: 'inline-grid' }}>
-                {props.array.map((element, i) => {
-                    return <div> {element} </div>
-                })}
-            </div>
+        <div className={'cell'} style = {(isClicked) ? ({backgroundColor: 'red'}) : ({backgroundColor: 'blue'})} onClick={() => click()}>
+            {props.element}
         </div>
     )
 }
 
 const GridContainer = () => {
-    let filled = new Array(store.getState().currentStep + 1)
-    let obj = store.getState().obj
+    const [side, setSide] = useState('middle')
 
-    filled.map(() => {
-        return obj[new String(filled.length)].map((element) => {
-            return (<FilledBox array={element} />)
-        })
+    const [clickedArray, setClickedArray] = useState(new Array())
+
+    let state = store.getState()
+
+    let arrJSX = (state.obj[new String(state.currentStep)].array)
+
+    useEffect(()=> {
+        console.log(clickedArray)
     })
 
     return (
         <div>
-            {filled}
+            {(side === 'middle') ? (
+                <div className='grid'>
+                    {arrJSX.map((element, i) => {
+                        return (<Box key={i} element={element} allign='row' setClickedArray={setClickedArray} clickedArray={clickedArray} />)
+                    })}
+                    {
+
+                    }
+
+                </div>
+            ) : (
+                (side === 'left') ? (
+                    <></>
+                ) : (
+                    <></>
+                )
+            )}
         </div>
     )
 }
@@ -55,13 +86,10 @@ export default class Game extends Component {
             }
         })
 
-        console.log(store.getState())
-
         this.setState({
             gameIsActive: true
         })
     }
-
 
     render() {
         return (
@@ -104,7 +132,7 @@ export default class Game extends Component {
                         }}> Start Game </Button>
                     </Grid>
                 </div>
-                <div style={{ display: 'grid' }}>
+                <div>
                     {(this.state.gameIsActive) ? (
                         <GridContainer />
                     ) : (<></>)}

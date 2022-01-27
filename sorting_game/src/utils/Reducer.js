@@ -5,7 +5,6 @@ const reducer = (state, action) => {
     switch (action.type) {
         case "LoadNew":
             let obj = MergeSort(action.payload.array)
-            console.log(obj)
             state = {
                 obj: obj,
                 array: obj[new String(0)],
@@ -19,7 +18,7 @@ const reducer = (state, action) => {
                 obj: state.obj,
                 array: state.obj[new String (state.currentStep + 1)],
                 currentStep: state.currentStep + 1,
-                userArray: state.userArray
+                userArray: state.array
             }
             break;
         
