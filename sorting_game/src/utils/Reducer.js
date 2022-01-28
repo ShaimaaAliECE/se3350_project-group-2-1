@@ -4,32 +4,27 @@ import MergeSort from "./sorting/TestMergeSort";
 const reducer = (state, action) => {
     switch (action.type) {
         case "LoadNew":
-            let obj = MergeSort(action.payload.array)
+            let stepsObject = MergeSort(action.payload.array)
             state = {
-                obj: obj,
-                array: obj[new String(0)],
+                stepsObject: stepsObject,
                 currentStep: 0,
-                userArray: new Array()
+                clickedArray: new Array()
             }
             break;
 
         case "SortNext":
             state = {
-                obj: state.obj,
-                array: state.obj[new String (state.currentStep + 1)],
+                stepsObject: state.stepsObject,
                 currentStep: state.currentStep + 1,
-                userArray: state.array
+                clickedArray: new Array()
             }
             break;
         
-        case "ChangeElement":
-            let newArr = state.userArray
-            newArr[action.payload.index] = action.payload.value
+        case "ChangeClickedArray":
             state = {
-                obj: state.obj,
-                array: state.array,
+                stepsObject: state.stepsObject,
                 currentStep: state.currentStep,
-                userArray: newArr
+                clickedArray: action.payload.array
             }
             break;
     }
