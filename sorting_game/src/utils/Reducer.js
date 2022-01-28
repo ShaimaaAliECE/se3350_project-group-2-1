@@ -1,5 +1,5 @@
 import { createStore } from "redux";
-import MergeSort from "./MergeSort";
+import MergeSort from "./sorting/TestMergeSort";
 
 const reducer = (state, action) => {
     switch (action.type) {
