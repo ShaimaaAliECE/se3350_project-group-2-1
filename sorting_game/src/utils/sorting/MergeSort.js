@@ -83,5 +83,5 @@ function run(size,range){
     return steps;
 }
 
-const output = run(10,10);
+module.exports = run;
 
