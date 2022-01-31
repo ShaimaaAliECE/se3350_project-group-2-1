@@ -92,6 +92,7 @@ export default class Game extends Component {
             size: '',
             range: '',
             error: 0,
+            isSplit:'true', // a false split is a sort step
             gameIsActive: false
         }
     }
@@ -141,6 +142,18 @@ export default class Game extends Component {
         this.setState({
             error: error++
         })
+    }
+
+    moveTypePrompt = () =>{
+        /*
+            on a given move, function will enable a toggle prompt for a split or sort
+        */
+        let isSplit = this.typeOfStep ? this.setState({typeOfStep: false}) : this.setState({typeOfStep: true})
+        
+        /*
+            deliver string input to user based on the toggle of boolean above that flips state
+                a true isSplit will prompt a split text and the opposite a order array instruction
+        */
     }
 
     render() {
