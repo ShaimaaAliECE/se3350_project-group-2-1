@@ -92,6 +92,7 @@ export default class Game extends Component {
             size: '',
             range: '',
             error: 0,
+            timeStamp: '', // time stamp when game is active to compare time on level 
             isSplit:'true', // a false split is a sort step
             gameIsActive: false
         }
@@ -109,6 +110,7 @@ export default class Game extends Component {
         })
         //render the game comp
         this.setState({
+            timeStamp: new Date().getTime(),
             gameIsActive: true
         })
     }
@@ -154,6 +156,18 @@ export default class Game extends Component {
             deliver string input to user based on the toggle of boolean above that flips state
                 a true isSplit will prompt a split text and the opposite a order array instruction
         */
+    }
+
+    levelLog = () => {
+        let endTime = new Date().getTime();
+        let timeOnLevel = this.timeStamp - endTime; // time on level
+        
+        if(this.gameIsActive == false){
+            /*
+                submit a prompt for time on level once completed
+            */
+        }
+
     }
 
     render() {
