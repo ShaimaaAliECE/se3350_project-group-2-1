@@ -1,13 +1,10 @@
 import './App.css';
-import Menu from './components/Menu';
+import Game from "./components/Game";
 
 function App() {
-    return (
-        <div className="App">
-            <h1>Group 2 3350 Project</h1>
-            <Menu />
-        </div>
-    );
+  return (
+    <Game />
+  );
 }
 
 export default App;
