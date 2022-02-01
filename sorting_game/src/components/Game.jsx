@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import GameMenu from "./GameMenu";
-import generateArray from "../utils/arrayGenerator";
-import ArrayGroup from "./ArrayGroup";
+import GameMenu from "./GameMenu.jsx";
+import MergeSort from "../utils/sorting/MergeSort.js";
+import ArrayGroup from "./ArrayGroup.jsx";
 
 /**
  * React component containing all functionality related to the sorting game (renders the game)
@@ -14,6 +14,10 @@ export default function Game(props) {
     const [arrayGroup, setArrayGroup] = useState();
     const [mergedArray, setMergedArray] = useState([]);
 
+    //size, range state -> array params
+    const [range, setRange] = useState(10);
+    const [size, setSize] = useState(10);
+
     function setMerged(value) {
         // Add value to merged array
     }
@@ -23,15 +27,15 @@ export default function Game(props) {
      */
     function startGame() {
         if (!isRunning) {
-            let numArray = generateArray(10, 1, 20)
-            setGameArray(numArray);
-            setArrayGroup(<ArrayGroup label="Root Array" depth={0} key={1} index={1} mergedArray={mergedArray} pushToMerged={setMerged} numArray={numArray} />);
+            let numArray = MergeSort(new Number(size), new Number(range));
+            setGameArray(numArray[0][1]);
+            setArrayGroup(<ArrayGroup label="Root Array" depth={0} key={1} index={1} mergedArray={mergedArray} pushToMerged={setMerged} numArray={numArray[0][1]} />);
             setIsRunning(true);
         }
     }
     return (
         <div id="sorting-game">
-            <GameMenu startGame={startGame}/>
+            <GameMenu startGame={startGame} setRange={setRange} setSize={setSize} size={size} range={range}/>
             {arrayGroup}
         </div>
     )

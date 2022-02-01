@@ -1,4 +1,4 @@
-const createArray = require('../numberGenerator');
+import generateArray from '../arrayGenerator.js';
 const steps = [];
 
 // Merges two subarrays of arr[].
@@ -69,8 +69,8 @@ function mergeSort(arr,l, r){
     return mergedArray;
 }
 
-function run(size,range){
-    const generatedArray = createArray(size,range);
+function MergeSort(size,range){
+    const generatedArray = generateArray(size,0,range);
     steps.push(['Start', generatedArray]);
 
     const result = mergeSort(generatedArray, 0, generatedArray.length -1);
@@ -78,7 +78,5 @@ function run(size,range){
 
     return steps;
 }
-
-//console.log(run(8,10));
-module.exports = run;
+export default MergeSort;
 
