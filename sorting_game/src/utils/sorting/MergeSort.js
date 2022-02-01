@@ -6,8 +6,6 @@ const steps = [];
 // Second subarray is arr[m+1..r]
 function merge(arr1, arr2)
 {
-    //output merging arrays
-    steps.push(['Merge:', arr1, arr2]);
     // Create temp array
     var arr = []; 
   
@@ -55,8 +53,6 @@ function merge(arr1, arr2)
 // right index of the sub-array
 // of arr to be sorted */
 function mergeSort(arr,l, r){
-    steps.push(['Split',arr.slice(l, r+1)]);
-
     if(l>=r){
         return [arr[l]];//returns recursively
     }
@@ -69,19 +65,20 @@ function mergeSort(arr,l, r){
 
     const mergedArray = merge(mergedArr1,mergedArr2);
     steps.push(['Merged',mergedArray]);
-    steps.push(['Step Up']);
 
     return mergedArray;
 }
 
 function run(size,range){
     const generatedArray = createArray(size,range);
+    steps.push(['Start', generatedArray]);
 
     const result = mergeSort(generatedArray, 0, generatedArray.length -1);
-    steps.push(['Result', result]);
+    steps.push(['Final', result]);
 
     return steps;
 }
 
+//console.log(run(8,10));
 module.exports = run;
 
