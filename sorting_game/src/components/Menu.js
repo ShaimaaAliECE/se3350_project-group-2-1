@@ -115,19 +115,20 @@ export default class Game extends Component {
         return (
             <div id="game">
                 <div id="game-controls">
-                    <Grid container>
-                        <Grid item xs={4}>
-                            <FormControl>
-                                <FormLabel id="algorithm-selector">Algorithm</FormLabel>
+                    <Grid container sx={{display: 'flex', flexDirection: 'column', color: 'red', alignItems: 'center'}}>
+                        <Grid item xs={4} sx={{paddingBottom: '20px'}}>
+                            <FormControl sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                                <FormLabel id="algorithm-selector" sx={{paddingRight: '20px'}}>Algorithm:</FormLabel>
                                 <RadioGroup
                                     aria-labelledby="algorithm-selector"
                                     defaultValue="mergesort"
                                     name="radio-buttons-group"
                                 >
                                     <FormControlLabel value="mergesort" control={<Radio />} label="Merge Sort" />
-                                    <FormControlLabel value="othersort" control={<Radio />} label="OtherSort" />
+                                    <FormControlLabel value="othersort" control={<Radio />} label="Other Sort" />
                                 </RadioGroup>
                             </FormControl>
+                            <FormControl sx={{ display: 'flex', flexDirection: 'row'}}>
                             <TextField
                                 placeholder='range'
                                 value={this.state.range}
@@ -146,6 +147,7 @@ export default class Game extends Component {
                                     })
                                 }}>
                             </TextField>
+                            </FormControl>
                         </Grid>
                         <Button onClick={() => {
                             this.startGame()
