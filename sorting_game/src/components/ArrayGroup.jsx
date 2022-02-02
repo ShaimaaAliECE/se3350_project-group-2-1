@@ -1,4 +1,4 @@
-import { Button, Grid } from "@mui/material";
+import { Button, Grid, Alert,Snackbar } from "@mui/material";
 import { useEffect, useState, useRef } from "react"
 
 
@@ -8,6 +8,7 @@ export default function ArrayGroup(props) {
     const [merged, setMerged] = useState(false || props.numArray.length == 1);
     const [mergedArray, setMergedArray] = useState(props.numArray.length == 1 ? [...props.numArray] : []); // Empty array to eventually be populated with the properly sorted values
     const [childArrays, setChildArrays] = useState(); // To hold ArrayGroup instances for the left and right sub-arrays (children)
+    const[gameTime, setGameTime] = useState();
 
     let mergedRef = useRef([]); // Used to store shared instance of the merged array (which is then transferred to the mergedArray state hook)
 
@@ -40,6 +41,8 @@ export default function ArrayGroup(props) {
         setMerging(true);
     }
 
+
+
     /**
      * Callback function to handle array element button onclick event
      * @param {number} value 
@@ -65,6 +68,9 @@ export default function ArrayGroup(props) {
     let children; // Only display child arrays if merging
     let mergedArrayLabel; // Shows the values currently in the merged array (when applicable)
     if (!merging) {
+        if (props.depth === 0 && gameTime === undefined) {
+            setGameTime(new Date().getTime());
+        }
         // When not ready to merge, present option to split array
         splitArrayButton = (<Grid item xs={12}>
             <Button onClick={splitArray} variant="contained">Split Array</Button>
@@ -77,6 +83,7 @@ export default function ArrayGroup(props) {
             ]);
         }
     } else if (merged) {
+        
         // If merging is complete, allow user to select numbers for upper-level merging
         for (let i = 0; i < mergedArray.length; i++) {
             let elementKey = `${props.index}-${i}`; // Unique identifier structure: {array key} - {element index}
@@ -90,9 +97,23 @@ export default function ArrayGroup(props) {
         children = childArrays;
     }
 
+    let timeAlert;
+    if (merged) {
+        if (props.depth === 0) {
+            let timeDelta = (new Date().getTime() - gameTime) / 1000; // from the time level 0 is presented till full sort
+            timeAlert = <Snackbar open={true} autoHideDuration={1}>
+                <Alert severity="success" sx={{ width: '100%' }}>
+                    {timeDelta + ' seconds to complete!'}
+                </Alert>
+            </Snackbar> // green popup on 
+            props.gameRunning.current = false;
+        }
+    }
+
     return (
         <div className="array-group">
             <Grid container>
+                {timeAlert}
                 <h4>{props.label}</h4>
                 {splitArrayButton}
                 <Grid item xs={12}>
