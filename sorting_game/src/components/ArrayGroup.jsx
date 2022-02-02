@@ -31,12 +31,12 @@ export default function ArrayGroup(props) {
         
         let leftArray = <ArrayGroup label="Left Array" depth={props.depth + 1} key={0} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={leftArrayNums} />
         let rightArray = <ArrayGroup label="Right Array" depth={props.depth + 1} key={1} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={rightArrayNums} />
+        let childrenArrays = <Grid container>
+            <Grid item xs={6}>{leftArray}</Grid>
+            <Grid item xs={6}>{rightArray}</Grid>
+        </Grid>
 
-        setChildArrays([
-            leftArray,
-            rightArray
-        ]);
-
+        setChildArrays(childrenArrays);
         setMerging(true);
     }
 
@@ -93,7 +93,7 @@ export default function ArrayGroup(props) {
     return (
         <div className="array-group">
             <Grid container>
-                <h4>{props.label} | Depth: {props.depth}</h4>
+                <h4>{props.label}</h4>
                 {splitArrayButton}
                 <Grid item xs={12}>
                     {mergedArrayLabel}

@@ -33,6 +33,7 @@ export default function Game(props) {
             setIsRunning(true);
         }
     }
+
     return (
         <div id="sorting-game">
             <GameMenu startGame={startGame} setRange={setRange} setSize={setSize} size={size} range={range}/>
