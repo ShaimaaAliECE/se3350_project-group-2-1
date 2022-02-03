@@ -10,10 +10,10 @@ export default function GameMenu(props) {
     return (
         <div id="game-menu">
             <Grid container>
-                <Grid item xs={4}>
-                    <>Range: </>
+                <Grid item xs={4} xs={{display: 'flex', flexDirection: 'row'}}>
+                    <><strong>Range: </strong></>
                     <Input value={props.range} onChange={(event) => {props.setRange(event.target.value)}}></Input>
-                    <>Size: </>
+                    <><strong>Size: </strong></>
                     <Input value={props.size} onChange={(event) => {props.setSize(event.target.value)}}></Input>
                     <Button onClick={props.startGame} variant="contained">Start Game</Button>
                     <Button onClick={props.restartGame} variant="contained">Restart</Button>
