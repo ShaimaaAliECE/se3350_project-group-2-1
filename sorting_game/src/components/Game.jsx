@@ -14,8 +14,6 @@ export default function Game(props) {
     const [arrayGroup, setArrayGroup] = useState();
     const [mergedArray, setMergedArray] = useState([]);
     
-
-
     //size, range state -> array params
     const [range, setRange] = useState(10);
     const [size, setSize] = useState(10);
@@ -36,9 +34,17 @@ export default function Game(props) {
         }
     }
 
+    function restartGame(){
+        if (isRunning.current) {
+            setGameArray([]);
+            setArrayGroup(<></>);
+            isRunning.current = false;
+        }
+    }
+
     return (
         <div id="sorting-game">
-            <GameMenu startGame={startGame} setRange={setRange} setSize={setSize} size={size} range={range}/>
+            <GameMenu startGame={startGame} restartGame={restartGame} setRange={setRange} setSize={setSize} size={size} range={range}/>
             {arrayGroup}
         </div>
     )
