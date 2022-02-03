@@ -1,5 +1,5 @@
 import generateArray from '../arrayGenerator.js';
-const steps = [];
+let steps = [];
 
 // Merges two subarrays of arr[].
 // First subarray is arr[l..m]
@@ -70,6 +70,7 @@ function mergeSort(arr,l, r){
 }
 
 function MergeSort(size,range){
+    steps = [];
     const generatedArray = generateArray(size,0,range);
     steps.push(['Start', generatedArray]);
 

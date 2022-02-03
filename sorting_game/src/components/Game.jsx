@@ -35,11 +35,9 @@ export default function Game(props) {
     }
 
     function restartGame(){
-        if (isRunning.current) {
-            setGameArray([]);
-            setArrayGroup(<></>);
-            isRunning.current = false;
-        }
+        setGameArray([]);
+        setArrayGroup(<></>);
+        isRunning.current = false;
     }
 
     return (
