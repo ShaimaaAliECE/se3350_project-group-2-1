@@ -98,11 +98,26 @@ export default function ArrayGroup(props) {
     }
 
     let timeAlert;
+
+    /*
+        Handling for closing out snackbars
+    */
+
+    const [open, setOpen] = useState(true);
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+        return;
+        }
+
+        setOpen(false);
+    };
+    
     if (merged) {
         if (props.depth === 0) {
             let timeDelta = (new Date().getTime() - gameTime) / 1000; // from the time level 0 is presented till full sort
-            timeAlert = <Snackbar open={true} autoHideDuration={1}>
-                <Alert severity="success" sx={{ width: '100%' }}>
+            timeAlert = <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
                     {timeDelta + ' seconds to complete!'}
                 </Alert>
             </Snackbar> // green popup on 
