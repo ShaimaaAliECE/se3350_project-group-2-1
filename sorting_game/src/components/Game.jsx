@@ -4,7 +4,7 @@ import ArrayGroup from "./ArrayGroup.jsx";
 import Githubicon from "../images/Githubicon.js";
 import {
     Grid,
-    Input,
+    TextField,
     Button,
     AppBar,
     FormControl,
@@ -83,18 +83,32 @@ export default function Game(props) {
                 </FormControl>
                 <Grid container style={{ marginLeft: 60 }}>
                     <Grid item xs={4} xs={{ display: 'flex', flexDirection: 'row' }}>
-                        <div>
-                            <a style={{ marginRight: 10 }}>Range:</a>
-                            <Input value={range} onChange={(event) => { setRange(event.target.value) }}></Input>
+                        <FormLabel id="demo-controlled-radio-buttons-group">Array content</FormLabel>
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            <TextField
+                                style={{ marginTop: 10 }}
+                                value={range}
+                                onChange={(event) => setRange(event.target.value)}
+                                label="Range"
+                                id="outlined-size-small"
+                                defaultValue="Small"
+                                size="small"
+                            ></TextField>
+                            <TextField
+                                style={{ marginTop: 20}}
+                                value={size}
+                                onChange={(event) => { setSize(event.target.value) }}
+                                label="Size"
+                                id="outlined-size-small"
+                                defaultValue="Small"
+                                size="small"
+                            ></TextField>
                         </div>
-                        <div>
-                            <a style={{ marginRight: 10 }}>Size:</a>
-                            <Input value={size} onChange={(event) => { setSize(event.target.value) }}></Input>
-                        </div>
-                        <Button onClick={startGame} variant="contained">Start Game</Button>
-                        <Button onClick={restartGame} variant="contained">Restart</Button>
                     </Grid>
+                    <Button onClick={startGame} variant="contained">Start Game</Button>
+                    <Button onClick={restartGame} variant="contained">Restart</Button>
                 </Grid>
+
             </div>
             {arrayGroup}
         </div>
