@@ -77,8 +77,18 @@ export default function Game(props) {
                         value={gameType}
                         onChange={(event) => setGameType(event.target.value)}
                     >
-                        <FormControlLabel value="Merge Sort" control={<Radio />} label="Merge Sort" />
-                        <FormControlLabel value="Quick Sort" control={<Radio />} label="Quick Sort" />
+                        <FormControlLabel
+                            style={{ marginTop: 10 }}
+                            value="Merge Sort"
+                            control={<Radio />}
+                            label="Merge Sort"
+                        />
+                        <FormControlLabel
+                            style={{ marginTop: 10 }}
+                            value="Quick Sort"
+                            control={<Radio />}
+                            label="Quick Sort"
+                        />
                     </RadioGroup>
                 </FormControl>
                 <Grid container style={{ marginLeft: 60 }}>
@@ -95,9 +105,9 @@ export default function Game(props) {
                                 size="small"
                             ></TextField>
                             <TextField
-                                style={{ marginTop: 20}}
+                                style={{ marginTop: 20 }}
                                 value={size}
-                                onChange={(event) => { setSize(event.target.value) }}
+                                onChange={(event) => setSize(event.target.value)}
                                 label="Size"
                                 id="outlined-size-small"
                                 defaultValue="Small"
@@ -105,10 +115,22 @@ export default function Game(props) {
                             ></TextField>
                         </div>
                     </Grid>
-                    <Button onClick={startGame} variant="contained">Start Game</Button>
-                    <Button onClick={restartGame} variant="contained">Restart</Button>
+                    <div style = {{marginLeft: 70, marginTop: 50}}>
+                        {(!isRunning.current) ? (
+                            <Button
+                                onClick={startGame}
+                                variant="contained"
+                                style={{ width: 140, height: 50 }}
+                            >Start Game</Button>
+                        ) : (
+                            <Button
+                                onClick={restartGame}
+                                style={{ width: 140, height: 50 }}
+                                variant="contained"
+                            >Restart</Button>
+                        )}
+                    </div>
                 </Grid>
-
             </div>
             {arrayGroup}
         </div>
