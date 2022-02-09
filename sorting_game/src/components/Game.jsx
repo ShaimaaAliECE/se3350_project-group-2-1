@@ -67,7 +67,7 @@ export default function Game(props) {
 
     return (
         <div id="sorting-game">
-            <NavBar />
+            <NavBar/>
             <div id="game-menu" style={{ marginTop: 15, marginLeft: 20, display: 'flex', flexDirection: 'row' }}>
                 <FormControl style={{ width: 200 }}>
                     <FormLabel id="demo-controlled-radio-buttons-group">Algorithim Type</FormLabel>
@@ -115,7 +115,7 @@ export default function Game(props) {
                             ></TextField>
                         </div>
                     </Grid>
-                    <div style = {{marginLeft: 70, marginTop: 50}}>
+                    <div style={{ marginLeft: 70, marginTop: 50 }}>
                         {(!isRunning.current) ? (
                             <Button
                                 onClick={startGame}
@@ -127,12 +127,14 @@ export default function Game(props) {
                                 onClick={restartGame}
                                 style={{ width: 140, height: 50 }}
                                 variant="contained"
-                            >Restart</Button>
+                            >Clear Game</Button>
                         )}
                     </div>
                 </Grid>
             </div>
-            {arrayGroup}
+            <div>
+                {arrayGroup}
+            </div>
         </div>
     )
 }
