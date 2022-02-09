@@ -34,7 +34,6 @@ export default function Game(props) {
     // State initialization
     const isRunning = useRef(false); // Game is not running by default (give users a chance to set game parameters)
     const [gameArray, setGameArray] = useState([]); // Multi-dimensional array that stores each "layer" of the merge sort
-    const [arrayGroup, setArrayGroup] = useState();
     const [mergedArray, setMergedArray] = useState([]);
 
     const [gameType, setGameType] = useState("Merge Sort")
@@ -53,21 +52,14 @@ export default function Game(props) {
     function startGame() {
         if (!isRunning.current) {
             let numArray = MergeSort(new Number(size), new Number(range));
-            setGameArray(numArray[0][1]);
-            setArrayGroup(<ArrayGroup gameRunning={isRunning} label="Root Array" depth={0} key={1} index={1} mergedArray={mergedArray} pushToMerged={setMerged} numArray={numArray[0][1]} />);
+            setGameArray(numArray);
             isRunning.current = true;
         }
     }
 
-    function restartGame() {
-        setGameArray([]);
-        setArrayGroup(<></>);
-        isRunning.current = false;
-    }
-
     return (
         <div id="sorting-game">
-            <NavBar/>
+            <NavBar />
             <div id="game-menu" style={{ marginTop: 15, marginLeft: 20, display: 'flex', flexDirection: 'row' }}>
                 <FormControl style={{ width: 200 }}>
                     <FormLabel id="demo-controlled-radio-buttons-group">Algorithim Type</FormLabel>
@@ -124,7 +116,10 @@ export default function Game(props) {
                             >Start Game</Button>
                         ) : (
                             <Button
-                                onClick={restartGame}
+                                onClick={() => {
+                                    setGameArray([]);
+                                    isRunning.current = false;
+                                }}
                                 style={{ width: 140, height: 50 }}
                                 variant="contained"
                             >Clear Game</Button>
@@ -133,7 +128,20 @@ export default function Game(props) {
                 </Grid>
             </div>
             <div>
-                {arrayGroup}
+                {(isRunning.current) ? (
+                    <ArrayGroup
+                        gameRunning={isRunning}
+                        label="Root Array"
+                        depth={0}
+                        key={1}
+                        index={1}
+                        mergedArray={mergedArray}
+                        pushToMerged={setMerged}
+                        numArray={gameArray[0][1]}
+                    />
+                ) : (
+                    <></>
+                )}
             </div>
         </div>
     )
