@@ -9,8 +9,6 @@ export default function ArrayGroup(props) {
     const [childArrays, setChildArrays] = useState(); // To hold ArrayGroup instances for the left and right sub-arrays (children)
     const[gameTime, setGameTime] = useState();
 
-    let mergedRef = useRef([]); // Used to store shared instance of the merged array (which is then transferred to the mergedArray state hook)
-
     /**
      * Updates the merged list with a new value selected from child array
      * @param {number} value 
@@ -27,8 +25,6 @@ export default function ArrayGroup(props) {
         let leftArrayNums = props.numArray.slice(0, splitIndex);
         let rightArrayNums = props.numArray.slice(splitIndex, props.numArray.length);
         
-        //let leftArray = <ArrayGroup parentState={arrayState} label="Left Array" depth={props.depth + 1} key={0} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={leftArrayNums} />
-        //let rightArray = <ArrayGroup parentState={arrayState} label="Right Array" depth={props.depth + 1} key={1} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={rightArrayNums} />
         setChildArrays({
             leftArray: leftArrayNums,
             rightArray: rightArrayNums
@@ -56,6 +52,7 @@ export default function ArrayGroup(props) {
             setArrayState(ArrayStates.MERGED);
             isMerged = true;
         }
+        // Update the parent state appropriately
         if (arrayState === ArrayStates.MERGED || isMerged) {
             // If merging is complete, allow user to select numbers for upper-level merging
             if (props.label === "Left Array" && props.parentState !== ArrayStates.MERGING) {
@@ -100,8 +97,9 @@ export default function ArrayGroup(props) {
         }
     } else if (arrayState === ArrayStates.MERGING) {
         // If the child arrays are merging into the parent, display the mergedArray label
-        mergedArrayLabel = mergedArray.toString();
-    } else if (arrayState === ArrayStates.LEFT_SORTING || arrayState === ArrayStates.RIGHT_SORTING) {
+        mergedArrayLabel = mergedArray.map((el, i) => {
+            return <Button disabled={true} key={i} variant="outlined">{el}</Button>
+        });
     }
 
     let timeAlert;
@@ -131,6 +129,8 @@ export default function ArrayGroup(props) {
             props.gameRunning.current = false;
         }
     }
+
+    // Render child arrays if not in merged state
     if (childArrays !== undefined) {
         if (arrayState !== ArrayStates.MERGED) {
             children = <Grid container>
