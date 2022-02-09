@@ -1,7 +1,30 @@
 import { useState, useRef } from "react";
-import GameMenu from "./GameMenu.jsx";
 import MergeSort from "../utils/sorting/MergeSort.js";
 import ArrayGroup from "./ArrayGroup.jsx";
+import Githubicon from "../images/Githubicon.js";
+import {
+    Grid,
+    TextField,
+    Button,
+    AppBar,
+    FormControl,
+    RadioGroup,
+    Radio,
+    FormControlLabel,
+    FormLabel,
+    Toolbar
+} from '@mui/material'
+
+const NavBar = () => {
+    return (
+        <AppBar position="static">
+            <Toolbar variant="dense">
+                <div>Array Sorting Game</div>
+                <Githubicon />
+            </Toolbar>
+        </AppBar>
+    )
+}
 
 /**
  * React component containing all functionality related to the sorting game (renders the game)
@@ -13,7 +36,9 @@ export default function Game(props) {
     const [gameArray, setGameArray] = useState([]); // Multi-dimensional array that stores each "layer" of the merge sort
     const [arrayGroup, setArrayGroup] = useState();
     const [mergedArray, setMergedArray] = useState([]);
-    
+
+    const [gameType, setGameType] = useState("Merge Sort")
+
     //size, range state -> array params
     const [range, setRange] = useState(10);
     const [size, setSize] = useState(10);
@@ -34,7 +59,7 @@ export default function Game(props) {
         }
     }
 
-    function restartGame(){
+    function restartGame() {
         setGameArray([]);
         setArrayGroup(<></>);
         isRunning.current = false;
@@ -42,8 +67,74 @@ export default function Game(props) {
 
     return (
         <div id="sorting-game">
-            <GameMenu startGame={startGame} restartGame={restartGame} setRange={setRange} setSize={setSize} size={size} range={range}/>
-            {arrayGroup}
+            <NavBar/>
+            <div id="game-menu" style={{ marginTop: 15, marginLeft: 20, display: 'flex', flexDirection: 'row' }}>
+                <FormControl style={{ width: 200 }}>
+                    <FormLabel id="demo-controlled-radio-buttons-group">Algorithim Type</FormLabel>
+                    <RadioGroup
+                        aria-labelledby="demo-controlled-radio-buttons-group"
+                        name="controlled-radio-buttons-group"
+                        value={gameType}
+                        onChange={(event) => setGameType(event.target.value)}
+                    >
+                        <FormControlLabel
+                            style={{ marginTop: 10 }}
+                            value="Merge Sort"
+                            control={<Radio />}
+                            label="Merge Sort"
+                        />
+                        <FormControlLabel
+                            style={{ marginTop: 10 }}
+                            value="Quick Sort"
+                            control={<Radio />}
+                            label="Quick Sort"
+                        />
+                    </RadioGroup>
+                </FormControl>
+                <Grid container style={{ marginLeft: 60 }}>
+                    <Grid item xs={4} xs={{ display: 'flex', flexDirection: 'row' }}>
+                        <FormLabel id="demo-controlled-radio-buttons-group">Array content</FormLabel>
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            <TextField
+                                style={{ marginTop: 10 }}
+                                value={range}
+                                onChange={(event) => setRange(event.target.value)}
+                                label="Range"
+                                id="outlined-size-small"
+                                defaultValue="Small"
+                                size="small"
+                            ></TextField>
+                            <TextField
+                                style={{ marginTop: 20 }}
+                                value={size}
+                                onChange={(event) => setSize(event.target.value)}
+                                label="Size"
+                                id="outlined-size-small"
+                                defaultValue="Small"
+                                size="small"
+                            ></TextField>
+                        </div>
+                    </Grid>
+                    <div style={{ marginLeft: 70, marginTop: 50 }}>
+                        {(!isRunning.current) ? (
+                            <Button
+                                onClick={startGame}
+                                variant="contained"
+                                style={{ width: 140, height: 50 }}
+                            >Start Game</Button>
+                        ) : (
+                            <Button
+                                onClick={restartGame}
+                                style={{ width: 140, height: 50 }}
+                                variant="contained"
+                            >Clear Game</Button>
+                        )}
+                    </div>
+                </Grid>
+            </div>
+            <div>
+                {arrayGroup}
+            </div>
         </div>
     )
 }
