@@ -1,11 +1,10 @@
 import { Button, Grid, Alert,Snackbar } from "@mui/material";
 import { useEffect, useState, useRef } from "react"
-
+import { ArrayStates } from "../utils/GameTypes";
 
 export default function ArrayGroup(props) {
     // State initialization
-    const [merging, setMerging] = useState(false || props.numArray.length == 1); // Boolean variable to declare whether the user should be splitting the array further (implying it is UNSORTED) or merge with another array (implying it is SORTED)
-    const [merged, setMerged] = useState(false || props.numArray.length == 1);
+    const [arrayState, setArrayState] = useState(props.numArray.length === 1 ? ArrayStates.MERGED : ArrayStates.UNSORTED);
     const [mergedArray, setMergedArray] = useState(props.numArray.length == 1 ? [...props.numArray] : []); // Empty array to eventually be populated with the properly sorted values
     const [childArrays, setChildArrays] = useState(); // To hold ArrayGroup instances for the left and right sub-arrays (children)
     const[gameTime, setGameTime] = useState();
@@ -17,30 +16,25 @@ export default function ArrayGroup(props) {
      * @param {number} value 
      */
     function pushToMerged(value) {
-        let updatedArray = [...mergedRef.current, value]
-        mergedRef.current = updatedArray;
-        setMergedArray(updatedArray);
+        setMergedArray([...mergedArray, value]);
     }
     
     /**
      * Handle "Split Array" button click event
      */
     function splitArray() {
-        let splitIndex = Math.floor(props.numArray.length / 2); // Index of the number to the left of the middle
+        let splitIndex = Math.ceil(props.numArray.length / 2); // Index of the number to the left of the middle
         let leftArrayNums = props.numArray.slice(0, splitIndex);
         let rightArrayNums = props.numArray.slice(splitIndex, props.numArray.length);
         
-        let leftArray = <ArrayGroup label="Left Array" depth={props.depth + 1} key={0} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={leftArrayNums} />
-        let rightArray = <ArrayGroup label="Right Array" depth={props.depth + 1} key={1} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={rightArrayNums} />
-        let childrenArrays = <Grid container>
-            <Grid item xs={6}>{leftArray}</Grid>
-            <Grid item xs={6}>{rightArray}</Grid>
-        </Grid>
-
-        setChildArrays(childrenArrays);
-        setMerging(true);
+        //let leftArray = <ArrayGroup parentState={arrayState} label="Left Array" depth={props.depth + 1} key={0} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={leftArrayNums} />
+        //let rightArray = <ArrayGroup parentState={arrayState} label="Right Array" depth={props.depth + 1} key={1} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={rightArrayNums} />
+        setChildArrays({
+            leftArray: leftArrayNums,
+            rightArray: rightArrayNums
+        });
+        setArrayState(ArrayStates.LEFT_SORTING);
     }
-
 
 
     /**
@@ -57,17 +51,31 @@ export default function ArrayGroup(props) {
      * When the component is re-rendered (due to a change in state), check to see if the array has been successfully merged
      */
     useEffect(_ => {
+        let isMerged = false;
         if (mergedArray.length == props.numArray.length) {
-            setMerged(true);
+            setArrayState(ArrayStates.MERGED);
+            isMerged = true;
         }
-    }, [mergedArray.length, props.numArray.length]);
+        if (arrayState === ArrayStates.MERGED || isMerged) {
+            // If merging is complete, allow user to select numbers for upper-level merging
+            if (props.label === "Left Array" && props.parentState !== ArrayStates.MERGING) {
+                if (props.numArray.length === 1) {
+                    props.setParentState(ArrayStates.MERGING);
+                } else {
+                    props.setParentState(ArrayStates.RIGHT_SORTING);
+                }
+            } else if (props.label === "Right Array" && props.parentState === ArrayStates.RIGHT_SORTING) {
+                props.setParentState(ArrayStates.MERGING);
+            }
+        }
+    }, [mergedArray.length, props.numArray.length, props.parentState]);
 
 
     let splitArrayButton; // Only display the "Split Array" button if the array is unsorted
     let arrayBlocks = []; // Stores array of components corresponding to each number in the array (only render when not merging)
     let children; // Only display child arrays if merging
     let mergedArrayLabel; // Shows the values currently in the merged array (when applicable)
-    if (!merging) {
+    if (arrayState === ArrayStates.UNSORTED) {
         if (props.depth === 0 && gameTime === undefined) {
             setGameTime(new Date().getTime());
         }
@@ -79,22 +87,21 @@ export default function ArrayGroup(props) {
         for (let i = 0; i < props.numArray.length; i++) {
             let elementKey = `${props.index}-${i}`; // Unique identifier structure: {array key} - {element index}
             arrayBlocks.push([
-                <Button disabled={!merged} key={elementKey} value={props.numArray[i]} onClick={selectValue} variant="outlined">{props.numArray[i]}</Button>
+                <Button disabled={arrayState !== ArrayStates.MERGED} key={elementKey} value={props.numArray[i]} onClick={selectValue} variant="outlined">{props.numArray[i]}</Button>
             ]);
         }
-    } else if (merged) {
+    } else if (arrayState === ArrayStates.MERGED) {
         
-        // If merging is complete, allow user to select numbers for upper-level merging
         for (let i = 0; i < mergedArray.length; i++) {
             let elementKey = `${props.index}-${i}`; // Unique identifier structure: {array key} - {element index}
             arrayBlocks.push([
-                <Button disabled={!merged} key={elementKey} value={mergedArray[i]} onClick={selectValue} variant="outlined">{mergedArray[i]}</Button>
+                <Button disabled={props.parentState !== ArrayStates.MERGING} key={elementKey} value={mergedArray[i]} onClick={selectValue} variant="outlined">{mergedArray[i]}</Button>
             ]);
         }
-    } else {
+    } else if (arrayState === ArrayStates.MERGING) {
         // If the child arrays are merging into the parent, display the mergedArray label
         mergedArrayLabel = mergedArray.toString();
-        children = childArrays;
+    } else if (arrayState === ArrayStates.LEFT_SORTING || arrayState === ArrayStates.RIGHT_SORTING) {
     }
 
     let timeAlert;
@@ -113,7 +120,7 @@ export default function ArrayGroup(props) {
         setOpen(false);
     };
     
-    if (merged) {
+    if (arrayState === ArrayStates.MERGED) {
         if (props.depth === 0) {
             let timeDelta = (new Date().getTime() - gameTime) / 1000; // from the time level 0 is presented till full sort
             timeAlert = <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
@@ -122,6 +129,18 @@ export default function ArrayGroup(props) {
                 </Alert>
             </Snackbar> // green popup on 
             props.gameRunning.current = false;
+        }
+    }
+    if (childArrays !== undefined) {
+        if (arrayState !== ArrayStates.MERGED) {
+            children = <Grid container>
+                <Grid item xs={6}>
+                    <ArrayGroup parentState={arrayState} setParentState={setArrayState} label="Left Array" depth={props.depth + 1} key={0} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.leftArray} />
+                </Grid>
+                <Grid item xs={6}>
+                    <ArrayGroup parentState={arrayState} setParentState={setArrayState} label="Right Array" depth={props.depth + 1} key={1} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.rightArray} />
+                </Grid>
+            </Grid>
         }
     }
 
