@@ -6,7 +6,7 @@ let steps = [];
 // Second subarray is arr[m+1..r]
 function merge(arr1, arr2)
 {
-    steps.push(['Merging',arr1,arr2]);
+    // steps.push(['Merging',arr1,arr2]);
     // Create temp array
     var arr = []; 
   
@@ -52,10 +52,11 @@ function merge(arr1, arr2)
 // right index of the sub-array
 // of arr to be sorted */
 function mergeSort(arr,l, r){
-    steps.push(['Step Down',arr]);
     if(l>=r){
+        // steps.push(['Single',arr]);
         return [arr[l]];//returns recursively
     }
+    steps.push(['Step Down',arr]);
 
     var m = l + parseInt((r-l)/2);
     const arr1 = arr.slice(l, m+1);
