@@ -20,7 +20,7 @@ const NavBar = () => {
         <AppBar position="static">
             <Toolbar variant="dense">
                 <div>Array Sorting Game</div>
-                <Githubicon/>
+                <Githubicon />
             </Toolbar>
         </AppBar>
     )
@@ -67,9 +67,9 @@ export default function Game(props) {
 
     return (
         <div id="sorting-game">
-            <NavBar/>
-            <div id="game-menu" style = {{marginTop: 15, marginLeft: 20, display: 'flex', flexDirection: 'row'}}>
-                <FormControl style={{width: 200}}>
+            <NavBar />
+            <div id="game-menu" style={{ marginTop: 15, marginLeft: 20, display: 'flex', flexDirection: 'row' }}>
+                <FormControl style={{ width: 200 }}>
                     <FormLabel id="demo-controlled-radio-buttons-group">Algorithim Type</FormLabel>
                     <RadioGroup
                         aria-labelledby="demo-controlled-radio-buttons-group"
@@ -81,12 +81,16 @@ export default function Game(props) {
                         <FormControlLabel value="Quick Sort" control={<Radio />} label="Quick Sort" />
                     </RadioGroup>
                 </FormControl>
-                <Grid container style={{marginLeft: 60}}>
+                <Grid container style={{ marginLeft: 60 }}>
                     <Grid item xs={4} xs={{ display: 'flex', flexDirection: 'row' }}>
-                        <a>Range:</a>
-                        <Input value={range} onChange={(event) => { setRange(event.target.value) }}></Input>
-                        <a style = {{marginRight: 10}}>Size:</a>
-                        <Input value={size} onChange={(event) => { setSize(event.target.value) }}></Input>
+                        <div>
+                            <a style={{ marginRight: 10 }}>Range:</a>
+                            <Input value={range} onChange={(event) => { setRange(event.target.value) }}></Input>
+                        </div>
+                        <div>
+                            <a style={{ marginRight: 10 }}>Size:</a>
+                            <Input value={size} onChange={(event) => { setSize(event.target.value) }}></Input>
+                        </div>
                         <Button onClick={startGame} variant="contained">Start Game</Button>
                         <Button onClick={restartGame} variant="contained">Restart</Button>
                     </Grid>
