@@ -166,7 +166,7 @@ export default function Game(props) {
                     )
 
                 ) : (
-                    //else for nothing if game isnt playable
+                    //else for nothing if game isnt running
                     <></>
                 )}
             </div>
