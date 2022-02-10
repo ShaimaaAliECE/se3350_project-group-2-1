@@ -17,6 +17,11 @@ import {
     Toolbar
 } from '@mui/material'
 
+/**
+ * Navigation bar at top of screen, add elements to the toolbar part like drop downs etc
+ *
+ */
+
 const NavBar = () => {
     return (
         <AppBar position="static">
@@ -38,8 +43,8 @@ export default function Game(props) {
     const [gameArray, setGameArray] = useState([]); // Multi-dimensional array that stores each "layer" of the merge sort
     const [mergedArray, setMergedArray] = useState([]);
 
-    const [gameType, setGameType] = useState("Merge Sort")
-    const [gameMode, setGameMode] = useState("playable")
+    const [gameType, setGameType] = useState("Merge Sort") //for picking between the different sorting
+    const [gameMode, setGameMode] = useState("playable") //for picking between walkthrough or playable
 
     //size, range state -> array params
     const [range, setRange] = useState(10);
@@ -110,6 +115,7 @@ export default function Game(props) {
                         </div>
                     </Grid>
                     <div style={{ marginLeft: 70, marginTop: 50 }}>
+                        {/* this section is for button display, either clear game or the start game options are shown*/}
                         {(!isRunning.current) ? (
                             //buttons for starting or doing the walkthough, need to be styled
                             <>
