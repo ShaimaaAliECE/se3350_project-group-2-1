@@ -2,6 +2,8 @@ import { useState, useRef } from "react";
 import MergeSort from "../utils/sorting/MergeSort.js";
 import ArrayGroup from "./ArrayGroup.jsx";
 import Githubicon from "../images/Githubicon.js";
+import WalkThrough from "./WalkThrough.jsx";
+
 import {
     Grid,
     TextField,
@@ -37,6 +39,7 @@ export default function Game(props) {
     const [mergedArray, setMergedArray] = useState([]);
 
     const [gameType, setGameType] = useState("Merge Sort")
+    const [gameMode, setGameMode] = useState("playable")
 
     //size, range state -> array params
     const [range, setRange] = useState(10);
@@ -46,13 +49,12 @@ export default function Game(props) {
         // Add value to merged array
     }
 
-    /**
-     * Helper function to handle on click event for "Start Game" button
-     */
-    function startGame() {
+    function startGame(mode) {
+        //pass in game mode for determining which button was pushed, start game or walkthough
         if (!isRunning.current) {
             let numArray = MergeSort(new Number(size), new Number(range));
             setGameArray(numArray);
+            setGameMode(mode)
             isRunning.current = true;
         }
     }
@@ -109,11 +111,19 @@ export default function Game(props) {
                     </Grid>
                     <div style={{ marginLeft: 70, marginTop: 50 }}>
                         {(!isRunning.current) ? (
-                            <Button
-                                onClick={startGame}
-                                variant="contained"
-                                style={{ width: 140, height: 50 }}
-                            >Start Game</Button>
+                            //buttons for starting or doing the walkthough, need to be styled
+                            <>
+                                <Button
+                                    onClick={() => startGame("playable")}
+                                    variant="contained"
+                                    style={{ width: 140, height: 50 }}
+                                >Start Game</Button>
+                                <Button
+                                    onClick={() => startGame("walkthrough")}
+                                    variant="contained"
+                                    style={{ width: 140, height: 50 }}
+                                >WalkThrough</Button>
+                            </>
                         ) : (
                             <Button
                                 onClick={() => {
@@ -129,17 +139,28 @@ export default function Game(props) {
             </div>
             <div>
                 {(isRunning.current) ? (
-                    <ArrayGroup
-                        gameRunning={isRunning}
-                        label="Root Array"
-                        depth={0}
-                        key={1}
-                        index={1}
-                        mergedArray={mergedArray}
-                        pushToMerged={setMerged}
-                        numArray={gameArray[0][1]}
-                    />
+                    //for loading the game, if game is running then...
+                    (gameMode === "playable") ? (
+                        //if gamemode is playable then load the array group
+                        <ArrayGroup
+                            gameRunning={isRunning}
+                            label="Root Array"
+                            depth={0}
+                            key={1}
+                            index={1}
+                            mergedArray={mergedArray}
+                            pushToMerged={setMerged}
+                            numArray={gameArray[0][1]}
+                        />
+                    ) : (
+                        //if gamemode is anything else load the walkthrough
+                        <WalkThrough
+                            numArray={gameArray}
+                        />
+                    )
+
                 ) : (
+                    //else for nothing if game isnt playable
                     <></>
                 )}
             </div>
