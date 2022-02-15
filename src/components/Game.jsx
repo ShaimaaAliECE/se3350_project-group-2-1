@@ -39,12 +39,14 @@ const NavBar = () => {
  */
 export default function Game(props) {
     // State initialization
+
     const isRunning = useRef(false); // Game is not running by default (give users a chance to set game parameters)
     const [gameArray, setGameArray] = useState([]); // Multi-dimensional array that stores each "layer" of the merge sort
     const [mergedArray, setMergedArray] = useState([]);
 
     const [gameType, setGameType] = useState("Merge Sort") //for picking between the different sorting
     const [gameMode, setGameMode] = useState("playable") //for picking between walkthrough or playable
+    
 
     //size, range state -> array params
     const [range, setRange] = useState(10);
@@ -54,12 +56,14 @@ export default function Game(props) {
         // Add value to merged array
     }
 
+    // function determining game level
     function startGame(mode) {
+
         //pass in game mode for determining which button was pushed, start game or walkthough
         if (!isRunning.current) {
             let numArray = MergeSort(new Number(size), new Number(range));
             setGameArray(numArray);
-            setGameMode(mode)
+            setGameMode(mode);
             isRunning.current = true;
         }
     }
@@ -129,6 +133,11 @@ export default function Game(props) {
                                     variant="contained"
                                     style={{ width: 140, height: 50 }}
                                 >Level 1</Button>
+                                 <Button
+                                    onClick={() => startGame("playable_lvl2")}
+                                    variant="contained"
+                                    style={{ width: 140, height: 50 }}
+                                >Level 2</Button>
                                 <Button
                                     onClick={() => startGame("walkthrough")}
                                     variant="contained"
@@ -160,6 +169,19 @@ export default function Game(props) {
                             key={1}
                             index={1}
                             level={2}
+                            mergedArray={mergedArray}
+                            pushToMerged={setMerged}
+                            numArray={gameArray[0][1]}
+                        />
+                    ) : (gameMode === "playable_lvl2") ? (
+                        //if gamemode is playable then load the array group
+                        <ArrayGroup
+                            gameRunning={isRunning}
+                            label="Root Array - Level 2"
+                            depth={0}
+                            key={1}
+                            index={1}
+                            level={3}
                             mergedArray={mergedArray}
                             pushToMerged={setMerged}
                             numArray={gameArray[0][1]}
