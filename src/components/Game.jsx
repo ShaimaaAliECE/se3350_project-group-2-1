@@ -189,7 +189,7 @@ export default function Game(props) {
                     ) : (gameMode === "walkthrough") ? (
                         //if gamemode is anything else load the walkthrough
                         <WalkThrough
-                            numArra y={gameArray}
+                            numArray={gameArray}
                         />
                     ) : (gameMode === "animation") ? (
                     //else for nothing if game isnt running
