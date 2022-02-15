@@ -125,6 +125,11 @@ export default function Game(props) {
                                     style={{ width: 140, height: 50 }}
                                 >Start Game</Button>
                                 <Button
+                                    onClick={() => startGame("animation")}
+                                    variant="contained"
+                                    style={{ width: 140, height: 50 }}
+                                >Level 1</Button>
+                                <Button
                                     onClick={() => startGame("walkthrough")}
                                     variant="contained"
                                     style={{ width: 140, height: 50 }}
@@ -154,19 +159,33 @@ export default function Game(props) {
                             depth={0}
                             key={1}
                             index={1}
+                            level={2}
+                            mergedArray={mergedArray}
+                            pushToMerged={setMerged}
+                            numArray={gameArray[0][1]}
+                        />
+                    ) : (gameMode === "walkthrough") ? (
+                        //if gamemode is anything else load the walkthrough
+                        <WalkThrough
+                            numArra y={gameArray}
+                        />
+                    ) : (gameMode === "animation") ? (
+                    //else for nothing if game isnt running
+                        <ArrayGroup
+                            gameRunning={isRunning}
+                            label="Root Array"
+                            depth={0}
+                            key={1}
+                            index={1}
+                            level={1}
                             mergedArray={mergedArray}
                             pushToMerged={setMerged}
                             numArray={gameArray[0][1]}
                         />
                     ) : (
-                        //if gamemode is anything else load the walkthrough
-                        <WalkThrough
-                            numArray={gameArray}
-                        />
+                        <></>
                     )
-
                 ) : (
-                    //else for nothing if game isnt running
                     <></>
                 )}
             </div>

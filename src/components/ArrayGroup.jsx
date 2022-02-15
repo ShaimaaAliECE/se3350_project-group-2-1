@@ -8,6 +8,7 @@ export default function ArrayGroup(props) {
     const [mergedArray, setMergedArray] = useState(props.numArray.length == 1 ? [...props.numArray] : []); // Empty array to eventually be populated with the properly sorted values
     const [childArrays, setChildArrays] = useState(); // To hold ArrayGroup instances for the left and right sub-arrays (children)
     const[gameTime, setGameTime] = useState();
+    const [level, setLevel] = useState(props.level);
 
     /**
      * Updates the merged list with a new value selected from child array
@@ -32,7 +33,6 @@ export default function ArrayGroup(props) {
         setArrayState(ArrayStates.LEFT_SORTING);
     }
 
-
     /**
      * Callback function to handle array element button onclick event
      * @param {number} value 
@@ -42,6 +42,12 @@ export default function ArrayGroup(props) {
         props.pushToMerged(value);
         el.target.style.display = "none";
     }
+
+    function delay(time) {
+        return new Promise(res => {
+          setTimeout(res,time)
+        })
+      }
 
     /**
      * When the component is re-rendered (due to a change in state), check to see if the array has been successfully merged
@@ -80,6 +86,18 @@ export default function ArrayGroup(props) {
         let splitArrayDisabled = false;
         if (props.parentState === ArrayStates.LEFT_SORTING && props.label === "Right Array") {
             splitArrayDisabled = true;
+        }
+        if (level == 1) {
+            delay(500).then(() => {
+            splitArrayDisabled = true;
+            splitArray();
+            for (let i = 0; i < props.numArray.length; i++) {
+                let elementKey = `${props.index}-${i}`; // Unique identifier structure: {array key} - {element index}
+                arrayBlocks.push([
+                    <Button disabled={arrayState !== ArrayStates.MERGED} key={elementKey} value={props.numArray[i]} onClick={selectValue} variant="outlined">{props.numArray[i]}</Button>
+                ]);
+            }
+            })
         }
         splitArrayButton = (<Button disabled={splitArrayDisabled} onClick={splitArray} variant="contained">Split</Button>);
 
