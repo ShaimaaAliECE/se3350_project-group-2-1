@@ -2,6 +2,8 @@ import { Button, Grid, Alert,Snackbar } from "@mui/material";
 import { useEffect, useState, useRef } from "react"
 import { ArrayStates } from "../utils/GameTypes";
 
+
+
 export default function ArrayGroup(props) {
     // State initialization
     const [arrayState, setArrayState] = useState(props.numArray.length === 1 ? ArrayStates.MERGED : ArrayStates.UNSORTED);
@@ -143,14 +145,43 @@ export default function ArrayGroup(props) {
 
         setOpen(false);
     };
+
+    function validateArray() { //validate that the root array is in ascending sequence to complete game properly
+
+        for (let i = 1; i < mergedArray.length; i++) {
+            let elementValue = mergedArray[i];
+            let prevElementValue = mergedArray[i-1];
+            if  (prevElementValue > elementValue) {
+                return(false);
+            }
+
+        }        
+
+        return(true);
+
+    }
     
     if (arrayState === ArrayStates.MERGED) {
         if (props.depth === 0) {
             let timeDelta = (new Date().getTime() - gameTime) / 1000; // from the time level 0 is presented till full sort
+            let successMsg = '';
+            if  (level === 3) {  //Level 2 on screen (level 3 in the level variable) - will do the valiation - otherwise always valid.
+                if  (validateArray()) {
+                    successMsg = ' seconds to complete!';
+                }
+                else {
+                    successMsg = ' seconds to complete! But the Game Failed';
+                }
+            }
+            else {
+                successMsg = ' seconds to complete!';
+            }
+
             timeAlert = <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-                    {timeDelta + ' seconds to complete!'}
+                    {timeDelta + successMsg}
                 </Alert>
+            
             </Snackbar> // green popup on 
             props.gameRunning.current = false;
         }
