@@ -167,10 +167,10 @@ export default function ArrayGroup(props) {
             let successMsg = '';
             if  (level === 3) {  //Level 2 on screen (level 3 in the level variable) - will do the valiation - otherwise always valid.
                 if  (validateArray()) {
-                    successMsg = ' seconds to complete!';
+                    successMsg = ' seconds to complete! Array is correct! Proceed to the next level!';
                 }
                 else {
-                    successMsg = ' seconds to complete! But the Game Failed';
+                    successMsg = ' seconds to complete! Array is inccorect! Try again!';
                 }
             }
             else {

@@ -174,7 +174,7 @@ export default function Game(props) {
                             numArray={gameArray[0][1]}
                         />
                     ) : (gameMode === "playable_lvl2") ? (
-                        //if gamemode is playable then load the array group
+                        //if gamemode is playable level 2 then load the array group
                         <ArrayGroup
                             gameRunning={isRunning}
                             label="Root Array - Level 2"
