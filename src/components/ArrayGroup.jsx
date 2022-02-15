@@ -1,8 +1,9 @@
 import { Button, Grid, Alert,Snackbar } from "@mui/material";
 import { useEffect, useState, useRef } from "react"
 import { ArrayStates } from "../utils/GameTypes";
-
-
+import useSound from 'use-sound';
+import checkSound from '../checkAudio.mp3' 
+import wrongSound from '../wrongAudio.mp3' 
 
 export default function ArrayGroup(props) {
     // State initialization
@@ -132,6 +133,15 @@ export default function ArrayGroup(props) {
 
     let timeAlert;
 
+
+    // handling button that provides auditory feedback for valid moves
+    //needs implementation into validity check at each depth
+    const CheckCorrectButton = () =>{
+        const [play] = useSound(checkSound);
+        
+        return <button onClick={play}>Check Valid Move</button>
+    }
+
     /*
         Handling for closing out snackbars
     */
@@ -176,7 +186,7 @@ export default function ArrayGroup(props) {
             else {
                 successMsg = ' seconds to complete!';
             }
-
+            console.log(checkSound); 
             timeAlert = <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
                     {timeDelta + successMsg}
