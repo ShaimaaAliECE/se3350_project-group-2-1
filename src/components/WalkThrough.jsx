@@ -43,9 +43,7 @@ export default function WalkThrough(props) {
     let [counter, setCounter] = useState(0);
 
     function increaseCounter() {
-        console.log("increased counter")
-        setCounter(counter++);
-        console.log(counter)
+        setCounter(counter + 1);
     }
 
     for (let i = 0; i < numArray.length; i++) {
@@ -86,6 +84,7 @@ export default function WalkThrough(props) {
 
     return (
         <>
+        {console.log("rerendered")}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <strong>Merge Sort Walkthrough</strong>
                 <div style={start}>
