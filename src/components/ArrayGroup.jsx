@@ -9,7 +9,7 @@ export default function ArrayGroup(props) {
     const [arrayState, setArrayState] = useState(props.numArray.length === 1 ? ArrayStates.MERGED : ArrayStates.UNSORTED);
     const [mergedArray, setMergedArray] = useState(props.numArray.length == 1 ? [...props.numArray] : []); // Empty array to eventually be populated with the properly sorted values
     const [childArrays, setChildArrays] = useState(); // To hold ArrayGroup instances for the left and right sub-arrays (children)
-    const[gameTime, setGameTime] = useState();
+    const [gameTime, setGameTime] = useState();
     const [level, setLevel] = useState(props.level);
 
     /**
