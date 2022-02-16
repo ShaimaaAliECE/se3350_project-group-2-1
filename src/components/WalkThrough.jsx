@@ -2,14 +2,6 @@ import { Button, Grid } from '@mui/material'
 import { render } from '@testing-library/react'
 import React from "react"
 
-/*
-index of merged arrays
-merged array [8]
-merged array [9]
-merged array [13]
-
-*/
-
 const rowStyle = {
     display: "flex",
     gap: "10px",
@@ -96,54 +88,67 @@ export default class WalkThrough extends React.Component {
             numArray: props.numArray,
             counter: { 'left': 0, 'right': 0 },
             side: 'left',
-            sorted: false
+            sorted: false,
+            leftSideSorted: false,
+            doneSorting: false
         }
-
     }
 
     //only thing i changed is the num array is already created so i passed it as a prop
     increaseCounter = () => {
-        if (this.state.counter[this.state.side] === 1 && this.state.sorted === true) {
-            this.setState(prevState => {
-                return {
-                    side: 'right',
-                    sorted: false,
-                }
+        if (this.state.leftSideSorted && this.state.counter['right'] === 1 && this.state.sorted === true) {
+            this.setState({
+                doneSorting: true
             })
         }
         else {
-            if (this.state.counter[this.state.side] === 4 && !this.state.sorted) {
-                console.log("right path")
+            if (this.state.counter[this.state.side] === 1 && this.state.sorted === true) {
                 this.setState(prevState => {
                     return {
-                        sorted: true,
+                        side: 'right',
+                        sorted: false,
+                        leftSideSorted: true,
                         counter: {
                             ...prevState.counter,
-                            [this.state.side]: prevState.counter[this.state.side] - 1,
+                            ['right']: prevState.counter['right'] + 1
                         }
                     }
                 })
             }
             else {
-                if (this.state.sorted) {
+                if (this.state.counter[this.state.side] === 4 && !this.state.sorted) {
+                    console.log("right path")
                     this.setState(prevState => {
                         return {
+                            sorted: true,
                             counter: {
                                 ...prevState.counter,
-                                [this.state.side]: prevState.counter[this.state.side] - 1
+                                [this.state.side]: prevState.counter[this.state.side] - 1,
                             }
                         }
                     })
                 }
-                if (!this.state.sorted) {
-                    this.setState(prevState => {
-                        return {
-                            counter: {
-                                ...prevState.counter,
-                                [this.state.side]: prevState.counter[this.state.side] + 1
+                else {
+                    if (this.state.sorted) {
+                        this.setState(prevState => {
+                            return {
+                                counter: {
+                                    ...prevState.counter,
+                                    [this.state.side]: prevState.counter[this.state.side] - 1
+                                }
                             }
-                        }
-                    })
+                        })
+                    }
+                    if (!this.state.sorted) {
+                        this.setState(prevState => {
+                            return {
+                                counter: {
+                                    ...prevState.counter,
+                                    [this.state.side]: prevState.counter[this.state.side] + 1
+                                }
+                            }
+                        })
+                    }
                 }
             }
         }
@@ -168,38 +173,40 @@ export default class WalkThrough extends React.Component {
         })
 
         return (
-            <>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <strong style={{
-                        textAlign: 'center'
-                    }}>Merge Sort Walkthrough</strong>
-                    <div style={start}>
-                        <Cell numArray={this.state.numArray[0]} color='' />
-                    </div>
-                    <div style={rowStyle}>
-                        <div className="Leftside" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <strong style={{
+                    textAlign: 'center'
+                }}>Merge Sort Walkthrough</strong>
+                <div style={start}>
+                    <Cell numArray={this.state.numArray[0]} color='' sorted={this.state.doneSorting} />
+                </div>
 
-                            {leftGroupStack.map((element, i) => {
-                                return (i < this.state.counter['left']) ? (element) : (<></>)
-                            })}
+                {(this.state.doneSorting) ? (<div>Done Sorting, clear game</div>) : (
+                    <>
+                        <div style={rowStyle}>
+                            <div className="Leftside" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
 
-                        </div>
-                        {(this.state.side === 'right') ? (
-                            <div className="Rightside" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-
-                                {rightGroupStack.map((element, i) => {
-                                    return (i < this.state.counter['right']) ? (element) : (<></>)
+                                {leftGroupStack.map((element, i) => {
+                                    return (i < this.state.counter['left']) ? (element) : (<></>)
                                 })}
 
                             </div>
-                        ) : (
-                            <></>
-                        )}
-                    </div>
-                </div>
-                <Button onClick={this.increaseCounter} variant="contained" style={{ width: 140, height: 50 }} >Next!</Button>
-            </>
+                            {(this.state.side === 'right') ? (
+                                <div className="Rightside" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
 
+                                    {rightGroupStack.map((element, i) => {
+                                        return (i < this.state.counter['right']) ? (element) : (<></>)
+                                    })}
+
+                                </div>
+                            ) : (
+                                <></>
+                            )}
+                        </div>
+                        <Button onClick={this.increaseCounter} variant="contained" style={{ width: 140, height: 50 }} >Next!</Button>
+                    </>
+                )}
+            </div>
         )
     }
 }
