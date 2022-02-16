@@ -49,7 +49,7 @@ export default function Game(props) {
     
 
     //size, range state -> array params
-    const [range, setRange] = useState(10);
+    const [range, setRange] = useState(20);
     const [size, setSize] = useState(10);
 
     function setMerged(value) {
@@ -60,6 +60,14 @@ export default function Game(props) {
     function startGame(mode) {
 
         //pass in game mode for determining which button was pushed, start game or walkthough
+        if(mode === 'walkthrough'){
+            if (!isRunning.current) {
+                let numArray = MergeSort(10, 20);
+                setGameArray(numArray);
+                setGameMode(mode);
+                isRunning.current = true;
+            }
+        }
         if (!isRunning.current) {
             let numArray = MergeSort(new Number(size), new Number(range));
             setGameArray(numArray);
