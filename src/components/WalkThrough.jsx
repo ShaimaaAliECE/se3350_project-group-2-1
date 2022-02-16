@@ -10,6 +10,18 @@ merged array [13]
 
 */
 
+const rowStyle = {
+    display: "flex",
+    gap: "10px",
+};
+
+const start = {
+    // backgroundColor: "green",
+    border: "solid",
+    display: "flex",
+    margin: 0
+}
+
 function LeftGroup(props) {
     return (
         <div style={{ display: "flex", gap: "10px" }}>
@@ -41,8 +53,13 @@ export default function WalkThrough(props) {
     let walkThrough = []
     let numArray = props.numArray
     let [counter, setCounter] = useState(0);
+    let [side, setSide] = useState('left')
 
     function increaseCounter() {
+        if (counter + 1 === 5) {
+            setSide('right')
+        }
+        console.log(side)
         setCounter(counter + 1);
     }
 
@@ -50,22 +67,9 @@ export default function WalkThrough(props) {
         let row = []
         //row.push(<strong>{numArray[i][0]}</strong>)
         for (let j = 0; j < numArray[i][1].length; j++) {
-            console.log(numArray[i][1][j])
             row.push(<Button disabled="true" variant="outlined"> {numArray[i][1][j]}</Button>)
         }
         walkThrough.push(<Grid>{row}</Grid>);
-    }
-
-    const rowStyle = {
-        display: "flex",
-        gap: "10px",
-    };
-
-    const start = {
-        // backgroundColor: "green",
-        border: "solid",
-        display: "flex",
-        margin: 0
     }
 
     const leftGroupStack = [
@@ -84,7 +88,6 @@ export default function WalkThrough(props) {
 
     return (
         <>
-        {console.log("rerendered")}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <strong>Merge Sort Walkthrough</strong>
                 <div style={start}>
@@ -92,20 +95,23 @@ export default function WalkThrough(props) {
                 </div>
                 <div style={rowStyle}>
                     <div className="Leftside" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                        
+
                         {leftGroupStack.map((element, i) => {
-                            console.log(i + "," + counter)
                             return (i < counter) ? (element) : (<></>)
                         })}
 
                     </div>
-                    <div className="Rightside" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                        
-                        {rightGroupStack.map((element, i) => {
-                            return (i < counter) ? (element) : (<></>)
-                        })}
+                    {(side ==='right') ? ( 
+                        <div className="Rightside" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
 
-                    </div>
+                            {rightGroupStack.map((element, i) => {
+                                return (i < (counter - 4)) ? (element) : (<></>)
+                            })}
+
+                        </div>
+                    ) : (
+                        <></>
+                    )}
                 </div>
             </div>
             <Button onClick={increaseCounter} variant="contained" style={{ width: 140, height: 50 }} >Next!</Button>
