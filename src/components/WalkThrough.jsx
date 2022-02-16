@@ -1,4 +1,5 @@
 import { Button, Grid } from '@mui/material'
+import { render } from '@testing-library/react'
 import { useEffect, useState, useRef } from "react"
 
 /*
@@ -7,9 +8,32 @@ merged array [8]
 merged array [9]
 merged array [13]
 
-
-
 */
+
+function LeftGroup(props){
+    return (
+        <div style={{display: "flex", gap: "10px"}}>
+            <div style={{backgroundColor: "red",border: "solid"}}>{props.walkThrough}</div>
+        </div>
+    )
+}
+
+function RightGroup(props){
+    return (
+        <div style={{display: "flex", gap: "10px"}}>
+            <div style={{backgroundColor: "blue", border: "solid"}}>{props.walkThrough}</div>
+        </div>
+    )
+}
+
+function DoubleGroup(props){
+    return (
+        <div style={{display: "flex", gap: "10px"}}>
+            <div style={{backgroundColor: "red",border: "solid"}}>{props.leftWalkThrough}</div>
+            <div style={{backgroundColor: "blue", border: "solid"}}>{props.rightWalkThrough}</div>
+        </div>
+    )
+}
 
 export default function WalkThrough(props) {
     //only thing i changed is the num array is already created so i passed it as a prop
@@ -37,22 +61,10 @@ export default function WalkThrough(props) {
         gap: "10px",
     };
 
-    const leftSide = {
-        backgroundColor: "red",
-        border: "solid"
-    }
-
-    const rightSide = {
-        backgroundColor: "blue",
-        border: "solid",
-    }
-
     const start = {
         // backgroundColor: "green",
         border: "solid",
         display: "flex",
-        padding: 0,
-        wdith: "50%"
     }
 
     return (
@@ -64,32 +76,16 @@ export default function WalkThrough(props) {
             </div>
             <div style={rowStyle}>
                 <div className="Leftside" style={{ display: 'flex', flexDirection: 'column',  gap: '10px'}}>
-                    <div style={rowStyle}>
-                        <div style={leftSide}>{walkThrough[2]}</div>
-                    </div>
-                    <div style={rowStyle}>
-                        <div style={leftSide}>{walkThrough[3]}</div><div style={rightSide}>{walkThrough[10]}</div>
-                    </div>
-                    <div style={rowStyle}>
-                        <div style={leftSide}>{walkThrough[4]}</div><div style={rightSide}>{walkThrough[8]}</div>
-                    </div>
-                    <div style={rowStyle}>
-                        <div style={leftSide}>{walkThrough[5]}</div><div style={rightSide}>{walkThrough[6]}</div>
-                    </div>
+                    <LeftGroup walkThrough={walkThrough[2]}></LeftGroup>
+                    <DoubleGroup leftWalkThrough={walkThrough[3]} rightWalkThrough={walkThrough[10]}></DoubleGroup>
+                    <DoubleGroup leftWalkThrough={walkThrough[4]} rightWalkThrough={walkThrough[8]}></DoubleGroup>
+                    <DoubleGroup leftWalkThrough={walkThrough[5]} rightWalkThrough={walkThrough[6]}></DoubleGroup>
                 </div>
                 <div className="Rightside" style={{ display: 'flex', flexDirection: 'column',  gap: '10px'}}>
-                    <div style={rowStyle}>
-                        <div style={rightSide}>{walkThrough[15]}</div>
-                    </div>
-                    <div style={rowStyle}>
-                        <div style={leftSide}>{walkThrough[16]}</div><div style={rightSide}>{walkThrough[23]}</div>
-                    </div>
-                    <div style={rowStyle}>
-                        <div style={leftSide}>{walkThrough[17]}</div><div style={rightSide}>{walkThrough[21]}</div>
-                    </div>
-                    <div style={rowStyle}>
-                        <div style={leftSide}>{walkThrough[18]}</div><div style={rightSide}>{walkThrough[19]}</div>
-                    </div>
+                    <RightGroup walkThrough={walkThrough[15]}></RightGroup>
+                    <DoubleGroup leftWalkThrough={walkThrough[16]} rightWalkThrough={walkThrough[23]}></DoubleGroup>
+                    <DoubleGroup leftWalkThrough={walkThrough[17]} rightWalkThrough={walkThrough[21]}></DoubleGroup>
+                    <DoubleGroup leftWalkThrough={walkThrough[18]} rightWalkThrough={walkThrough[19]}></DoubleGroup>
                 </div>
             </div>
         </div>
