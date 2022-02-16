@@ -33,26 +33,61 @@ function DoubleGroup(props) {
 
 const Cell = (props) => {
     let numArray = props.numArray
-    console.log("success")
 
     return (
         <Grid>
             {(props.sorted) ? (
                 [].concat(numArray[1])
-                .sort((a, b) => a > b ? 1 : -1)
-                .map((item, i) =>
-                    <Button style={{ backgroundColor: props.color }} disabled="true" variant="outlined"> {item}</Button>
-                )
+                    .sort((a, b) => a > b ? 1 : -1)
+                    .map((item, i) =>
+                        <Button style={{ backgroundColor: props.color }} disabled="true" variant="outlined"> {item}</Button>
+                    )
             ) : (
                 numArray[1].map((element) => {
                     return <Button style={{ backgroundColor: props.color }} disabled="true" variant="outlined"> {element}</Button>
                 }
-            ))}
+                ))}
         </Grid>
     )
 }
 
-const 
+const HardCodedSide = (props) => {
+    let numArray = props.numArray
+    let index = props.index
+    let values = props.values
+
+    const flipSorted = (level) => {
+        if(props.sorted){
+            if(level >= index){
+                return true
+            }
+            else{
+                return false
+            }
+        }
+        else{
+            return false
+        }
+    }
+
+    return ( 
+        [
+            <Cell numArray={numArray[values[0]]} color='red' sorted = {flipSorted(1)} />,
+            <DoubleGroup
+                leftWalkThrough={<Cell numArray={numArray[values[1]]} color='red' sorted={flipSorted(2)} />}
+                rightWalkThrough={<Cell numArray={numArray[values[2]]} color='blue' sorted={props.sorted} />}>
+            </DoubleGroup>,
+            <DoubleGroup
+                leftWalkThrough={<Cell numArray={numArray[values[3]]} color='red' sorted={flipSorted(3)} />}
+                rightWalkThrough={<Cell numArray={numArray[values[4]]} color='blue' sorted={props.sorted} />}>
+            </DoubleGroup>,
+            <DoubleGroup
+                leftWalkThrough={<Cell numArray={numArray[values[5]]} color='red' sorted={flipSorted(4)} />}
+                rightWalkThrough={<Cell numArray={numArray[values[6]]} color='blue' sorted={props.sorted} />}>
+            </DoubleGroup>
+        ]
+    )
+}
 
 export default function WalkThrough(props) {
     //only thing i changed is the num array is already created so i passed it as a prop
@@ -61,46 +96,32 @@ export default function WalkThrough(props) {
     let numArray = props.numArray
     let [counter, setCounter] = useState(0);
     let [side, setSide] = useState('left')
+    let [sorted, setSorted] = useState(false)
 
     function increaseCounter() {
         if (counter + 1 === 5) {
-
+            setSorted(true)
         }
-        console.log(side)
-        setCounter(counter + 1);
+        if(sorted === true){
+            setCounter(counter - 1)
+        }
+        if(sorted !== true){
+            setCounter(counter+1)
+        }
+        if(counter === 0 && sorted === true){
+            setSide('right')
+            setSorted(false)
+        }
     }
 
-    const leftGroupStack = [
-        <Cell numArray={numArray[2]} color='red'/>,
-        <DoubleGroup
-            leftWalkThrough={<Cell numArray={numArray[3]} color='red' />}
-            rightWalkThrough={<Cell numArray={numArray[10]} color='blue' />}>
-        </DoubleGroup>,
-        <DoubleGroup
-            leftWalkThrough={<Cell numArray={numArray[4]} color='red' />}
-            rightWalkThrough={<Cell numArray={numArray[8]} color='blue' />}>
-        </DoubleGroup>,
-        <DoubleGroup
-            leftWalkThrough={<Cell numArray={numArray[5]} color='red' />}
-            rightWalkThrough={<Cell numArray={numArray[6]} color='blue' />}>
-        </DoubleGroup>
-    ]
+    useEffect(()=>{
+        console.log(counter)
+        console.log(sorted)
+    })
 
-    const rightGroupStack = [
-        <Cell numArray={numArray[15]} color='red' />,
-        <DoubleGroup
-            leftWalkThrough={<Cell numArray={numArray[16]} color='red' />}
-            rightWalkThrough={<Cell numArray={numArray[23]} color='blue' />}>
-        </DoubleGroup>,
-        <DoubleGroup
-            leftWalkThrough={<Cell numArray={numArray[17]} color='red' />}
-            rightWalkThrough={<Cell numArray={numArray[21]} color='blue' />}>
-        </DoubleGroup>,
-        <DoubleGroup
-            leftWalkThrough={<Cell numArray={numArray[18]} color='red' />}
-            rightWalkThrough={<Cell numArray={numArray[19]} color='blue' />}>
-        </DoubleGroup>
-    ]
+    const leftGroupStack = HardCodedSide({numArray: numArray, sorted: sorted, index: counter, values: [2,3,10,4,8,5,6]})
+
+    const rightGroupStack = HardCodedSide({numArray: numArray, sorted: sorted, index: counter,  values: [15,16,23,17,21,18,19]})
 
     return (
         <>
