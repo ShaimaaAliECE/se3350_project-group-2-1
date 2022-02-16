@@ -34,32 +34,36 @@ export default function WalkThrough(props) {
 
     const rowStyle = {
         display: "flex",
+        gap: "10px",
     };
 
     const leftSide = {
-        background: "red",
+        backgroundColor: "red",
         border: "solid"
     }
 
     const rightSide = {
-        background: "blue",
-        border: "solid"
+        backgroundColor: "blue",
+        border: "solid",
     }
 
     const start = {
-        background: "green",
-        border: "solid"
+        // backgroundColor: "green",
+        border: "solid",
+        display: "flex",
+        padding: 0,
+        wdith: "50%"
     }
 
     return (
         <>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', flexDirection: 'column',  gap: '10px'}}>
             <strong>Merge Sort Walkthrough</strong>
             <div style={start}>
                 {walkThrough[0]}
             </div>
             <div style={rowStyle}>
-                <div className="Leftside">
+                <div className="Leftside" style={{ display: 'flex', flexDirection: 'column',  gap: '10px'}}>
                     <div style={rowStyle}>
                         <div style={leftSide}>{walkThrough[2]}</div>
                     </div>
@@ -73,7 +77,7 @@ export default function WalkThrough(props) {
                         <div style={leftSide}>{walkThrough[5]}</div><div style={rightSide}>{walkThrough[6]}</div>
                     </div>
                 </div>
-                <div className="Rightside">
+                <div className="Rightside" style={{ display: 'flex', flexDirection: 'column',  gap: '10px'}}>
                     <div style={rowStyle}>
                         <div style={rightSide}>{walkThrough[15]}</div>
                     </div>
@@ -90,7 +94,6 @@ export default function WalkThrough(props) {
             </div>
         </div>
         <Button onClick={increaseCounter}  variant="contained" style={{ width: 140, height: 50 }} >Next!</Button>
-        {walkThrough}
         </>
     )
 }
