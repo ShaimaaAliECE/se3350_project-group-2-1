@@ -1,6 +1,6 @@
 import { Button, Grid } from '@mui/material'
 import { render } from '@testing-library/react'
-import { useEffect, useState, useRef } from "react"
+import React from "react"
 
 /*
 index of merged arrays
@@ -57,22 +57,22 @@ const HardCodedSide = (props) => {
     let values = props.values
 
     const flipSorted = (level) => {
-        if(props.sorted){
-            if(level >= index){
+        if (props.sorted) {
+            if (level >= index) {
                 return true
             }
-            else{
+            else {
                 return false
             }
         }
-        else{
+        else {
             return false
         }
     }
 
-    return ( 
+    return (
         [
-            <Cell numArray={numArray[values[0]]} color='red' sorted = {flipSorted(1)} />,
+            <Cell numArray={numArray[values[0]]} color='red' sorted={flipSorted(1)} />,
             <DoubleGroup
                 leftWalkThrough={<Cell numArray={numArray[values[1]]} color='red' sorted={flipSorted(2)} />}
                 rightWalkThrough={<Cell numArray={numArray[values[2]]} color='blue' sorted={props.sorted} />}>
@@ -89,71 +89,117 @@ const HardCodedSide = (props) => {
     )
 }
 
-export default function WalkThrough(props) {
+export default class WalkThrough extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            numArray: props.numArray,
+            counter: { 'left': 0, 'right': 0 },
+            side: 'left',
+            sorted: false
+        }
+
+    }
+
     //only thing i changed is the num array is already created so i passed it as a prop
-
-    let walkThrough = []
-    let numArray = props.numArray
-    let [counter, setCounter] = useState(0);
-    let [side, setSide] = useState('left')
-    let [sorted, setSorted] = useState(false)
-
-    function increaseCounter() {
-        if (counter + 1 === 5) {
-            setSorted(true)
+    increaseCounter = () => {
+        if (this.state.counter[this.state.side] === 1 && this.state.sorted === true) {
+            this.setState(prevState => {
+                return {
+                    side: 'right',
+                    sorted: false,
+                }
+            })
         }
-        if(sorted === true){
-            setCounter(counter - 1)
-        }
-        if(sorted !== true){
-            setCounter(counter+1)
-        }
-        if(counter === 0 && sorted === true){
-            setSide('right')
-            setSorted(false)
+        else {
+            if (this.state.counter[this.state.side] === 4 && !this.state.sorted) {
+                console.log("right path")
+                this.setState(prevState => {
+                    return {
+                        sorted: true,
+                        counter: {
+                            ...prevState.counter,
+                            [this.state.side]: prevState.counter[this.state.side] - 1,
+                        }
+                    }
+                })
+            }
+            else {
+                if (this.state.sorted) {
+                    this.setState(prevState => {
+                        return {
+                            counter: {
+                                ...prevState.counter,
+                                [this.state.side]: prevState.counter[this.state.side] - 1
+                            }
+                        }
+                    })
+                }
+                if (!this.state.sorted) {
+                    this.setState(prevState => {
+                        return {
+                            counter: {
+                                ...prevState.counter,
+                                [this.state.side]: prevState.counter[this.state.side] + 1
+                            }
+                        }
+                    })
+                }
+            }
         }
     }
 
-    useEffect(()=>{
-        console.log(counter)
-        console.log(sorted)
-    })
+    render() {
+        console.log(this.state.counter)
+        console.log(this.state.sorted)
+        console.log(this.state.side)
 
-    const leftGroupStack = HardCodedSide({numArray: numArray, sorted: sorted, index: counter, values: [2,3,10,4,8,5,6]})
+        const leftGroupStack = HardCodedSide({
+            numArray: this.state.numArray,
+            sorted: (this.state.sorted || this.state.side === 'right'),
+            index: this.state.counter['left'],
+            values: [2, 3, 10, 4, 8, 5, 6]
+        })
+        const rightGroupStack = HardCodedSide({
+            numArray: this.state.numArray,
+            sorted: this.state.sorted,
+            index: this.state.counter['right'],
+            values: [15, 16, 23, 17, 21, 18, 19]
+        })
 
-    const rightGroupStack = HardCodedSide({numArray: numArray, sorted: sorted, index: counter,  values: [15,16,23,17,21,18,19]})
-
-    return (
-        <>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <strong style={{
-                    textAlign: 'center'
-                }}>Merge Sort Walkthrough</strong>
-                <div style={start}>
-                    <Cell numArray={numArray[0]} color='' />
-                </div>
-                <div style={rowStyle}>
-                    <div className="Leftside" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-
-                        {leftGroupStack.map((element, i) => {
-                            return (i < counter) ? (element) : (<></>)
-                        })}
-
+        return (
+            <>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <strong style={{
+                        textAlign: 'center'
+                    }}>Merge Sort Walkthrough</strong>
+                    <div style={start}>
+                        <Cell numArray={this.state.numArray[0]} color='' />
                     </div>
-                    {(side === 'right') ? (
-                        <div className="Rightside" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div style={rowStyle}>
+                        <div className="Leftside" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
 
-                            {rightGroupStack.map((element, i) => {
-                                return (i < (counter - 4)) ? (element) : (<></>)
+                            {leftGroupStack.map((element, i) => {
+                                return (i < this.state.counter['left']) ? (element) : (<></>)
                             })}
 
                         </div>
-                    ) : (
-                        <></>
-                    )}
+                        {(this.state.side === 'right') ? (
+                            <div className="Rightside" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+
+                                {rightGroupStack.map((element, i) => {
+                                    return (i < this.state.counter['right']) ? (element) : (<></>)
+                                })}
+
+                            </div>
+                        ) : (
+                            <></>
+                        )}
+                    </div>
                 </div>
-            </div>
-            <Button onClick={increaseCounter} variant="contained" style={{ width: 140, height: 50 }} >Next!</Button>
-        </>
-    )
+                <Button onClick={this.increaseCounter} variant="contained" style={{ width: 140, height: 50 }} >Next!</Button>
+            </>
+
+        )
+    }
 }
