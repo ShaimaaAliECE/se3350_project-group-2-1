@@ -17,33 +17,30 @@ const rowStyle = {
 
 const start = {
     // backgroundColor: "green",
-    border: "solid",
     display: "flex",
-    margin: 0
-}
-
-function LeftGroup(props) {
-    return (
-        <div style={{ display: "flex", gap: "10px" }}>
-            <div style={{ backgroundColor: "red", border: "solid" }}>{props.walkThrough}</div>
-        </div>
-    )
-}
-
-function RightGroup(props) {
-    return (
-        <div style={{ display: "flex", gap: "10px" }}>
-            <div style={{ backgroundColor: "blue", border: "solid" }}>{props.walkThrough}</div>
-        </div>
-    )
+    alignItems: 'center',
+    justifyContent: 'center'
 }
 
 function DoubleGroup(props) {
     return (
         <div style={{ display: "flex", gap: "10px" }}>
-            <div style={{ backgroundColor: "red", border: "solid" }}>{props.leftWalkThrough}</div>
-            <div style={{ backgroundColor: "blue", border: "solid" }}>{props.rightWalkThrough}</div>
+            <div>{props.leftWalkThrough}</div>
+            <div>{props.rightWalkThrough}</div>
         </div>
+    )
+}
+
+
+const Cell = (props) => {
+    let numArray = props.numArray
+    console.log("success")
+    return (
+        <Grid>
+            {numArray[1].map((element) => {
+               return <Button style={{backgroundColor: props.color}} disabled="true" variant="outlined"> {element}</Button>
+            })}
+        </Grid>
     )
 }
 
@@ -63,33 +60,44 @@ export default function WalkThrough(props) {
         setCounter(counter + 1);
     }
 
-    for (let i = 0; i < numArray.length; i++) {
-        let row = []
-        //row.push(<strong>{numArray[i][0]}</strong>)
-        for (let j = 0; j < numArray[i][1].length; j++) {
-            row.push(<Button disabled="true" variant="outlined"> {numArray[i][1][j]}</Button>)
-        }
-        walkThrough.push(<Grid>{row}</Grid>);
-    }
-
     const leftGroupStack = [
-        <LeftGroup walkThrough={walkThrough[2]}></LeftGroup>,
-        <DoubleGroup leftWalkThrough={walkThrough[3]} rightWalkThrough={walkThrough[10]}></DoubleGroup>,
-        <DoubleGroup leftWalkThrough={walkThrough[4]} rightWalkThrough={walkThrough[8]}></DoubleGroup>,
-        <DoubleGroup leftWalkThrough={walkThrough[5]} rightWalkThrough={walkThrough[6]}></DoubleGroup>
+        <Cell numArray = {numArray[2]} color = 'red'/>,
+        <DoubleGroup 
+            leftWalkThrough={<Cell numArray = {numArray[3]} color = 'red'/>} 
+            rightWalkThrough={<Cell numArray = {numArray[10]} color = 'blue'/>}>    
+        </DoubleGroup>,
+        <DoubleGroup 
+            leftWalkThrough={<Cell numArray = {numArray[4]} color = 'red'/>} 
+            rightWalkThrough={<Cell numArray = {numArray[8]} color = 'blue'/>}>
+        </DoubleGroup>,
+        <DoubleGroup 
+            leftWalkThrough={<Cell numArray = {numArray[5]} color = 'red'/>} 
+            rightWalkThrough={<Cell numArray = {numArray[6]} color = 'blue'/>}>
+        </DoubleGroup>
     ]
 
     const rightGroupStack = [
-        <RightGroup walkThrough={walkThrough[15]}></RightGroup>,
-        <DoubleGroup leftWalkThrough={walkThrough[16]} rightWalkThrough={walkThrough[23]}></DoubleGroup>,
-        <DoubleGroup leftWalkThrough={walkThrough[17]} rightWalkThrough={walkThrough[21]}></DoubleGroup>,
-        <DoubleGroup leftWalkThrough={walkThrough[18]} rightWalkThrough={walkThrough[19]}></DoubleGroup>
+        <Cell numArray = {numArray[15]} color = 'red'/>,
+        <DoubleGroup 
+            leftWalkThrough={<Cell numArray = {numArray[16]} color = 'red'/>} 
+            rightWalkThrough={<Cell numArray = {numArray[23]} color = 'blue'/>}>    
+        </DoubleGroup>,
+        <DoubleGroup 
+            leftWalkThrough={<Cell numArray = {numArray[17]} color = 'red'/>} 
+            rightWalkThrough={<Cell numArray = {numArray[21]} color = 'blue'/>}>
+        </DoubleGroup>,
+        <DoubleGroup 
+            leftWalkThrough={<Cell numArray = {numArray[18]} color = 'red'/>} 
+            rightWalkThrough={<Cell numArray = {numArray[19]} color = 'blue'/>}>
+        </DoubleGroup>
     ]
 
     return (
         <>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <strong>Merge Sort Walkthrough</strong>
+                <strong style={{
+                    textAlign: 'center'
+                }}>Merge Sort Walkthrough</strong>
                 <div style={start}>
                     {walkThrough[0]}
                 </div>
@@ -101,7 +109,7 @@ export default function WalkThrough(props) {
                         })}
 
                     </div>
-                    {(side ==='right') ? ( 
+                    {(side === 'right') ? (
                         <div className="Rightside" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
 
                             {rightGroupStack.map((element, i) => {
