@@ -14,6 +14,7 @@ const start = {
     justifyContent: 'center'
 }
 
+//contains a holder for the group, for styling purposes, should probably be fixed up
 function DoubleGroup(props) {
     return (
         <div style={{ display: "flex", gap: "10px" }}>
@@ -25,29 +26,29 @@ function DoubleGroup(props) {
 
 const Cell = (props) => {
     let numArray = props.numArray
-
+    //return a grid containing the array, return either a sorted version or the orignal scrambled version
     return (
         <Grid>
             {(props.sorted) ? (
-                [].concat(numArray[1])
-                    .sort((a, b) => a > b ? 1 : -1)
-                    .map((item, i) =>
-                        <Button style={{ backgroundColor: props.color }} disabled="true" variant="outlined"> {item}</Button>
-                    )
+                [].concat(numArray[1]).sort((a, b) => (a > b) ? 1 : -1).map((element) => {
+                    return <Button style={{ backgroundColor: props.color }} disabled="true" variant="outlined"> {element}</Button>   
+                })
             ) : (
                 numArray[1].map((element) => {
                     return <Button style={{ backgroundColor: props.color }} disabled="true" variant="outlined"> {element}</Button>
-                }
-                ))}
+                })
+            )}
         </Grid>
     )
 }
 
 const HardCodedSide = (props) => {
+    //not actually a react component it just returns an array
     let numArray = props.numArray
     let index = props.index
     let values = props.values
 
+    //for determining if it should be sorted or not based on the level its at vs the counter position
     const flipSorted = (level) => {
         if (props.sorted) {
             if (level >= index) {
@@ -94,7 +95,7 @@ export default class WalkThrough extends React.Component {
         }
     }
 
-    //only thing i changed is the num array is already created so i passed it as a prop
+    //if statements for handling the counter, flipping sides to display, and flipping if the counter should be increased/decreseased and controlling if we want the displayed to be sorted or not
     increaseCounter = () => {
         if (this.state.leftSideSorted && this.state.counter['right'] === 1 && this.state.sorted === true) {
             this.setState({
@@ -159,6 +160,7 @@ export default class WalkThrough extends React.Component {
         console.log(this.state.sorted)
         console.log(this.state.side)
 
+        //hard coded sides, values is for the index of the array from sams generators, this should definetly be a proper component but hey
         const leftGroupStack = HardCodedSide({
             numArray: this.state.numArray,
             sorted: (this.state.sorted || this.state.side === 'right'),
@@ -172,6 +174,7 @@ export default class WalkThrough extends React.Component {
             values: [15, 16, 23, 17, 21, 18, 19]
         })
 
+        //hard coded sides are displayed with the map function, only elements that have an index greater than the counter are shown
         return (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <strong style={{
