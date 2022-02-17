@@ -31,11 +31,11 @@ const Cell = (props) => {
         <Grid>
             {(props.sorted) ? (
                 [].concat(numArray[1]).sort((a, b) => (a > b) ? 1 : -1).map((element) => {
-                    return <Button style={{ backgroundColor: props.color }} disabled="true" variant="outlined"> {element}</Button>   
+                    return <Button style={{ backgroundColor: props.color, fontWeight: 'bolder', color: 'black' }} disabled="true" variant="outlined"> {element}</Button>   
                 })
             ) : (
                 numArray[1].map((element) => {
-                    return <Button style={{ backgroundColor: props.color }} disabled="true" variant="outlined"> {element}</Button>
+                    return <Button style={{ backgroundColor: props.color, fontWeight: 'bolder', color: 'black' }} disabled="true" variant="outlined"> {element}</Button>
                 })
             )}
         </Grid>
