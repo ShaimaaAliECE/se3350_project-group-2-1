@@ -66,18 +66,18 @@ const HardCodedSide = (props) => {
 
     return (
         [
-            <Cell numArray={numArray[values[0]]} color='red' sorted={flipSorted(1)} />,
+            <Cell numArray={numArray[values[0]]} color='lightpink' sorted={flipSorted(1)} />,
             <DoubleGroup
-                leftWalkThrough={<Cell numArray={numArray[values[1]]} color='red' sorted={flipSorted(2)} />}
-                rightWalkThrough={<Cell numArray={numArray[values[2]]} color='blue' sorted={props.sorted} />}>
+                leftWalkThrough={<Cell numArray={numArray[values[1]]} color='lightpink' sorted={flipSorted(2)} />}
+                rightWalkThrough={<Cell numArray={numArray[values[2]]} color='lightblue' sorted={props.sorted} />}>
             </DoubleGroup>,
             <DoubleGroup
-                leftWalkThrough={<Cell numArray={numArray[values[3]]} color='red' sorted={flipSorted(3)} />}
-                rightWalkThrough={<Cell numArray={numArray[values[4]]} color='blue' sorted={props.sorted} />}>
+                leftWalkThrough={<Cell numArray={numArray[values[3]]} color='lightpink' sorted={flipSorted(3)} />}
+                rightWalkThrough={<Cell numArray={numArray[values[4]]} color='lightblue' sorted={props.sorted} />}>
             </DoubleGroup>,
             <DoubleGroup
-                leftWalkThrough={<Cell numArray={numArray[values[5]]} color='red' sorted={flipSorted(4)} />}
-                rightWalkThrough={<Cell numArray={numArray[values[6]]} color='blue' sorted={props.sorted} />}>
+                leftWalkThrough={<Cell numArray={numArray[values[5]]} color='lightpink' sorted={flipSorted(4)} />}
+                rightWalkThrough={<Cell numArray={numArray[values[6]]} color='lightblue' sorted={props.sorted} />}>
             </DoubleGroup>
         ]
     )
