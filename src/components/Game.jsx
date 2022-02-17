@@ -149,9 +149,9 @@ export default function Game(props) {
                                     setGameArray([]);
                                     isRunning.current = false;
                                 }}
-                                style={{ width: 140, height: 50 }}
+                                style={{ width: 160, height: 50, fontSize: 15, }}
                                 variant="contained"
-                            >Clear Game</Button>
+                            >Restart Game</Button>
                         )}
                     </div>
                 </Grid>
@@ -168,19 +168,6 @@ export default function Game(props) {
                             key={1}
                             index={1}
                             level={2}
-                            mergedArray={mergedArray}
-                            pushToMerged={setMerged}
-                            numArray={gameArray[0][1]}
-                        />
-                    ) : (gameMode === "playable_lvl2") ? (
-                        //if gamemode is playable level 2 then load the array group
-                        <ArrayGroup
-                            gameRunning={isRunning}
-                            label="Root Array - Level 2"
-                            depth={0}
-                            key={1}
-                            index={1}
-                            level={3}
                             mergedArray={mergedArray}
                             pushToMerged={setMerged}
                             numArray={gameArray[0][1]}

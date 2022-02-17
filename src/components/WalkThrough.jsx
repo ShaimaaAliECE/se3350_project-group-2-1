@@ -186,7 +186,7 @@ export default class WalkThrough extends React.Component {
                 </div>
 
                 {(this.state.doneSorting) ? (
-                    <Transition level={2} msg='Level 2' />
+                    <Transition level={2} msg='2' />
                     ) : (
                     <>
                         <div style={rowStyle}>
