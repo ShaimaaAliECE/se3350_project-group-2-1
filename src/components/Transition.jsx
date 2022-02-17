@@ -15,7 +15,7 @@ export default function Transition(props) {
     return (
         <div>
             <Button onClick={LevelUp} variant="contained">{props.msg}</Button>
-            {(startNextLevel) ? (<Game />) : (<></>)}
+            {(startNextLevel) ? (<Game level={level}/>) : (<></>)}
         </div>
     )
 }

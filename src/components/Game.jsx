@@ -46,6 +46,7 @@ export default function Game(props) {
 
     const [gameType, setGameType] = useState("Merge Sort") //for picking between the different sorting
     const [gameMode, setGameMode] = useState("playable") //for picking between walkthrough or playable
+    const [level, setLevel] = useState(props.level);
     
 
     //size, range state -> array params
@@ -134,18 +135,13 @@ export default function Game(props) {
                                 <Button
                                     onClick={() => startGame("playable")}
                                     variant="contained"
-                                    style={{ width: 140, height: 50 }}
-                                >Start Game</Button>
-                                 <Button
-                                    onClick={() => startGame("playable_lvl2")}
-                                    variant="contained"
-                                    style={{ width: 140, height: 50 }}
-                                >Level 2</Button>
+                                    style={{ width: 140, height: 50, display: ((level == null) ? 'none' : 'show') }}
+                                >Level {level}</Button>
                                 <Button
                                     onClick={() => startGame("walkthrough")}
                                     variant="contained"
                                     style={{ width: 140, height: 50 }}
-                                >WalkThrough</Button>
+                                >Level 1</Button>
                             </>
                         ) : (
                             <Button
