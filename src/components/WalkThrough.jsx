@@ -1,6 +1,7 @@
 import { Button, Grid } from '@mui/material'
 import { render } from '@testing-library/react'
 import React from "react"
+import Transition from './Transition';
 
 const rowStyle = {
     display: "flex",
@@ -184,7 +185,9 @@ export default class WalkThrough extends React.Component {
                     <Cell numArray={this.state.numArray[0]} color='' sorted={this.state.doneSorting} />
                 </div>
 
-                {(this.state.doneSorting) ? (<div>Done Sorting, clear game</div>) : (
+                {(this.state.doneSorting) ? (
+                    <Transition level={2} msg='Level 2' />
+                    ) : (
                     <>
                         <div style={rowStyle}>
                             <div className="Leftside" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>

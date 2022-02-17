@@ -136,11 +136,6 @@ export default function Game(props) {
                                     variant="contained"
                                     style={{ width: 140, height: 50 }}
                                 >Start Game</Button>
-                                <Button
-                                    onClick={() => startGame("animation")}
-                                    variant="contained"
-                                    style={{ width: 140, height: 50 }}
-                                >Level 1</Button>
                                  <Button
                                     onClick={() => startGame("playable_lvl2")}
                                     variant="contained"

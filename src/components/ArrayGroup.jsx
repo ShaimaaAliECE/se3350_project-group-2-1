@@ -90,18 +90,6 @@ export default function ArrayGroup(props) {
         if (props.parentState === ArrayStates.LEFT_SORTING && props.label === "Right Array") {
             splitArrayDisabled = true;
         }
-        if (level == 1) {
-            delay(500).then(() => {
-            splitArrayDisabled = true;
-            splitArray();
-            for (let i = 0; i < props.numArray.length; i++) {
-                let elementKey = `${props.index}-${i}`; // Unique identifier structure: {array key} - {element index}
-                arrayBlocks.push([
-                    <Button disabled={arrayState !== ArrayStates.MERGED} key={elementKey} value={props.numArray[i]} onClick={selectValue} variant="outlined">{props.numArray[i]}</Button>
-                ]);
-            }
-            })
-        }
         splitArrayButton = (<Button disabled={splitArrayDisabled} onClick={splitArray} variant="contained">Split</Button>);
 
         for (let i = 0; i < props.numArray.length; i++) {
