@@ -1,15 +1,16 @@
 import { Button, Grid, Alert,Snackbar } from "@mui/material";
 import { useEffect, useState, useRef } from "react"
 import { ArrayStates } from "../utils/GameTypes";
-
-
+import useSound from 'use-sound';
+import checkSound from '../checkAudio.mp3' 
+import wrongSound from '../wrongAudio.mp3' 
 
 export default function ArrayGroup(props) {
     // State initialization
     const [arrayState, setArrayState] = useState(props.numArray.length === 1 ? ArrayStates.MERGED : ArrayStates.UNSORTED);
     const [mergedArray, setMergedArray] = useState(props.numArray.length == 1 ? [...props.numArray] : []); // Empty array to eventually be populated with the properly sorted values
     const [childArrays, setChildArrays] = useState(); // To hold ArrayGroup instances for the left and right sub-arrays (children)
-    const[gameTime, setGameTime] = useState();
+    const [gameTime, setGameTime] = useState();
     const [level, setLevel] = useState(props.level);
 
     /**
@@ -132,6 +133,15 @@ export default function ArrayGroup(props) {
 
     let timeAlert;
 
+
+    // handling button that provides auditory feedback for valid moves
+    //needs implementation into validity check at each depth
+    const CheckCorrectButton = () =>{
+        const [play] = useSound(checkSound);
+
+        return <button onClick={play}>Check Valid Move</button>
+    }
+
     /*
         Handling for closing out snackbars
     */
@@ -165,20 +175,23 @@ export default function ArrayGroup(props) {
         if (props.depth === 0) {
             let timeDelta = (new Date().getTime() - gameTime) / 1000; // from the time level 0 is presented till full sort
             let successMsg = '';
+            let typeOfFinishAlert='';
             if  (level === 3) {  //Level 2 on screen (level 3 in the level variable) - will do the valiation - otherwise always valid.
                 if  (validateArray()) {
                     successMsg = ' seconds to complete! Array is correct! Proceed to the next level!';
+                    typeOfFinishAlert = 'success';
                 }
                 else {
                     successMsg = ' seconds to complete! Array is inccorect! Try again!';
+                    typeOfFinishAlert = 'error';
                 }
             }
             else {
                 successMsg = ' seconds to complete!';
             }
-
+            console.log(checkSound); 
             timeAlert = <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                <Alert onClose={handleClose} severity={typeOfFinishAlert} sx={{ width: '100%' }}>
                     {timeDelta + successMsg}
                 </Alert>
             

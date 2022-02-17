@@ -6,7 +6,7 @@ let steps = [];
 // Second subarray is arr[m+1..r]
 function merge(arr1, arr2)
 {
-    steps.push(['Merging',arr1,arr2]);
+    // steps.push(['Merging',arr1,arr2]);
     // Create temp array
     var arr = []; 
   
@@ -76,7 +76,7 @@ function MergeSort(size,range){
 
     const result = mergeSort(generatedArray, 0, generatedArray.length -1);
     steps.push(['Final', result]);
-
+    console.log(steps)
     return steps;
 }
 export default MergeSort;
