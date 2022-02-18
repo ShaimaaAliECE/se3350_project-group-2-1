@@ -203,7 +203,12 @@ export default class WalkThrough extends React.Component {
 
                 {(this.state.doneSorting) ? (
                     // <Transition level={2} msg='2' />
-                    <></>
+                    <div className="infoText" style={{display: "flex", flexDirection: 'column', outline: "solid", textAlign: 'center'}}>
+                               <div><strong>Current Side: </strong> { ((this.state.counter["right"] === 0 && this.state.counter["left"] === 0) || this.state.doneSorting === true ) ? '' : this.state.side}</div> 
+                               <div><strong>Current Action: </strong>{messages.complete}</div>
+                               <div><strong>Status: </strong> Complete</div>
+                               
+                        </div>
                 ) : (
                     <>
                         <div style={start}>
@@ -229,8 +234,9 @@ export default class WalkThrough extends React.Component {
                             </div>
                         </div>
                         <div className="infoText" style={{display: "flex", flexDirection: 'column', outline: "solid", textAlign: 'center'}}>
-                               <div><strong>Current side: </strong> { (this.state.counter["right"] === 0 && this.state.counter["left"] === 0) ? '' : this.state.side}</div> 
-                               <div><strong>Current action: </strong>{this.state.infoMsg}</div>
+                               <div><strong>Current Side: </strong> { (this.state.counter["right"] === 0 && this.state.counter["left"] === 0) ? '' : this.state.side}</div> 
+                               <div><strong>Current Action: </strong>{this.state.infoMsg}</div>
+                               <div><strong>Status: </strong> Merging</div>
                                
                         </div>
                         <Button onClick={this.increaseCounter} variant="contained" style={{ width: 140, height: 50 }} >Next!</Button>
