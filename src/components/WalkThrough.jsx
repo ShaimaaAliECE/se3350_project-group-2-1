@@ -6,6 +6,8 @@ import Transition from './Transition';
 const rowStyle = {
     display: "flex",
     gap: "10px",
+    // alignItems: 'center',
+    // justifyContent: 'center'
 };
 
 const start = {
@@ -13,6 +15,13 @@ const start = {
     display: "flex",
     alignItems: 'center',
     justifyContent: 'center'
+}
+
+const messages = {
+    split: "The parent array is being split into two child arrays.",
+    start:"The starting unsorted array is split into two children arrays, starting with the right side.",
+    sortMerge: "The child arrays are sorted and merged back into the parent array.",
+    complete: "The array has been succesfully merged and sorted."
 }
 
 //contains a holder for the group, for styling purposes, should probably be fixed up
@@ -32,7 +41,7 @@ const Cell = (props) => {
         <Grid>
             {(props.sorted) ? (
                 [].concat(numArray[1]).sort((a, b) => (a > b) ? 1 : -1).map((element) => {
-                    return <Button style={{ backgroundColor: props.color, fontWeight: 'bolder', color: 'black' }} disabled="true" variant="outlined"> {element}</Button>   
+                    return <Button style={{ backgroundColor: props.color, fontWeight: 'bolder', color: 'black' }} disabled="true" variant="outlined"> {element}</Button>
                 })
             ) : (
                 numArray[1].map((element) => {
@@ -92,15 +101,18 @@ export default class WalkThrough extends React.Component {
             side: 'left',
             sorted: false,
             leftSideSorted: false,
-            doneSorting: false
+            doneSorting: false,
+            infoMsg: messages.start
         }
     }
 
     //if statements for handling the counter, flipping sides to display, and flipping if the counter should be increased/decreseased and controlling if we want the displayed to be sorted or not
     increaseCounter = () => {
+        console.log(this.counter)
         if (this.state.leftSideSorted && this.state.counter['right'] === 1 && this.state.sorted === true) {
             this.setState({
-                doneSorting: true
+                doneSorting: true,
+                infoMsg: messages.complete
             })
         }
         else {
@@ -109,6 +121,7 @@ export default class WalkThrough extends React.Component {
                     return {
                         side: 'right',
                         sorted: false,
+                        infoMsg: messages.split,
                         leftSideSorted: true,
                         counter: {
                             ...prevState.counter,
@@ -122,6 +135,7 @@ export default class WalkThrough extends React.Component {
                     console.log("right path")
                     this.setState(prevState => {
                         return {
+                            infoMsg: messages.sortMerge,
                             sorted: true,
                             counter: {
                                 ...prevState.counter,
@@ -134,6 +148,7 @@ export default class WalkThrough extends React.Component {
                     if (this.state.sorted) {
                         this.setState(prevState => {
                             return {
+                                infoMsg: messages.sortMerge,
                                 counter: {
                                     ...prevState.counter,
                                     [this.state.side]: prevState.counter[this.state.side] - 1
@@ -144,6 +159,7 @@ export default class WalkThrough extends React.Component {
                     if (!this.state.sorted) {
                         this.setState(prevState => {
                             return {
+                                infoMsg: messages.split,
                                 counter: {
                                     ...prevState.counter,
                                     [this.state.side]: prevState.counter[this.state.side] + 1
@@ -186,28 +202,36 @@ export default class WalkThrough extends React.Component {
                 </div>
 
                 {(this.state.doneSorting) ? (
-                    <Transition level={2} msg='2' />
-                    ) : (
+                    // <Transition level={2} msg='2' />
+                    <></>
+                ) : (
                     <>
-                        <div style={rowStyle}>
-                            <div className="Leftside" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <div style={start}>
+                            <div style={rowStyle}>
+                                <div className="Leftside" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
 
-                                {leftGroupStack.map((element, i) => {
-                                    return (i < this.state.counter['left']) ? (element) : (<></>)
-                                })}
-
-                            </div>
-                            {(this.state.side === 'right') ? (
-                                <div className="Rightside" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-
-                                    {rightGroupStack.map((element, i) => {
-                                        return (i < this.state.counter['right']) ? (element) : (<></>)
+                                    {leftGroupStack.map((element, i) => {
+                                        return (i < this.state.counter['left']) ? (element) : (<></>)
                                     })}
 
                                 </div>
-                            ) : (
-                                <></>
-                            )}
+                                {(this.state.side === 'right') ? (
+                                    <div className="Rightside" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+
+                                        {rightGroupStack.map((element, i) => {
+                                            return (i < this.state.counter['right']) ? (element) : (<></>)
+                                        })}
+
+                                    </div>
+                                ) : (
+                                    <></>
+                                )}
+                            </div>
+                        </div>
+                        <div className="infoText" style={{display: "flex", flexDirection: 'column', outline: "solid", textAlign: 'center'}}>
+                               <div><strong>Current side: </strong> { (this.state.counter["right"] === 0 && this.state.counter["left"] === 0) ? '' : this.state.side}</div> 
+                               <div><strong>Current action: </strong>{this.state.infoMsg}</div>
+                               
                         </div>
                         <Button onClick={this.increaseCounter} variant="contained" style={{ width: 140, height: 50 }} >Next!</Button>
                     </>
