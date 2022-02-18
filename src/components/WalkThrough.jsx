@@ -236,7 +236,7 @@ export default class WalkThrough extends React.Component {
                         <div className="infoText" style={{display: "flex", flexDirection: 'column', outline: "solid", textAlign: 'center'}}>
                                <div><strong>Current Side: </strong> { (this.state.counter["right"] === 0 && this.state.counter["left"] === 0) ? '' : this.state.side}</div> 
                                <div><strong>Current Action: </strong>{this.state.infoMsg}</div>
-                               <div><strong>Status: </strong> Merging</div>
+                               <div><strong>Status: </strong> In Progress</div>
                                
                         </div>
                         <Button onClick={this.increaseCounter} variant="contained" style={{ width: 140, height: 50 }} >Next!</Button>
