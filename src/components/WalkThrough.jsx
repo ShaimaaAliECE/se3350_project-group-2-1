@@ -202,12 +202,11 @@ export default class WalkThrough extends React.Component {
                 </div>
 
                 {(this.state.doneSorting) ? (
-                    // <Transition level={2} msg='2' />
                     <div className="infoText" style={{display: "flex", flexDirection: 'column', outline: "solid", textAlign: 'center'}}>
                                <div><strong>Current Side: </strong> { ((this.state.counter["right"] === 0 && this.state.counter["left"] === 0) || this.state.doneSorting === true ) ? '' : this.state.side}</div> 
                                <div><strong>Current Action: </strong>{messages.complete}</div>
                                <div><strong>Status: </strong> Complete</div>
-                               
+                               <br /><Transition level={2} msg='2' /><br />
                         </div>
                 ) : (
                     <>
