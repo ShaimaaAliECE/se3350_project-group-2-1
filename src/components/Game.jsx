@@ -37,6 +37,7 @@ const NavBar = () => {
  * React component containing all functionality related to the sorting game (renders the game)
  * @param props 
  */
+
 export default function Game(props) {
     // State initialization
 

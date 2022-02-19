@@ -77,7 +77,7 @@ export default function ArrayGroup(props) {
     }, [mergedArray.length, props.numArray.length, props.parentState]);
 
 
-    let splitArrayButton; // Only display the "Split Array" button if the array is unsorted
+    let splitArrayButton; // Only display the "Split Array" button if array is unsorted
     let arrayBlocks = []; // Stores array of components corresponding to each number in the array (only render when not merging)
     let children; // Only display child arrays if merging
     let mergedArrayLabel; // Shows the values currently in the merged array (when applicable)
@@ -120,7 +120,6 @@ export default function ArrayGroup(props) {
     }
 
     let timeAlert;
-
 
     // handling button that provides auditory feedback for valid moves
     //needs implementation into validity check at each depth
