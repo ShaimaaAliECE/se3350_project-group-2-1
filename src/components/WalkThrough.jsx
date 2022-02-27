@@ -28,8 +28,7 @@ const messages = {
 function DoubleGroup(props) {
     return (
         <div style={{ display: "flex", gap: "10px" }}>
-            <div>{props.leftWalkThrough}</div>
-            <div>{props.rightWalkThrough}</div>
+            {props.children}
         </div>
     )
 }
@@ -76,17 +75,17 @@ const HardCodedSide = (props) => {
     return (
         [
             <Cell numArray={numArray[values[0]]} color='lightpink' sorted={flipSorted(1)} />,
-            <DoubleGroup
-                leftWalkThrough={<Cell numArray={numArray[values[1]]} color='lightpink' sorted={flipSorted(2)} />}
-                rightWalkThrough={<Cell numArray={numArray[values[2]]} color='lightblue' sorted={props.sorted} />}>
+            <DoubleGroup>
+                <Cell numArray={numArray[values[1]]} color='lightpink' sorted={flipSorted(2)} />
+                <Cell numArray={numArray[values[2]]} color='lightblue' sorted={false} />
             </DoubleGroup>,
-            <DoubleGroup
-                leftWalkThrough={<Cell numArray={numArray[values[3]]} color='lightpink' sorted={flipSorted(3)} />}
-                rightWalkThrough={<Cell numArray={numArray[values[4]]} color='lightblue' sorted={props.sorted} />}>
+            <DoubleGroup>
+                <Cell numArray={numArray[values[3]]} color='lightpink' sorted={flipSorted(3)} />
+                <Cell numArray={numArray[values[4]]} color='lightblue' sorted={false} />
             </DoubleGroup>,
-            <DoubleGroup
-                leftWalkThrough={<Cell numArray={numArray[values[5]]} color='lightpink' sorted={flipSorted(4)} />}
-                rightWalkThrough={<Cell numArray={numArray[values[6]]} color='lightblue' sorted={props.sorted} />}>
+            <DoubleGroup>
+                <Cell numArray={numArray[values[5]]} color='lightpink' sorted={flipSorted(4)} />
+                <Cell numArray={numArray[values[6]]} color='lightblue' sorted={false} />
             </DoubleGroup>
         ]
     )
@@ -132,7 +131,6 @@ export default class WalkThrough extends React.Component {
             }
             else {
                 if (this.state.counter[this.state.side] === 4 && !this.state.sorted) {
-                    console.log("right path")
                     this.setState(prevState => {
                         return {
                             infoMsg: messages.sortMerge,
@@ -173,10 +171,6 @@ export default class WalkThrough extends React.Component {
     }
 
     render() {
-        console.log(this.state.counter)
-        console.log(this.state.sorted)
-        console.log(this.state.side)
-
         //hard coded sides, values is for the index of the array from sams generators, this should definetly be a proper component but hey
         const leftGroupStack = HardCodedSide({
             numArray: this.state.numArray,
