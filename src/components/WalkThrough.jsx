@@ -19,8 +19,8 @@ const start = {
 
 const messages = {
     split: "The parent array is being split into two child arrays.",
-    start:"The starting unsorted array is split into two children arrays, starting with the right side.",
-    sortMerge: "The child arrays are sorted and merged back into the parent array.",
+    start:"The starting unsorted array is split into two children arrays, starting with the left side.",
+    sortMerge: "The child arrays are sorted and merged back into the parent array. \nThe two child arrays elements are compared one by one, adding the smallest element to the parent. ",
     complete: "The array has been succesfully merged and sorted."
 }
 
@@ -175,7 +175,7 @@ export default class WalkThrough extends React.Component {
         //hard coded sides, values is for the index of the array from sams generators, this should definetly be a proper component but hey
         const leftGroupStack = HardCodedSide({
             numArray: this.state.numArray,
-            sorted: (this.state.sorted || this.state.side === 'right'),
+            sorted: (this.state.sorted || this.state.side === 'ight'),
             index: this.state.counter['left'],
             values: [2, 3, 10, 4, 8, 5, 6]
         })
@@ -202,8 +202,7 @@ export default class WalkThrough extends React.Component {
                                <div><strong>Current Action: </strong>{messages.complete}</div>
                                <div><strong>Status: </strong> Complete</div>
                                <Button onClick= {() => {this.state.nextLevel()}}>Next Level</Button>
-                               {/*<br /><Transition level={2} msg='2' /><br />*/}
-                        </div>
+                    </div>
                 ) : (
                     <>
                         <div style={start}>
@@ -229,10 +228,9 @@ export default class WalkThrough extends React.Component {
                             </div>
                         </div>
                         <div className="infoText" style={{display: "flex", flexDirection: 'column', outline: "solid", textAlign: 'center'}}>
-                               <div><strong>Current Side: </strong> { (this.state.counter["right"] === 0 && this.state.counter["left"] === 0) ? '' : this.state.side}</div> 
+                               <div><strong>Current Side: </strong> { (this.state.counter["right"] === 0 && this.state.counter["left"] === 0) ? 'Parent' : this.state.side}</div> 
                                <div><strong>Current Action: </strong>{this.state.infoMsg}</div>
                                <div><strong>Status: </strong> In Progress</div>
-                               
                         </div>
                         <Button onClick={this.increaseCounter} variant="contained" style={{ width: 140, height: 50 }} >Next!</Button>
                     </>
