@@ -101,7 +101,8 @@ export default class WalkThrough extends React.Component {
             sorted: false,
             leftSideSorted: false,
             doneSorting: false,
-            infoMsg: messages.start
+            infoMsg: messages.start,
+            nextLevel: props.changeLevel
         }
     }
 
@@ -200,7 +201,8 @@ export default class WalkThrough extends React.Component {
                                <div><strong>Current Side: </strong> { ((this.state.counter["right"] === 0 && this.state.counter["left"] === 0) || this.state.doneSorting === true ) ? '' : this.state.side}</div> 
                                <div><strong>Current Action: </strong>{messages.complete}</div>
                                <div><strong>Status: </strong> Complete</div>
-                               <br /><Transition level={2} msg='2' /><br />
+                               <Button onClick= {() => {this.state.nextLevel()}}>Next Level</Button>
+                               {/*<br /><Transition level={2} msg='2' /><br />*/}
                         </div>
                 ) : (
                     <>

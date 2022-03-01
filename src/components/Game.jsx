@@ -47,8 +47,8 @@ export default function Game(props) {
 
     const [gameType, setGameType] = useState("Merge Sort") //for picking between the different sorting
     const [gameMode, setGameMode] = useState("playable") //for picking between walkthrough or playable
-    const [level, setLevel] = useState(props.level);
-    
+    const [level, setLevel] = useState(0);
+
 
     //size, range state -> array params
     const [range, setRange] = useState(20);
@@ -58,11 +58,19 @@ export default function Game(props) {
         // Add value to merged array
     }
 
+
+    const incrLevel = () => {
+        console.log(level)
+        setGameArray([]);
+        isRunning.current = false;
+        setLevel(level + 1)
+    }
+
     // function determining game level
     function startGame(mode) {
 
         //pass in game mode for determining which button was pushed, start game or walkthough
-        if(mode === 'walkthrough'){
+        if (mode === 'walkthrough') {
             if (!isRunning.current) {
                 let numArray = MergeSort(10, 20);
                 setGameArray(numArray);
@@ -134,15 +142,20 @@ export default function Game(props) {
                             //buttons for starting or doing the walkthough, need to be styled
                             <>
                                 <Button
-                                    onClick={() => startGame("playable")}
-                                    variant="contained"
-                                    style={{ width: 140, height: 50, display: ((level == null) ? 'none' : 'show') }}
-                                >Level {level}</Button>
-                                <Button
                                     onClick={() => startGame("walkthrough")}
                                     variant="contained"
                                     style={{ width: 140, height: 50 }}
                                 >Level 1</Button>
+                                <Button
+                                    onClick={() => startGame("playable")}
+                                    variant="contained"
+                                    style={{ width: 140, height: 50, display: ((level >= 1) ? 'show' : 'none') }}
+                                >Level 2</Button>
+                                <Button
+                                    onClick={() => startGame("animation")}
+                                    variant="contained"
+                                    style={{ width: 140, height: 50, display: ((level >= 2) ? 'show' : 'none') }}
+                                >Level 3</Button>
                             </>
                         ) : (
                             <Button
@@ -177,9 +190,10 @@ export default function Game(props) {
                         //if gamemode is anything else load the walkthrough
                         <WalkThrough
                             numArray={gameArray}
+                            changeLevel={incrLevel}
                         />
                     ) : (gameMode === "animation") ? (
-                    //else for nothing if game isnt running
+                        //else for nothing if game isnt running
                         <ArrayGroup
                             gameRunning={isRunning}
                             label="Root Array"
