@@ -40,7 +40,7 @@ const Cell = (props) => {
         <Grid>
             {(props.sorted) ? (
                 [].concat(numArray[1]).sort((a, b) => (a > b) ? 1 : -1).map((element) => {
-                    return <Button style={{ backgroundColor: props.color, fontWeight: 'bolder', color: 'black' }} disabled="true" variant="outlined"> {element}</Button>
+                    return <Button style={{ backgroundColor: 'green', fontWeight: 'bolder', color: 'black' }} disabled="true" variant="outlined"> {element}</Button>
                 })
             ) : (
                 numArray[1].map((element) => {
@@ -175,7 +175,7 @@ export default class WalkThrough extends React.Component {
         //hard coded sides, values is for the index of the array from sams generators, this should definetly be a proper component but hey
         const leftGroupStack = HardCodedSide({
             numArray: this.state.numArray,
-            sorted: (this.state.sorted || this.state.side === 'ight'),
+            sorted: (this.state.sorted || this.state.side === 'right'),
             index: this.state.counter['left'],
             values: [2, 3, 10, 4, 8, 5, 6]
         })
