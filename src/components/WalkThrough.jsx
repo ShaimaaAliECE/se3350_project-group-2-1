@@ -175,7 +175,7 @@ export default class WalkThrough extends React.Component {
         //hard coded sides, values is for the index of the array from sams generators, this should definetly be a proper component but hey
         const leftGroupStack = HardCodedSide({
             numArray: this.state.numArray,
-            sorted: (this.state.sorted || this.state.side === 'ight'),
+            sorted: (this.state.sorted || this.state.side === 'right'),
             index: this.state.counter['left'],
             values: [2, 3, 10, 4, 8, 5, 6]
         })
