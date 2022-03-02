@@ -12,6 +12,10 @@ export default function ArrayGroup(props) {
     const [childArrays, setChildArrays] = useState(); // To hold ArrayGroup instances for the left and right sub-arrays (children)
     const [gameTime, setGameTime] = useState();
     const [level, setLevel] = useState(props.level);
+    const [open, setOpen] = useState(true); // Used to store snackbar display status
+    const [playSuccess] = useSound(checkSound);
+    const [playFail] = useSound(wrongSound);
+    const soundPlayed = useRef(props.numArray > 1);
 
     /**
      * Updates the merged list with a new value selected from child array
@@ -46,11 +50,18 @@ export default function ArrayGroup(props) {
         el.target.style.display = "none";
     }
 
-    function delay(time) {
-        return new Promise(res => {
-          setTimeout(res,time)
-        })
-      }
+    function validateArray() {
+        if (mergedArray.length > 1) {
+            for (let i = 0; i < mergedArray.length - 1; i++) {
+                if (mergedArray[i] > mergedArray[i+1]) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return true
+        }
+    }
 
     /**
      * When the component is re-rendered (due to a change in state), check to see if the array has been successfully merged
@@ -58,8 +69,21 @@ export default function ArrayGroup(props) {
     useEffect(_ => {
         let isMerged = false;
         if (mergedArray.length == props.numArray.length) {
-            setArrayState(ArrayStates.MERGED);
-            isMerged = true;
+            // Validate that the array was sorted properly
+            if (validateArray()) {
+                setArrayState(ArrayStates.MERGED);
+                if (!soundPlayed.current) {
+                    playSuccess();
+                    soundPlayed.current = true;
+                }
+                isMerged = true;
+            } else {
+                setArrayState(ArrayStates.FAILED_MERGE);
+                if (!soundPlayed.current) {
+                    playFail();
+                    soundPlayed.current = true;
+                }
+            }
         }
         // Update the parent state appropriately
         if (arrayState === ArrayStates.MERGED || isMerged) {
@@ -74,7 +98,7 @@ export default function ArrayGroup(props) {
                 props.setParentState(ArrayStates.MERGING);
             }
         }
-    }, [mergedArray.length, props.numArray.length, props.parentState]);
+    });
 
 
     let splitArrayButton; // Only display the "Split Array" button if array is unsorted
@@ -99,11 +123,18 @@ export default function ArrayGroup(props) {
             ]);
         }
     } else if (arrayState === ArrayStates.MERGED) {
-        
+        // If merge was successful, display buttons and make them clickable
         for (let i = 0; i < mergedArray.length; i++) {
             let elementKey = `${props.index}-${i}`; // Unique identifier structure: {array key} - {element index}
             arrayBlocks.push([
                 <Button disabled={props.parentState !== ArrayStates.MERGING} key={elementKey} value={mergedArray[i]} onClick={selectValue} variant="outlined">{mergedArray[i]}</Button>
+            ]);
+        }
+    } else if (arrayState === ArrayStates.FAILED_MERGE) {
+        for (let i = 0; i < mergedArray.length; i++) {
+            let elementKey = `${props.index}-${i}`; // Unique identifier structure: {array key} - {element index}
+            arrayBlocks.push([
+                <Button disabled={false} variant="outlined" color="error" key={elementKey} value={mergedArray[i]}>{mergedArray[i]}</Button>
             ]);
         }
     } else if (arrayState === ArrayStates.MERGING) {
@@ -119,21 +150,10 @@ export default function ArrayGroup(props) {
         mergedArrayLabel = <Button disabled={true} variant="outlined">Sort Child Arrays</Button>
     }
 
-    let timeAlert;
-
-    // handling button that provides auditory feedback for valid moves
-    //needs implementation into validity check at each depth
-    const CheckCorrectButton = () =>{
-        const [play] = useSound(checkSound);
-
-        return <button onClick={play}>Check Valid Move</button>
-    }
-
     /*
         Handling for closing out snackbars
     */
-
-    const [open, setOpen] = useState(true);
+    let timeAlert;
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -142,49 +162,29 @@ export default function ArrayGroup(props) {
 
         setOpen(false);
     };
-
-    function validateArray() { //validate that the root array is in ascending sequence to complete game properly
-
-        for (let i = 1; i < mergedArray.length; i++) {
-            let elementValue = mergedArray[i];
-            let prevElementValue = mergedArray[i-1];
-            if  (prevElementValue > elementValue) {
-                return(false);
-            }
-
-        }        
-
-        return(true);
-
-    }
     
-    if (arrayState === ArrayStates.MERGED) {
-        if (props.depth === 0) {
-            let timeDelta = (new Date().getTime() - gameTime) / 1000; // from the time level 0 is presented till full sort
-            let successMsg = '';
-            let typeOfFinishAlert='';
-            if  (level === 3) {  //Level 2 on screen (level 3 in the level variable) - will do the valiation - otherwise always valid.
-                if  (validateArray()) {
-                    successMsg = ' seconds to complete! Array is correct! Proceed to the next level!';
-                    typeOfFinishAlert = 'success';
-                }
-                else {
-                    successMsg = ' seconds to complete! Array is inccorect! Try again!';
-                    typeOfFinishAlert = 'error';
-                }
-            }
-            else {
-                successMsg = ' seconds to complete!';
-            }
-            console.log(checkSound); 
-            timeAlert = <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                <Alert onClose={handleClose} severity={typeOfFinishAlert} sx={{ width: '100%' }}>
-                    {timeDelta + successMsg}
-                </Alert>
-            
-            </Snackbar> // green popup on 
-            props.gameRunning.current = false;
-        }
+    if (arrayState === ArrayStates.MERGED && props.numArray.length > 1) {
+        let timeDelta = (new Date().getTime() - gameTime) / 1000 + ' seconds to complete! '; // Total time to complete level only displayed if ArrayGroup depth == 0
+        let msg = 'Correct!';
+        let typeOfFinishAlert = 'success';
+
+        timeAlert = <Snackbar open={open} autoHideDuration={1200} onClose={handleClose}>
+            <Alert onClose={handleClose} severity={typeOfFinishAlert} sx={{ width: '100%' }}>
+                {(props.depth === 0 ? timeDelta : '') + msg}
+            </Alert>
+        
+        </Snackbar> // green popup on
+
+    } else if (arrayState === ArrayStates.FAILED_MERGE) {
+        let msg = 'Incorrect! Try Again!';
+        let typeOfFinishAlert = 'error';
+
+        timeAlert = <Snackbar open={open} autoHideDuration={1200} onClose={handleClose}>
+            <Alert onClose={handleClose} severity={typeOfFinishAlert} sx={{ width: '100%' }}>
+                {msg}
+            </Alert>
+        
+        </Snackbar> // green popup on
     }
 
     // Render child arrays if not in merged state

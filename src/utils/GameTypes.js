@@ -5,5 +5,6 @@ export var ArrayStates;
     ArrayStates["RIGHT_SORTING"] = "right_sorting";
     ArrayStates["MERGING"] = "merging";
     ArrayStates["MERGED"] = "merged";
+    ArrayStates["FAILED_MERGE"] = "failed_merge";
 })(ArrayStates || (ArrayStates = {}));
 //# sourceMappingURL=GameTypes.js.map
