@@ -1,7 +1,5 @@
 import { Button, Grid } from '@mui/material'
-import { render } from '@testing-library/react'
 import React from "react"
-import Transition from './Transition';
 
 const rowStyle = {
     display: "flex",
@@ -201,7 +199,7 @@ export default class WalkThrough extends React.Component {
                                <div><strong>Current Side: </strong> { ((this.state.counter["right"] === 0 && this.state.counter["left"] === 0) || this.state.doneSorting === true ) ? '' : this.state.side}</div> 
                                <div><strong>Current Action: </strong>{messages.complete}</div>
                                <div><strong>Status: </strong> Complete</div>
-                               <Button onClick= {() => {this.state.nextLevel()}}>Next Level</Button>
+                               <Button onClick= {() => {this.state.nextLevel("WalkThrough")}}>Next Level</Button>
                     </div>
                 ) : (
                     <>

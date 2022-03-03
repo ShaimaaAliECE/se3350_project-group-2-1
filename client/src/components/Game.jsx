@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import MergeSort from "../utils/sorting/MergeSort.js";
 import ArrayGroup from "./ArrayGroup.jsx";
 import Githubicon from "../images/Githubicon.js";
@@ -58,12 +58,24 @@ export default function Game(props) {
         // Add value to merged array
     }
 
-
-    const incrLevel = () => {
-        console.log(level)
+    const restart = () => {
         setGameArray([]);
         isRunning.current = false;
-        setLevel(level + 1)
+    }
+
+    //increaseing the level, only increase once for each comp, definetley a better way to do it but ...
+    const incrLevel = (comp) => {
+        if (comp === 'WalkThrough' && !(level >= 1)) {
+            restart()
+            setLevel(level + 1)
+        }
+        if (comp === 'WalkThrough' && level >= 1) {
+            restart()
+        }
+        else {
+            restart()
+            setLevel(level + 1)
+        }
     }
 
     // function determining game level
@@ -85,6 +97,10 @@ export default function Game(props) {
             isRunning.current = true;
         }
     }
+
+    useEffect(() => {
+        console.log(level)
+    })
 
     return (
         <div id="sorting-game">
@@ -185,6 +201,7 @@ export default function Game(props) {
                             mergedArray={mergedArray}
                             pushToMerged={setMerged}
                             numArray={gameArray[0][1]}
+                            changeLevel={incrLevel}
                         />
                     ) : (gameMode === "walkthrough") ? (
                         //if gamemode is anything else load the walkthrough

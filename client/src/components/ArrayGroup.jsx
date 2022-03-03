@@ -1,9 +1,9 @@
-import { Button, Grid, Alert,Snackbar } from "@mui/material";
+import { Button, Grid, Alert, Snackbar } from "@mui/material";
 import { useEffect, useState, useRef } from "react"
 import { ArrayStates } from "../utils/GameTypes";
 import useSound from 'use-sound';
-import checkSound from '../checkAudio.mp3' 
-import wrongSound from '../wrongAudio.mp3' 
+import checkSound from '../checkAudio.mp3'
+import wrongSound from '../wrongAudio.mp3'
 
 export default function ArrayGroup(props) {
     // State initialization
@@ -24,7 +24,7 @@ export default function ArrayGroup(props) {
     function pushToMerged(value) {
         setMergedArray([...mergedArray, value]);
     }
-    
+
     /**
      * Handle "Split Array" button click event
      */
@@ -32,7 +32,7 @@ export default function ArrayGroup(props) {
         let splitIndex = Math.ceil(props.numArray.length / 2); // Index of the number to the left of the middle
         let leftArrayNums = props.numArray.slice(0, splitIndex);
         let rightArrayNums = props.numArray.slice(splitIndex, props.numArray.length);
-        
+
         setChildArrays({
             leftArray: leftArrayNums,
             rightArray: rightArrayNums
@@ -53,7 +53,7 @@ export default function ArrayGroup(props) {
     function validateArray() {
         if (mergedArray.length > 1) {
             for (let i = 0; i < mergedArray.length - 1; i++) {
-                if (mergedArray[i] > mergedArray[i+1]) {
+                if (mergedArray[i] > mergedArray[i + 1]) {
                     return false;
                 }
             }
@@ -99,7 +99,6 @@ export default function ArrayGroup(props) {
             }
         }
     });
-
 
     let splitArrayButton; // Only display the "Split Array" button if array is unsorted
     let arrayBlocks = []; // Stores array of components corresponding to each number in the array (only render when not merging)
@@ -157,12 +156,12 @@ export default function ArrayGroup(props) {
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
-        return;
+            return;
         }
 
         setOpen(false);
     };
-    
+
     if (arrayState === ArrayStates.MERGED && props.numArray.length > 1) {
         let timeDelta = (new Date().getTime() - gameTime) / 1000 + ' seconds to complete! '; // Total time to complete level only displayed if ArrayGroup depth == 0
         let msg = 'Correct!';
@@ -172,7 +171,6 @@ export default function ArrayGroup(props) {
             <Alert onClose={handleClose} severity={typeOfFinishAlert} sx={{ width: '100%' }}>
                 {(props.depth === 0 ? timeDelta : '') + msg}
             </Alert>
-        
         </Snackbar> // green popup on
 
     } else if (arrayState === ArrayStates.FAILED_MERGE) {
@@ -183,7 +181,7 @@ export default function ArrayGroup(props) {
             <Alert onClose={handleClose} severity={typeOfFinishAlert} sx={{ width: '100%' }}>
                 {msg}
             </Alert>
-        
+
         </Snackbar> // green popup on
     }
 
