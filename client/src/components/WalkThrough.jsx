@@ -44,7 +44,7 @@ const Cell = (props) => {
                 })
             ) : (
                 numArray[1].map((element) => {
-                    return <Button style={{ backgroundColor: props.color, fontWeight: 'bolder', color: 'black' }} disabled="true" variant="outlined"> {element}</Button>
+                    return <Button style={{ backgroundColor: 'lightpink', fontWeight: 'bolder', color: 'black' }} disabled="true" variant="outlined"> {element}</Button>
                 })
             )}
         </Grid>
@@ -74,18 +74,18 @@ const HardCodedSide = (props) => {
 
     return (
         [
-            <Cell numArray={numArray[values[0]]} color='lightpink' sorted={flipSorted(1)} />,
+            <Cell numArray={numArray[values[0]]} sorted={flipSorted(1)} />,
             <DoubleGroup>
-                <Cell numArray={numArray[values[1]]} color='lightpink' sorted={flipSorted(2)} />
-                <Cell numArray={numArray[values[2]]} color='lightblue' sorted={false} />
+                <Cell numArray={numArray[values[1]]} sorted={flipSorted(2)} />
+                <Cell numArray={numArray[values[2]]} sorted={false} />
             </DoubleGroup>,
             <DoubleGroup>
-                <Cell numArray={numArray[values[3]]} color='lightpink' sorted={flipSorted(3)} />
-                <Cell numArray={numArray[values[4]]} color='lightblue' sorted={false} />
+                <Cell numArray={numArray[values[3]]} sorted={flipSorted(3)} />
+                <Cell numArray={numArray[values[4]]} sorted={false} />
             </DoubleGroup>,
             <DoubleGroup>
-                <Cell numArray={numArray[values[5]]} color='lightpink' sorted={flipSorted(4)} />
-                <Cell numArray={numArray[values[6]]} color='lightblue' sorted={false} />
+                <Cell numArray={numArray[values[5]]} sorted={flipSorted(4)} />
+                <Cell numArray={numArray[values[6]]} sorted={false} />
             </DoubleGroup>
         ]
     )
