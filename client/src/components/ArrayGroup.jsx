@@ -77,6 +77,7 @@ export default function ArrayGroup(props) {
                     soundPlayed.current = true;
                 }
                 isMerged = true;
+
             } else {
                 setArrayState(ArrayStates.FAILED_MERGE);
                 if (!soundPlayed.current) {
@@ -104,6 +105,8 @@ export default function ArrayGroup(props) {
     let arrayBlocks = []; // Stores array of components corresponding to each number in the array (only render when not merging)
     let children; // Only display child arrays if merging
     let mergedArrayLabel; // Shows the values currently in the merged array (when applicable)
+    let nextButton;
+    
     if (arrayState === ArrayStates.UNSORTED) {
         if (props.depth === 0 && gameTime === undefined) {
             setGameTime(new Date().getTime());
@@ -120,6 +123,7 @@ export default function ArrayGroup(props) {
             arrayBlocks.push([
                 <Button disabled={arrayState !== ArrayStates.MERGED} key={elementKey} value={props.numArray[i]} onClick={selectValue} variant="outlined">{props.numArray[i]}</Button>
             ]);
+            
         }
     } else if (arrayState === ArrayStates.MERGED) {
         // If merge was successful, display buttons and make them clickable
@@ -129,6 +133,8 @@ export default function ArrayGroup(props) {
                 <Button disabled={props.parentState !== ArrayStates.MERGING} key={elementKey} value={mergedArray[i]} onClick={selectValue} variant="outlined">{mergedArray[i]}</Button>
             ]);
         }
+        nextButton = (props.depth === 0) ? (<Button onClick={() => props.changeLevel()}>Next Level</Button>) : (<></>)
+    
     } else if (arrayState === ArrayStates.FAILED_MERGE) {
         for (let i = 0; i < mergedArray.length; i++) {
             let elementKey = `${props.index}-${i}`; // Unique identifier structure: {array key} - {element index}
@@ -181,8 +187,8 @@ export default function ArrayGroup(props) {
             <Alert onClose={handleClose} severity={typeOfFinishAlert} sx={{ width: '100%' }}>
                 {msg}
             </Alert>
-
         </Snackbar> // green popup on
+
     }
 
     // Render child arrays if not in merged state
@@ -214,7 +220,11 @@ export default function ArrayGroup(props) {
                 {mergedArrayLabel}
                 {arrayBlocks}
                 {children}
+                
             </Grid>
+            <div style={{display: "flex", flexDirection: 'column'}}>
+                {nextButton}
+            </div>
         </div>
     )
 }

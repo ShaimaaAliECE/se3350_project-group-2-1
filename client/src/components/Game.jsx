@@ -63,7 +63,7 @@ export default function Game(props) {
         isRunning.current = false;
     }
 
-    //increaseing the level, only increase once for each comp, definetley a better way to do it but ...
+    //increaseing the level, only increase once for each comp, definetley a better way to do it but...
     const incrLevel = (comp) => {
         if (comp === 'WalkThrough' && !(level >= 1)) {
             restart()
