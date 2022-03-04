@@ -172,6 +172,7 @@ export default function Game(props) {
                                     variant="contained"
                                     style={{ width: 140, height: 50, display: ((level >= 2) ? 'show' : 'none') }}
                                 >Level 3</Button>
+                                
                             </>
                         ) : (
                             <Button
@@ -217,7 +218,7 @@ export default function Game(props) {
                             depth={0}
                             key={1}
                             index={1}
-                            level={1}
+                            level={3}
                             mergedArray={mergedArray}
                             pushToMerged={setMerged}
                             numArray={gameArray[0][1]}
