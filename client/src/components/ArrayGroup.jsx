@@ -1,4 +1,4 @@
-import { Button, Grid, Alert, Snackbar, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Paper} from "@mui/material";
+import { Button, Grid, Alert, Snackbar, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Paper } from "@mui/material";
 import { useEffect, useState, useRef } from "react"
 import { ArrayStates } from "../utils/GameTypes";
 import useSound from 'use-sound';
@@ -12,7 +12,6 @@ export default function ArrayGroup(props) {
     const [mergedArray, setMergedArray] = useState(props.numArray.length == 1 ? [...props.numArray] : []); // Empty array to eventually be populated with the properly sorted values
     const [childArrays, setChildArrays] = useState(); // To hold ArrayGroup instances for the left and right sub-arrays (children)
     const [gameTime, setGameTime] = useState();
-    const [level, setLevel] = useState(props.level);
     const [open, setOpen] = useState(true); // Used to store snackbar display status
     const [openDialogue, setOpenDialogue] = useState(true); // Used to store snackbar display status
     const [playSuccess] = useSound(checkSound);
@@ -109,6 +108,8 @@ export default function ArrayGroup(props) {
     let mergedArrayLabel; // Shows the values currently in the merged array (when applicable)
     let nextButton;
 
+    //console.log(level); 
+
 
     if (arrayState === ArrayStates.UNSORTED) {
         if (props.depth === 0 && gameTime === undefined) {
@@ -126,7 +127,7 @@ export default function ArrayGroup(props) {
             arrayBlocks.push([
                 <Button disabled={arrayState !== ArrayStates.MERGED} key={elementKey} value={props.numArray[i]} onClick={selectValue} variant="outlined">{props.numArray[i]}</Button>
             ]);
-            
+
         }
     } else if (arrayState === ArrayStates.MERGED) {
         // If merge was successful, display buttons and make them clickable
@@ -137,7 +138,7 @@ export default function ArrayGroup(props) {
             ]);
         }
         nextButton = (props.depth === 0) ? (<Button onClick={() => props.changeLevel()}>Next Level</Button>) : (<></>)
-    
+
     } else if (arrayState === ArrayStates.FAILED_MERGE) {
         for (let i = 0; i < mergedArray.length; i++) {
             let elementKey = `${props.index}-${i}`; // Unique identifier structure: {array key} - {element index}
@@ -146,75 +147,71 @@ export default function ArrayGroup(props) {
             ]);
         }
     } else if (arrayState === ArrayStates.MERGING) {
-        
-        /*
-            ADD LEVEL FOR BOOLEAN IN HERE, NOT WORKING CURRENTLY SHOWING UNDEF
-        */
-        
+
         // If the child arrays are merging into the parent, display the mergedArray numbers as buttons (or instruction text if nothing has merged yet)
-        if (mergedArray.length === 0) { // only show prompts if before level 3
+        if (mergedArray.length === 0 && props.level < 3) { // only show prompts if before level 3
             mergedArrayLabel = <Button disabled={true} variant="outlined">Click Numbers to Merge</Button>
         } else {
             mergedArrayLabel = mergedArray.map((el, i) => {
                 return <Button disabled={true} key={i} variant="outlined">{el}</Button>
             });
         }
-    } else if ((arrayState === ArrayStates.LEFT_SORTING || arrayState === ArrayStates.RIGHT_SORTING) && level < 3) {
+    } else if ((arrayState === ArrayStates.LEFT_SORTING || arrayState === ArrayStates.RIGHT_SORTING) && props.level < 3) {
         mergedArrayLabel = <Button disabled={true} variant="outlined">Sort Child Arrays</Button>
     }
 
     ////////////////////////////////////////////////////
     //level 2 prompt text for more details on merge sort
     let infoPromptlvl2;
-    if(level === 2){
-        infoPromptlvl2 = DraggableDialog(); 
+    if (props.level === 2 && props.depth === 0) {
+        infoPromptlvl2 = DraggableDialog();
     }
-    
+
     function DraggableDialog() {
         const closeDialogue = () => {
             setOpenDialogue(false);
         };
-        return(     <div>
-                        <Dialog
-                        open={openDialogue}
-                        onClose={closeDialogue}
-                        PaperComponent={PaperComponent}
-                        aria-labelledby="draggable-dialog-title"
-                        >
-                        <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                            Welcome to Level 2!
-                        </DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                            When John von Neumann invented mergesort little did he know the
-                            power of the internet to learn; this game aims to help that learning proccess. In level 2 
-                            you will be guided through a self powered merge sort with propmpts to split and sort child arrays existing 
-                            above each move you can make on the left then right child arrays. Happy Sorting!
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button autoFocus onClick={closeDialogue}>
-                            Close
-                            </Button>
-                        </DialogActions>
-                        </Dialog>
-                    </div>
-                );
+        return (<div>
+            <Dialog
+                open={openDialogue}
+                onClose={closeDialogue}
+                PaperComponent={PaperComponent}
+                aria-labelledby="draggable-dialog-title"
+            >
+                <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                    Welcome to Level 2!
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        When John von Neumann invented mergesort little did he know the
+                        power of the internet to learn; this game aims to help that learning proccess. In level 2
+                        you will be guided through a self powered merge sort with prompts to split and sort child arrays existing
+                        above each move you can make on the left then right child arrays. Happy Sorting!
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button autoFocus onClick={closeDialogue}>
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </div>
+        );
     }
 
     // render body of dialogue 
     function PaperComponent(props) {
         return (
-          <Draggable
-            handle="#draggable-dialog-title"
-            cancel={'[class*="MuiDialogContent-root"]'}
-          >
-            <Paper {...props} />
-          </Draggable>
+            <Draggable
+                handle="#draggable-dialog-title"
+                cancel={'[class*="MuiDialogContent-root"]'}
+            >
+                <Paper {...props} />
+            </Draggable>
         );
     }
-      
-     
+
+
 
     ////////////////////////////////////////////////
 
@@ -259,10 +256,10 @@ export default function ArrayGroup(props) {
         if (arrayState !== ArrayStates.MERGED) {
             children = <Grid container>
                 <Grid item xs={6}>
-                    <ArrayGroup parentState={arrayState} setParentState={setArrayState} label="Left Array" depth={props.depth + 1} key={0} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.leftArray} />
+                    <ArrayGroup level={props.level} parentState={arrayState} setParentState={setArrayState} label="Left Array" depth={props.depth + 1} key={0} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.leftArray} />
                 </Grid>
                 <Grid item xs={6}>
-                    <ArrayGroup parentState={arrayState} setParentState={setArrayState} label="Right Array" depth={props.depth + 1} key={1} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.rightArray} />
+                    <ArrayGroup level={props.level} parentState={arrayState} setParentState={setArrayState} label="Right Array" depth={props.depth + 1} key={1} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.rightArray} />
                 </Grid>
             </Grid>
         }
@@ -284,9 +281,9 @@ export default function ArrayGroup(props) {
                 {mergedArrayLabel}
                 {arrayBlocks}
                 {children}
-                
+
             </Grid>
-            <div style={{display: "flex", flexDirection: 'column'}}>
+            <div style={{ display: "flex", flexDirection: 'column' }}>
                 {nextButton}
             </div>
         </div>
