@@ -1,9 +1,10 @@
-import { Button, Grid, Alert, Snackbar } from "@mui/material";
+import { Button, Grid, Alert, Snackbar, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Paper} from "@mui/material";
 import { useEffect, useState, useRef } from "react"
 import { ArrayStates } from "../utils/GameTypes";
 import useSound from 'use-sound';
 import checkSound from '../checkAudio.mp3'
 import wrongSound from '../wrongAudio.mp3'
+import Draggable from "react-draggable";
 
 export default function ArrayGroup(props) {
     // State initialization
@@ -13,6 +14,7 @@ export default function ArrayGroup(props) {
     const [gameTime, setGameTime] = useState();
     const [level, setLevel] = useState(props.level);
     const [open, setOpen] = useState(true); // Used to store snackbar display status
+    const [openDialogue, setOpenDialogue] = useState(true); // Used to store snackbar display status
     const [playSuccess] = useSound(checkSound);
     const [playFail] = useSound(wrongSound);
     const soundPlayed = useRef(props.numArray > 1);
@@ -155,6 +157,60 @@ export default function ArrayGroup(props) {
         mergedArrayLabel = <Button disabled={true} variant="outlined">Sort Child Arrays</Button>
     }
 
+    ////////////////////////////////////////////////////
+    //level 2 prompt text for more details on merge sort
+    let infoPromptlvl2;
+
+    if(level === 2){
+        infoPromptlvl2 = DraggableDialog(); 
+    }
+    
+    function DraggableDialog() {
+        
+        const closeDialogue = () => {
+            setOpenDialogue(false);
+        };
+        return(     <div>
+                        <Dialog
+                        open={openDialogue}
+                        onClose={closeDialogue}
+                        PaperComponent={PaperComponent}
+                        aria-labelledby="draggable-dialog-title"
+                        >
+                        <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                            test
+                        </DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                            test is this works
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button autoFocus onClick={closeDialogue}>
+                            close
+                            </Button>
+                        </DialogActions>
+                        </Dialog>
+                    </div>
+                );
+    }
+
+    // render body of dialogue 
+    function PaperComponent(props) {
+        return (
+          <Draggable
+            handle="#draggable-dialog-title"
+            cancel={'[class*="MuiDialogContent-root"]'}
+          >
+            <Paper {...props} />
+          </Draggable>
+        );
+    }
+      
+     
+
+    ////////////////////////////////////////////////
+
     /*
         Handling for closing out snackbars
     */
@@ -209,6 +265,7 @@ export default function ArrayGroup(props) {
         <div className="array-group">
             <Grid container>
                 {timeAlert}
+                {infoPromptlvl2}
                 <Grid className="array-group-header" item xs={12}>
                     <h4>{props.label}</h4>
                 </Grid>
