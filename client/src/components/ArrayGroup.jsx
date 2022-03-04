@@ -108,7 +108,8 @@ export default function ArrayGroup(props) {
     let children; // Only display child arrays if merging
     let mergedArrayLabel; // Shows the values currently in the merged array (when applicable)
     let nextButton;
-    
+
+
     if (arrayState === ArrayStates.UNSORTED) {
         if (props.depth === 0 && gameTime === undefined) {
             setGameTime(new Date().getTime());
@@ -145,8 +146,13 @@ export default function ArrayGroup(props) {
             ]);
         }
     } else if (arrayState === ArrayStates.MERGING) {
+        
+        /*
+            ADD LEVEL FOR BOOLEAN IN HERE, NOT WORKING CURRENTLY SHOWING UNDEF
+        */
+        
         // If the child arrays are merging into the parent, display the mergedArray numbers as buttons (or instruction text if nothing has merged yet)
-        if (mergedArray.length === 0 && level < 3) { // only show prompts if before level 3
+        if (mergedArray.length === 0) { // only show prompts if before level 3
             mergedArrayLabel = <Button disabled={true} variant="outlined">Click Numbers to Merge</Button>
         } else {
             mergedArrayLabel = mergedArray.map((el, i) => {
@@ -160,13 +166,11 @@ export default function ArrayGroup(props) {
     ////////////////////////////////////////////////////
     //level 2 prompt text for more details on merge sort
     let infoPromptlvl2;
-
     if(level === 2){
         infoPromptlvl2 = DraggableDialog(); 
     }
     
     function DraggableDialog() {
-        
         const closeDialogue = () => {
             setOpenDialogue(false);
         };
@@ -178,16 +182,19 @@ export default function ArrayGroup(props) {
                         aria-labelledby="draggable-dialog-title"
                         >
                         <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                            test
+                            Welcome to Level 2!
                         </DialogTitle>
                         <DialogContent>
                             <DialogContentText>
-                            test is this works
+                            When John von Neumann invented mergesort little did he know the
+                            power of the internet to learn; this game aims to help that learning proccess. In level 2 
+                            you will be guided through a self powered merge sort with propmpts to split and sort child arrays existing 
+                            above each move you can make on the left then right child arrays. Happy Sorting!
                             </DialogContentText>
                         </DialogContent>
                         <DialogActions>
                             <Button autoFocus onClick={closeDialogue}>
-                            close
+                            Close
                             </Button>
                         </DialogActions>
                         </Dialog>
