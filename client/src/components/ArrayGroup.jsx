@@ -144,14 +144,14 @@ export default function ArrayGroup(props) {
         }
     } else if (arrayState === ArrayStates.MERGING) {
         // If the child arrays are merging into the parent, display the mergedArray numbers as buttons (or instruction text if nothing has merged yet)
-        if (mergedArray.length === 0) {
+        if (mergedArray.length === 0 && level < 3) { // only show prompts if before level 3
             mergedArrayLabel = <Button disabled={true} variant="outlined">Click Numbers to Merge</Button>
         } else {
             mergedArrayLabel = mergedArray.map((el, i) => {
                 return <Button disabled={true} key={i} variant="outlined">{el}</Button>
             });
         }
-    } else if (arrayState === ArrayStates.LEFT_SORTING || arrayState === ArrayStates.RIGHT_SORTING) {
+    } else if ((arrayState === ArrayStates.LEFT_SORTING || arrayState === ArrayStates.RIGHT_SORTING) && level < 3) {
         mergedArrayLabel = <Button disabled={true} variant="outlined">Sort Child Arrays</Button>
     }
 
