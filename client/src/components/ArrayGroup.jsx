@@ -106,7 +106,7 @@ export default function ArrayGroup(props) {
     let arrayBlocks = []; // Stores array of components corresponding to each number in the array (only render when not merging)
     let children; // Only display child arrays if merging
     let mergedArrayLabel; // Shows the values currently in the merged array (when applicable)
-    let nextButton;
+    let nextButton, mistakeBtn;
 
     //console.log(level); 
 
@@ -145,6 +145,7 @@ export default function ArrayGroup(props) {
             arrayBlocks.push([
                 <Button disabled={false} variant="outlined" color="error" key={elementKey} value={mergedArray[i]}>{mergedArray[i]}</Button>
             ]);
+            mistakeBtn = <Button onClick={() => props.mistakeCount()} variant="outlined">You have made a mistake! Restart Level</Button>
         }
     } else if (arrayState === ArrayStates.MERGING) {
 
@@ -227,7 +228,6 @@ export default function ArrayGroup(props) {
 
         setOpen(false);
     };
-
     if (arrayState === ArrayStates.MERGED && props.numArray.length > 1) {
         let timeDelta = (new Date().getTime() - gameTime) / 1000 + ' seconds to complete! '; // Total time to complete level only displayed if ArrayGroup depth == 0
         let msg = 'Correct!';
@@ -242,7 +242,6 @@ export default function ArrayGroup(props) {
     } else if (arrayState === ArrayStates.FAILED_MERGE) {
         let msg = 'Incorrect! Try Again!';
         let typeOfFinishAlert = 'error';
-
         timeAlert = <Snackbar open={open} autoHideDuration={1200} onClose={handleClose}>
             <Alert onClose={handleClose} severity={typeOfFinishAlert} sx={{ width: '100%' }}>
                 {msg}
@@ -256,10 +255,10 @@ export default function ArrayGroup(props) {
         if (arrayState !== ArrayStates.MERGED) {
             children = <Grid container>
                 <Grid item xs={6}>
-                    <ArrayGroup level={props.level} parentState={arrayState} setParentState={setArrayState} label="Left Array" depth={props.depth + 1} key={0} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.leftArray} />
+                    <ArrayGroup level={props.level} parentState={arrayState} mistakeCount={props.mistakeCount} setParentState={setArrayState} label="Left Array" depth={props.depth + 1} key={0} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.leftArray} />
                 </Grid>
                 <Grid item xs={6}>
-                    <ArrayGroup level={props.level} parentState={arrayState} setParentState={setArrayState} label="Right Array" depth={props.depth + 1} key={1} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.rightArray} />
+                    <ArrayGroup level={props.level} parentState={arrayState} mistakeCount={props.mistakeCount} setParentState={setArrayState} label="Right Array" depth={props.depth + 1} key={1} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.rightArray} />
                 </Grid>
             </Grid>
         }
@@ -286,6 +285,7 @@ export default function ArrayGroup(props) {
             <div style={{ display: "flex", flexDirection: 'column' }}>
                 {nextButton}
             </div>
+            <div>{mistakeBtn}</div>
         </div>
     )
 }

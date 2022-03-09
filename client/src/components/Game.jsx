@@ -48,6 +48,7 @@ export default function Game(props) {
     const [gameType, setGameType] = useState("Merge Sort") //for picking between the different sorting
     const [gameMode, setGameMode] = useState("playable") //for picking between walkthrough or playable
     const [level, setLevel] = useState(0);
+    const [mistake, setMistake] = useState(3);
 
 
     //size, range state -> array params
@@ -63,6 +64,9 @@ export default function Game(props) {
         isRunning.current = false;
     }
 
+    const quitGame = () => {
+    }
+
     //increaseing the level, only increase once for each comp, definetley a better way to do it but...
     const incrLevel = (comp) => {
         if (comp === 'WalkThrough' && !(level >= 1)) {
@@ -75,6 +79,15 @@ export default function Game(props) {
         else {
             restart()
             setLevel(level + 1)
+        }
+    }
+
+    let showMistakeText = false;
+    const mistakeCounter = () => {
+            setMistake(mistake - 1);
+            restart(); 
+        if (mistake < 1) {
+            showMistakeText = true;
         }
     }
 
@@ -102,6 +115,7 @@ export default function Game(props) {
         console.log(level)
     })
 
+    console.log(showMistakeText);
     return (
         <div id="sorting-game">
             <NavBar />
@@ -152,9 +166,15 @@ export default function Game(props) {
                             ></TextField>
                         </div>
                     </Grid>
+                    <div>
+                {(isRunning.current) ? (
+                    <Grid fontSize={20}>Mistakes Left: {mistake}</Grid>
+                    ) : <></>
+                    }
+                </div>
                     <div style={{ marginLeft: 70, marginTop: 50 }}>
                         {/* this section is for button display, either clear game or the start game options are shown*/}
-                        {(!isRunning.current) ? (
+                        {(!isRunning.current && mistake >= 1) ? (
                             //buttons for starting or doing the walkthough, need to be styled
                             <>
                                 <Button
@@ -175,14 +195,32 @@ export default function Game(props) {
                                 
                             </>
                         ) : (
+                            <div>
                             <Button
                                 onClick={() => {
                                     setGameArray([]);
                                     isRunning.current = false;
                                 }}
                                 style={{ width: 160, height: 50, fontSize: 15, }}
-                                variant="contained"
-                            >Restart Game</Button>
+                                variant="contained">
+                                Restart Game
+                            </Button>
+                            <div style={{display: ((showMistakeText) ? 'show' : 'none')}}>
+                                <h2>You have made the maximum number of mistakes.</h2>
+                                <h3>You can now either: </h3>
+                                <ul>
+                                    <li style={{padding: '5px'}}>
+                                        <Button variant='contained' onClick={() => setLevel(level = 1)}>Restart Game from Level 1</Button>
+                                    </li>
+                                    <li style={{padding: '5px'}}>
+                                        <Button variant='contained' onClick={() => restart()}>Go back to a previous level</Button>
+                                    </li>
+                                    <li style={{padding: '5px'}}>
+                                        <Button variant='contained' onClick={() => quitGame()}>Quit Game</Button>
+                                    </li>
+                                </ul>
+                            </div>
+                            </div>
                         )}
                     </div>
                 </Grid>
@@ -203,6 +241,7 @@ export default function Game(props) {
                             pushToMerged={setMerged}
                             numArray={gameArray[0][1]}
                             changeLevel={incrLevel}
+                            mistakeCount={mistakeCounter}
                         />
                     ) : (gameMode === "walkthrough") ? (
                         //if gamemode is anything else load the walkthrough
