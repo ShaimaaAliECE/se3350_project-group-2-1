@@ -3,7 +3,6 @@ import MergeSort from "../utils/sorting/MergeSort.js";
 import ArrayGroup from "./ArrayGroup.jsx";
 import Githubicon from "../images/Githubicon.js";
 import WalkThrough from "./WalkThrough.jsx";
-import QuitGame from "./QuitGame.jsx";
 
 import {
     Grid,
@@ -50,6 +49,7 @@ export default function Game(props) {
     const [gameMode, setGameMode] = useState("playable") //for picking between walkthrough or playable
     const [level, setLevel] = useState(0);
     const [mistake, setMistake] = useState(3);
+    const [quitGame, setGame] = useState(false);
 
 
     //size, range state -> array params
@@ -88,14 +88,10 @@ export default function Game(props) {
     const restartGame = () => {
         setLevel(0);
         setMistake(3);
+        setGame(false);
         restart();
     }
 
-    const quitGame = () => {
-        return (
-            <QuitGame />
-        )
-    }
     // function determining game level
     function startGame(mode) {
 
@@ -119,8 +115,9 @@ export default function Game(props) {
     useEffect(() => {
         console.log(level)
     })
-    
+
     return (
+        ((!quitGame) ? (
         <div id="sorting-game">
             <NavBar />
             <div id="game-menu" style={{ marginTop: 15, marginLeft: 20, display: 'flex', flexDirection: 'row' }}>
@@ -198,20 +195,20 @@ export default function Game(props) {
                                     style={{ width: 140, height: 50, display: ((level >= 2) ? 'show' : 'none') }}
                                 >Level 3</Button>
                                 <div style={{display: ((!mistake) ? 'show' : 'none')}}>
-                                <h2>You have made the maximum number of mistakes.</h2>
-                                <h3>You can now either: </h3>
-                                <ul>
-                                    <li style={{padding: '5px'}}>
-                                        <Button variant='contained' onClick={() => restartGame()}>Restart Game from Level 1</Button>
-                                    </li>
-                                    <li style={{padding: '5px'}}>
-                                        <h3>Go back to a previous level</h3>
-                                    </li>
-                                    <li style={{padding: '5px'}}>
-                                        <Button variant='contained' onClick={() => quitGame()}>Quit Game</Button>
-                                    </li>
-                                </ul>
-                            </div>
+                                    <h2>You have made the maximum number of mistakes.</h2>
+                                    <h3>You can now either: </h3>
+                                    <ul>
+                                        <li style={{padding: '5px'}}>
+                                            <Button variant='contained' onClick={() => restartGame()}>Restart Game from Level 1</Button>
+                                        </li>
+                                        <li style={{padding: '5px'}}>
+                                            <h3>Go back to a previous level</h3>
+                                        </li>
+                                        <li style={{padding: '5px'}}>
+                                            <Button variant='contained' onClick={() => setGame(true)}>Quit Game</Button>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                             </>
                         ) : (
@@ -273,5 +270,12 @@ export default function Game(props) {
                 )}
             </div>
         </div>
+        ) : (
+            <div style={{textAlign: 'center'}}>
+            <h1 >Thank you for playing!</h1>
+            <h2>If you'd like to play again, click here!</h2> 
+            <Button variant='contained' style={{ fontSize: '20px'}} onClick={() => restartGame()}>New Game</Button>
+        </div>
+        ))
     )
 }
