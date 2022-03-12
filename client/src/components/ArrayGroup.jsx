@@ -6,6 +6,22 @@ import checkSound from '../checkAudio.mp3'
 import wrongSound from '../wrongAudio.mp3'
 import Draggable from "react-draggable";
 
+/**
+ * Renders one group of array elements
+ * 
+ * Required Props:
+ *  label: {string} Displayed above the ArrayGroup numbers
+ *  depth: {number} Integer value representing recursion depth (0 for root)
+ *  index: {number} Must be a unique integer per depth value
+ *  level: {number} Integer value representing the game's current level
+ *  mergedArray: {Array<Number>} Current merged array of parent ArrayGroup
+ *  pushToMerged: {Function} Method that pushes a new integer to the parent ArrayGroup's merged array
+ *  numArray: {Array<Number>} Array of numbers to be represented by the array group (unsorted)
+ *  changeLevel: {Function} Void function to be executed when the user sorts the root array
+ *  mistakeCount: {Function} Void function to be executed whenever a user makes a mistake when sorting
+ *  parentState: {ArrayStates} State of parent array
+ *  setParentState: {Function} Updates the parent's state
+ */
 export default function ArrayGroup(props) {
     // State initialization
     const [arrayState, setArrayState] = useState(props.numArray.length === 1 ? ArrayStates.MERGED : ArrayStates.UNSORTED);

@@ -112,10 +112,6 @@ export default function Game(props) {
         }
     }
 
-    useEffect(() => {
-        console.log(level)
-    })
-
     return (
         ((!quitGame) ? (
         <div id="sorting-game">
@@ -144,7 +140,7 @@ export default function Game(props) {
                     </RadioGroup>
                 </FormControl>
                 <Grid container style={{ marginLeft: 60 }}>
-                    <Grid item xs={4} xs={{ display: 'flex', flexDirection: 'row' }}>
+                    <Grid item xs={4} style={{ display: 'flex', flexDirection: 'row' }}>
                         <FormLabel id="demo-controlled-radio-buttons-group">Array content</FormLabel>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                             <TextField
