@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
+import { useIdleTimer } from 'react-idle-timer';
 import MergeSort from "../utils/sorting/MergeSort.js";
 import ArrayGroup from "./ArrayGroup.jsx";
 import Githubicon from "../images/Githubicon.js";
@@ -51,6 +52,7 @@ export default function Game(props) {
     const [gameLevel, setGameLevel] = useState(props.startLevel || 0); // To store level selected for play by user
     const [mistake, setMistake] = useState(3);
     const [quitGame, setGame] = useState(false);
+    
 
 
     //size, range state -> array params
@@ -75,8 +77,8 @@ export default function Game(props) {
     }
 
     const mistakeCounter = () => {
-            setMistake(mistake - 1);
-            restart(); 
+        setMistake(mistake - 1);
+        restart(); 
     }
 
     const restartGame = () => {
@@ -86,18 +88,20 @@ export default function Game(props) {
         restart();
     }
 
+    // After 5 minutes of inactivity, the session times out and restarts
+    const { getRemainingTime, getLastActiveTime } = useIdleTimer({
+        timeout: 1000 * 60 * 5,
+        onIdle: _ => {
+            alert('Timeout due to inactivity!');
+            restartGame();
+        },
+        debounce: 500
+    });
+
     // function determining game level
     function startGame(mode, selectedLevel) {
 
-        //pass in game mode for determining which button was pushed, start game or walkthough
-        if (mode === 'walkthrough') {
-            if (!isRunning.current) {
-                let numArray = MergeSort(10, 20);
-                setGameArray(numArray);
-                setGameMode(mode);
-                isRunning.current = true;
-            }
-        }
+        
         if (!isRunning.current) {
             // Parameters for each level
             let gameSize;
@@ -141,30 +145,32 @@ export default function Game(props) {
         <div id="sorting-game">
             <NavBar />
             <div id="game-menu" style={{ marginTop: 15, marginLeft: 20, display: 'flex', flexDirection: 'row' }}>
-                <FormControl style={{ width: 200 }}>
-                    <FormLabel id="demo-controlled-radio-buttons-group">Algorithim Type</FormLabel>
-                    <RadioGroup
-                        aria-labelledby="demo-controlled-radio-buttons-group"
-                        name="controlled-radio-buttons-group"
-                        value={gameType}
-                        onChange={(event) => setGameType(event.target.value)}
-                    >
-                        <FormControlLabel
-                            style={{ marginTop: 10 }}
-                            value="Merge Sort"
-                            control={<Radio />}
-                            label="Merge Sort"
-                        />
-                        <FormControlLabel
-                            style={{ marginTop: 10 }}
-                            value="Quick Sort"
-                            control={<Radio />}
-                            label="Quick Sort"
-                        />
-                    </RadioGroup>
-                </FormControl>
                 <Grid container style={{ marginLeft: 60 }}>
-                    <Grid item xs={4} style={{ display: 'flex', flexDirection: 'row' }}>
+                    <Grid item xs={1} >
+                        <FormControl style={{ width: 200 }}>
+                            <FormLabel id="demo-controlled-radio-buttons-group">Algorithim Type</FormLabel>
+                            <RadioGroup
+                                aria-labelledby="demo-controlled-radio-buttons-group"
+                                name="controlled-radio-buttons-group"
+                                value={gameType}
+                                onChange={(event) => setGameType(event.target.value)}
+                            >
+                                <FormControlLabel
+                                    style={{ marginTop: 10 }}
+                                    value="Merge Sort"
+                                    control={<Radio />}
+                                    label="Merge Sort"
+                                />
+                                <FormControlLabel
+                                    style={{ marginTop: 10 }}
+                                    value="Quick Sort"
+                                    control={<Radio />}
+                                    label="Quick Sort"
+                                />
+                            </RadioGroup>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={1} style={{ display: 'flex', flexDirection: 'column' }}>
                         <FormLabel id="demo-controlled-radio-buttons-group">Array content</FormLabel>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                             <TextField
@@ -175,6 +181,7 @@ export default function Game(props) {
                                 id="outlined-size-small"
                                 defaultValue="Small"
                                 size="small"
+                                disabled={level<5}
                             ></TextField>
                             <TextField
                                 style={{ marginTop: 20 }}
@@ -184,6 +191,7 @@ export default function Game(props) {
                                 id="outlined-size-small"
                                 defaultValue="Small"
                                 size="small"
+                                disabled={level<5}
                             ></TextField>
                         </div>
                     </Grid>
