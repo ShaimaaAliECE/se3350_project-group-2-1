@@ -47,7 +47,8 @@ export default function Game(props) {
 
     const [gameType, setGameType] = useState("Merge Sort") //for picking between the different sorting
     const [gameMode, setGameMode] = useState("playable") //for picking between walkthrough or playable
-    const [level, setLevel] = useState(0);
+    const [level, setLevel] = useState(props.startLevel || 0); // To store max level completed by the user
+    const [gameLevel, setGameLevel] = useState(props.startLevel || 0); // To store level selected for play by user
     const [mistake, setMistake] = useState(3);
     const [quitGame, setGame] = useState(false);
 
@@ -67,17 +68,10 @@ export default function Game(props) {
 
     //increaseing the level, only increase once for each comp, definetley a better way to do it but...
     const incrLevel = (comp) => {
-        if (comp === 'WalkThrough' && !(level >= 1)) {
-            restart()
-            setLevel(level + 1)
+        if (gameLevel > level) {
+            setLevel(gameLevel);
         }
-        if (comp === 'WalkThrough' && level >= 1) {
-            restart()
-        }
-        else {
-            restart()
-            setLevel(level + 1)
-        }
+        restart();
     }
 
     const mistakeCounter = () => {
@@ -93,7 +87,7 @@ export default function Game(props) {
     }
 
     // function determining game level
-    function startGame(mode) {
+    function startGame(mode, selectedLevel) {
 
         //pass in game mode for determining which button was pushed, start game or walkthough
         if (mode === 'walkthrough') {
@@ -105,9 +99,39 @@ export default function Game(props) {
             }
         }
         if (!isRunning.current) {
-            let numArray = MergeSort(new Number(size), new Number(range));
+            // Parameters for each level
+            let gameSize;
+            let gameRange;
+            switch (selectedLevel) {
+                case 2:
+                    gameSize = 10;
+                    gameRange = 20;
+                    break;
+                case 3:
+                    gameSize = 10;
+                    gameRange = 20;
+                    break;
+                case 4:
+                    gameSize = 20;
+                    gameRange = 50;
+                    break;
+                case 5:
+                    gameSize = 50;
+                    gameRange = 100;
+                    break;
+                case 6:
+                    // Custom level
+                    gameSize = size;
+                    gameRange = range;
+                    break;
+                default:
+                    gameSize = 10;
+                    gameRange = 20;
+            }
+            let numArray = MergeSort(gameSize, gameRange);
             setGameArray(numArray);
             setGameMode(mode);
+            setGameLevel(selectedLevel);
             isRunning.current = true;
         }
     }
@@ -176,20 +200,35 @@ export default function Game(props) {
                             <>
                                 <div>
                                 <Button
-                                    onClick={() => startGame("walkthrough")}
+                                    onClick={() => startGame("walkthrough", 1)}
                                     variant="contained"
                                     style={{ width: 140, height: 50 }}
                                 >Level 1</Button>
                                 <Button
-                                    onClick={() => startGame("playable")}
+                                    onClick={() => startGame("playable", 2)}
                                     variant="contained"
                                     style={{ width: 140, height: 50, display: ((level >= 1) ? 'show' : 'none') }}
                                 >Level 2</Button>
                                 <Button
-                                    onClick={() => startGame("animation")}
+                                    onClick={() => startGame("animation", 3)}
                                     variant="contained"
                                     style={{ width: 140, height: 50, display: ((level >= 2) ? 'show' : 'none') }}
                                 >Level 3</Button>
+                                <Button
+                                    onClick={() => startGame("animation", 4)}
+                                    variant="contained"
+                                    style={{ width: 140, height: 50, display: ((level >= 3) ? 'show' : 'none') }}
+                                >Level 4</Button>
+                                <Button
+                                    onClick={() => startGame("animation", 5)}
+                                    variant="contained"
+                                    style={{ width: 140, height: 50, display: ((level >= 4) ? 'show' : 'none') }}
+                                >Level 5</Button>
+                                <Button
+                                    onClick={() => startGame("animation", 6)}
+                                    variant="contained"
+                                    style={{ width: 140, height: 50, display: ((level >= 5) ? 'show' : 'none') }}
+                                >Custom</Button>
                                 <div style={{display: ((!mistake) ? 'show' : 'none')}}>
                                     <h2>You have made the maximum number of mistakes.</h2>
                                     <h3>You can now either: </h3>
@@ -257,6 +296,7 @@ export default function Game(props) {
                             mergedArray={mergedArray}
                             pushToMerged={setMerged}
                             numArray={gameArray[0][1]}
+                            changeLevel={incrLevel}
                         />
                     ) : (
                         <></>
