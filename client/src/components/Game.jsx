@@ -125,8 +125,8 @@ export default function Game(props) {
                     break;
                 case 6:
                     // Custom level
-                    gameSize = size;
-                    gameRange = range;
+                    gameSize = parseInt(size);
+                    gameRange = parseInt(range);
                     break;
                 default:
                     gameSize = 10;
