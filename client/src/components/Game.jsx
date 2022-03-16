@@ -3,7 +3,8 @@ import { useIdleTimer } from 'react-idle-timer';
 import MergeSort from "../utils/sorting/MergeSort.js";
 import ArrayGroup from "./ArrayGroup.jsx";
 import Githubicon from "../images/Githubicon.js";
-import WalkThrough from "./WalkThrough.jsx";
+import WalkThrough from "./WalkThrough.tsx";
+
 
 import {
     Grid,
