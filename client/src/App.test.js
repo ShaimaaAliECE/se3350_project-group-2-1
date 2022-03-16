@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
-import App from './App';
+import App from '../../old_client/src/App';
 import ArrayGroup from './components/ArrayGroup.jsx';
 import Game from './components/Game.jsx';
 

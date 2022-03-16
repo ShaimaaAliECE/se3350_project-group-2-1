@@ -1,5 +1,5 @@
 import { Button, Grid } from '@mui/material'
-import React from "react"
+import React, { useEffect } from "react"
 
 const rowStyle = {
     display: "flex",
@@ -17,7 +17,7 @@ const start = {
 
 const messages = {
     split: "The parent array is being split into two child arrays.",
-    start:"The starting unsorted array is split into two children arrays, starting with the left side.",
+    start: "The starting unsorted array is split into two children arrays, starting with the left side.",
     sortMerge: "The child arrays are sorted and merged back into the parent array. \nThe two child arrays elements are compared one by one, adding the smallest element to the parent. ",
     complete: "The array has been succesfully merged and sorted."
 }
@@ -49,16 +49,15 @@ const Cell = (props) => {
     )
 }
 
-const HardCodedSide = (props) => {
-    //not actually a react component it just returns an array
+const ArrayComp = (props) => {
     let numArray = props.numArray
-    let index = props.index
+    let counter = props.counter
     let values = props.values
+    let index = props.index
 
-    //for determining if it should be sorted or not based on the level its at vs the counter position
     const flipSorted = (level) => {
         if (props.sorted) {
-            if (level >= index) {
+            if (level >= counter) {
                 return true
             }
             else {
@@ -70,28 +69,60 @@ const HardCodedSide = (props) => {
         }
     }
 
+    useEffect(() => {
+        console.log(index)
+        console.log(counter)
+    })
+
     return (
-        [
-            <Cell numArray={numArray[values[0]]} sorted={flipSorted(1)} />,
-            <DoubleGroup>
-                <Cell numArray={numArray[values[1]]} sorted={flipSorted(2)} />
-                <Cell numArray={numArray[values[2]]} sorted={false} />
-            </DoubleGroup>,
-            <DoubleGroup>
-                <Cell numArray={numArray[values[3]]} sorted={flipSorted(3)} />
-                <Cell numArray={numArray[values[4]]} sorted={false} />
-            </DoubleGroup>,
-            <DoubleGroup>
-                <Cell numArray={numArray[values[5]]} sorted={flipSorted(4)} />
-                <Cell numArray={numArray[values[6]]} sorted={false} />
-            </DoubleGroup>
-        ]
+        (index === 1) ? (
+            <>
+                {console.log("first path")}
+                <Cell numArray={numArray[values[index]]} color='lightpink' sorted={flipSorted(1)} />
+                <ArrayComp
+                    key={index + 1}
+                    index={index + 1}
+                    numArray={numArray}
+                    sorted={props.sorted}
+                    counter={counter}
+                    values={values}
+                />
+            </>
+        ) : (
+            (index < counter) ? (
+                <>
+                    {console.log("second path")}
+                    <DoubleGroup>
+                        <Cell numArray={numArray[values[index + 1]]} color='lightpink' sorted={flipSorted(index + 1)} />
+                        <Cell numArray={numArray[values[index + 2]]} color='lightblue' sorted={false} />
+                    </DoubleGroup>
+
+                    <ArrayComp
+                        key={index + 1}
+                        index={index + 1}
+                        numArray={numArray}
+                        sorted={props.sorted}
+                        counter={counter}
+                        values={values}
+                    />
+                </>
+            ) : (<></>)
+        )
     )
 }
+
 
 export default class WalkThrough extends React.Component {
     constructor(props) {
         super(props)
+        console.log(props.numArray)
+        
+        let indexedArray = [2, 3, 10, 4, 8, 5, 6, 15, 16, 23, 17, 21, 18, 19]
+        
+        let properlySorted = indexedArray.map((element, i)=> {
+            return props.numArray[element]
+        })
+
         this.state = {
             numArray: props.numArray,
             counter: { 'left': 0, 'right': 0 },
@@ -170,65 +201,35 @@ export default class WalkThrough extends React.Component {
     }
 
     render() {
-        //hard coded sides, values is for the index of the array from sams generators, this should definetly be a proper component but hey
-        const leftGroupStack = HardCodedSide({
-            numArray: this.state.numArray,
-            sorted: (this.state.sorted || this.state.side === 'right'),
-            index: this.state.counter['left'],
-            values: [2, 3, 10, 4, 8, 5, 6]
-        })
-        const rightGroupStack = HardCodedSide({
-            numArray: this.state.numArray,
-            sorted: this.state.sorted,
-            index: this.state.counter['right'],
-            values: [15, 16, 23, 17, 21, 18, 19]
-        })
-
-        //hard coded sides are displayed with the map function, only elements that have an index greater than the counter are shown
         return (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <strong style={{
                     textAlign: 'center'
                 }}>Merge Sort Walkthrough</strong>
-                <div style={start}>
-                    <Cell numArray={this.state.numArray[0]} color='' sorted={this.state.doneSorting} />
-                </div>
 
                 {(this.state.doneSorting) ? (
-                    <div className="infoText" style={{display: "flex", flexDirection: 'column', outline: "solid", textAlign: 'center'}}>
-                               <div><strong>Current Side: </strong> { ((this.state.counter["right"] === 0 && this.state.counter["left"] === 0) || this.state.doneSorting === true ) ? '' : this.state.side}</div> 
-                               <div><strong>Current Action: </strong>{messages.complete}</div>
-                               <div><strong>Status: </strong> Complete</div>
-                               <Button onClick= {() => {this.state.nextLevel("WalkThrough")}}>Next Level</Button>
+                    <div className="infoText" style={{ display: "flex", flexDirection: 'column', outline: "solid", textAlign: 'center' }}>
+                        <div><strong>Current Side: </strong> {((this.state.counter["right"] === 0 && this.state.counter["left"] === 0) || this.state.doneSorting === true) ? '' : this.state.side}</div>
+                        <div><strong>Current Action: </strong>{messages.complete}</div>
+                        <div><strong>Status: </strong> Complete</div>
+                        <Button onClick={() => { this.state.nextLevel("WalkThrough") }}>Next Level</Button>
                     </div>
                 ) : (
                     <>
                         <div style={start}>
-                            <div style={rowStyle}>
-                                <div className="Leftside" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-
-                                    {leftGroupStack.map((element, i) => {
-                                        return (i < this.state.counter['left']) ? (element) : (<></>)
-                                    })}
-
-                                </div>
-                                {(this.state.side === 'right') ? (
-                                    <div className="Rightside" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-
-                                        {rightGroupStack.map((element, i) => {
-                                            return (i < this.state.counter['right']) ? (element) : (<></>)
-                                        })}
-
-                                    </div>
-                                ) : (
-                                    <></>
-                                )}
-                            </div>
+                            <ArrayComp
+                                key={0}
+                                index={0}
+                                numArray={this.state.numArray}
+                                sorted={(this.state.sorted || this.state.side === 'right')}
+                                counter={this.state.counter['left']}
+                                values={[2, 3, 10, 4, 8, 5, 6]}
+                            />
                         </div>
-                        <div className="infoText" style={{display: "flex", flexDirection: 'column', outline: "solid", textAlign: 'center'}}>
-                               <div><strong>Current Side: </strong> { (this.state.counter["right"] === 0 && this.state.counter["left"] === 0) ? 'Parent' : this.state.side}</div> 
-                               <div><strong>Current Action: </strong>{this.state.infoMsg}</div>
-                               <div><strong>Status: </strong> In Progress</div>
+                        <div className="infoText" style={{ display: "flex", flexDirection: 'column', outline: "solid", textAlign: 'center' }}>
+                            <div><strong>Current Side: </strong> {(this.state.counter["right"] === 0 && this.state.counter["left"] === 0) ? 'Parent' : this.state.side}</div>
+                            <div><strong>Current Action: </strong>{this.state.infoMsg}</div>
+                            <div><strong>Status: </strong> In Progress</div>
                         </div>
                         <Button onClick={this.increaseCounter} variant="contained" style={{ width: 140, height: 50 }} >Next!</Button>
                     </>
