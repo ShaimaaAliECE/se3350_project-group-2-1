@@ -1,10 +1,5 @@
-import { Transition } from './types';
+import { Transition, TransitionComponents } from './types';
 import { createStore } from 'redux';
-
-type TransitionComponents = {
-    array: Array<number>
-    index: number
-}
 
 const y = -1 * (36.5 + 10)
 
@@ -14,11 +9,14 @@ const getX = (flip: boolean): number => {
 
 const transition = (props: TransitionComponents & { counter: number }): Transition => {
     let array = props.array
-
-    let multiplier
+    let value = array[props.index]
 
     for(let i = 0; i < array.length; i++ ){
-        
+        let curr = array[i]
+        if(curr > value){
+            
+
+        }
     }
     
     return {
