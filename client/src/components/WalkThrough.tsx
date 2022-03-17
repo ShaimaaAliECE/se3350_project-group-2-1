@@ -21,11 +21,15 @@ function ArrayHolder(props: { children: React.ReactNode }) {
     )
 }
 
-const sort = (array: Array<number>): Array<number> => {
-    return array.sort((a: any, b: any) => (a > b) ? 1 : -1)
+const sort = (array: any): any => {
+    return [].concat(array).sort((a: any, b: any) => (a > b) ? 1 : -1)
 }
 
 const transitionValue = (props: TransitionComponents): Transition => {
+    if(props.array.length === 2){
+        console.log(props)
+    }
+    
     store.dispatch({
         type: 'createTransition',
         payload: {
@@ -72,6 +76,7 @@ const Animation = (props: { children: React.ReactNode, play: boolean, colorOld: 
 
 const Cell = (props: { play: boolean, color: string, numArray: any, sorted: boolean }) => {
     let numArray = props.numArray
+    let unSorted = props.numArray
 
     return (
         <div style={{ flexDirection: "row", display: 'flex' }}>
@@ -82,7 +87,7 @@ const Cell = (props: { play: boolean, color: string, numArray: any, sorted: bool
                             play={props.play}
                             colorOld={props.color}
                             colorNew={props.color}
-                            transition={transitionValue({ array: numArray[1], correctArray: sort(numArray[1]), index: i })}
+                            transition={transitionValue({ array: numArray[1], correctArray: sort(unSorted[1]), index: i })}
                         >
                             <Button style={{ backgroundColor: props.color, fontWeight: 'bolder', color: 'black' }} disabled={true} variant="outlined"> {element}</Button>
                         </Animation>

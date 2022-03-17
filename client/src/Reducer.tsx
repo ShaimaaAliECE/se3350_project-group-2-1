@@ -2,23 +2,45 @@ import { Transition, TransitionComponents } from './types';
 import { createStore } from 'redux';
 
 const y = -1 * (36.5 + 10)
-
-const getX = (flip: boolean): number => {
-    return (flip) ? (64 - 10) : (64 + 10)
-}
+const x = 64
 
 const transition = (props: TransitionComponents & { counter: number }): Transition => {
     let array = props.array
-    let value = array[props.index]
+    let correctArray = props.correctArray
+    let index = props.index
 
-    for(let i = 0; i < array.length; i++ ){
-        let curr = array[i]
-        if(curr > value){
-            
+    let correctIndex = 0
 
+    for (let i = 0; i < array.length; i++) {
+        if (array[index] === correctArray[i]) {
+            correctIndex = i
         }
     }
-    
+
+    if (correctIndex === index) {
+        return {
+            x: 0,
+            y: y
+        }
+    }
+    if (correctIndex < index) {
+        let multiplier = index - correctIndex
+        console.log(multiplier)
+        return {
+            x: (-74) * multiplier,
+            y: y
+        }
+
+    }
+    if (correctIndex > index) {
+        let multiplier = correctIndex - index
+
+        return {
+            x: (74) * multiplier,
+            y: y
+        }
+    }
+
     return {
         x: 0,
         y: y
