@@ -25,7 +25,13 @@ type WalkThroughState = {
     changeLevel: (name: string) => void
 }
 
+type Transition = {
+    x: number
+    y: number
+}
+
 export type {
     WalkThroughProps,
-    WalkThroughState
+    WalkThroughState,
+    Transition
 }

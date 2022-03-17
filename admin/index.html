@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="./select/css/select.dataTables.min.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script src="./select/js/dataTables.select.min.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Array Sorting Admin</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-link active" aria-current="page" href="?">Home</a>
+                    <a class="nav-link">Levels: </a>
+                    <a class="nav-link" href='?table=Level 1'>1</a>
+                    <a class="nav-link" href="?table=Level 2">2</a>
+                    <a class="nav-link" href="?table=Level 3">3</a>
+                    <a class="nav-link" href="?table=Level 4">4</a>
+                    <a class="nav-link" href="?table=Level 5">5</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <h1 style="margin: 20px; font-size: 20px;" id="header">Home</h1>
+    <div style=" margin: 20px;">
+        <table id="table">
+            <thead>
+                <tr>
+                    <th>Forum Name</th>
+                    <th>Forum Description</th>
+                    <th>Forum Creater</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</body>
+<script>
+    function setTable(level) {
+        $('#table').DataTable({
+            ajax: '/get-forums',
+            searching: false,
+            ordering: false,
+            select: true
+        });
+    }
+
+    function getUrlParameter(sParam) {
+        var sPageURL = window.location.search.substring(1), sURLVariables = sPageURL.split('&'), sParameterName, i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return typeof sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+            }
+        }
+        return false;
+    };
+
+    $(function () {
+        let params = getUrlParameter('table')
+        console.log(params)
+
+        if (!params) {
+            setTable('home')
+        }
+        else {
+            $('#header').text(params)
+            setTable(params)
+        }
+    })
+</script>
+
+</html>
