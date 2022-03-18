@@ -114,6 +114,7 @@ const ArrayComp = (props: { numArray: Array<Array<number>> }) => {
             </Button>
             <Cell play={false} color='#ff5b5b' numArray={props.numArray} sorted={false} />
             <Cell play={click} color='#ff5b5b' numArray={props.numArray} sorted={true} />
+
         </>
     )
 }
@@ -125,7 +126,7 @@ export default function AnimationTest() {
         <WalkThroughProvider>
 
             <ArrayComp
-                numArray={[[0], [3, 6, 4, 3, 2]]}
+                numArray={[[0], [2, 6, 4, 3, 5]]}
             />
 
         </WalkThroughProvider>

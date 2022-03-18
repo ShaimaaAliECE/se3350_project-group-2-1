@@ -11,12 +11,6 @@ const transition = (props: TransitionComponents & { counter: number }): Transiti
 
     let correctIndex = 0
 
-    for (let i = 0; i < array.length; i++) {
-        if (array[index] === correctArray[i]) {
-            correctIndex = i
-        }
-    }
-
     if (correctIndex === index) {
         return {
             x: 0,
@@ -25,7 +19,6 @@ const transition = (props: TransitionComponents & { counter: number }): Transiti
     }
     if (correctIndex < index) {
         let multiplier = index - correctIndex
-        console.log(multiplier)
         return {
             x: (-74) * multiplier,
             y: y
@@ -41,10 +34,7 @@ const transition = (props: TransitionComponents & { counter: number }): Transiti
         }
     }
 
-    return {
-        x: 0,
-        y: y
-    }
+    throw new Error()
 }
 
 const initialState = {
