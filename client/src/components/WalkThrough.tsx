@@ -28,19 +28,6 @@ const getSide = (val: any, side: string) => {
 const transitionValue = (props: { counter: number, index: number, side: string }): Transition => {
     let state = store.getState()
 
-    if(props.counter === 3){
-        if (props.side === 'right') {
-            console.log("correct")
-            console.log(state.positionValues.level2.right[0])
-            return state.positionValues.level2.right[0]
-        }
-        else{
-            console.log(state.positionValues.level2.left[props.index])
-            return state.positionValues.level2.left[props.index]
-        }
-    }
-
-
     if (props.counter === 2) {
         console.log(getSide(state.positionValues.level1, props.side)[props.index])
         return getSide(state.positionValues.level1, props.side)[props.index]
