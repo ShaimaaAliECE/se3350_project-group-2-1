@@ -1,6 +1,6 @@
 import { Button, Grid } from '@mui/material'
 import React, { useEffect, useLayoutEffect, useContext, useState } from "react"
-import { WalkThroughProps, WalkThroughState, Transition, TransitionComponents } from '../types';
+import { WalkThroughProps, WalkThroughState, Transition } from '../types';
 import { useSpring, animated, useSpringRef } from 'react-spring'
 import { WalkThroughProvider, WalkThroughContext } from './WalkThroughProvider';
 import { store } from '../Reducer';
@@ -21,27 +21,28 @@ function ArrayHolder(props: { children: React.ReactNode }) {
     )
 }
 
-const sort = (array: any): any => {
-    return [].concat(array).sort((a: any, b: any) => (a > b) ? 1 : -1)
+const getSide = (val: any, side: string) => {
+    return (side === 'right') ? (val.right) : (val.left)
 }
 
-const transitionValue = (props: TransitionComponents): Transition => {
-    if(props.array.length === 2){
-        console.log(props)
+const transitionValue = (props: { counter: number, index: number, side: string }): Transition => {
+    let state = store.getState()
+
+    if (props.counter === 2) {
+        console.log(getSide(state.positionValues.level1, props.side)[props.index])
+        return getSide(state.positionValues.level1, props.side)[props.index]
     }
-    
-    store.dispatch({
-        type: 'createTransition',
-        payload: {
-            ...props
+    if (props.counter === 3) {
+        if(props.side === 'right'){
+            return state.positionValues.level2.right[0]
         }
-    })
+    }
 
-    return store.getState().transition
+    return { x: 1, y: 1 }
 }
-
 
 const Animation = (props: { children: React.ReactNode, play: boolean, colorOld: string, transition: Transition, colorNew: string }) => {
+
     //@ts-ignore
     const { setAnimating, isAnimating } = useContext(WalkThroughContext);
 
@@ -51,18 +52,20 @@ const Animation = (props: { children: React.ReactNode, play: boolean, colorOld: 
         y: 0, x: 0,
         backgroundColor: props.colorOld,
         onRest: () => {
+            console.log("done")
             setAnimating(false)
         },
     }))
 
     useLayoutEffect(() => {
         if (props.play && !hasRun) {
+            console.log("starting")
             setAnimating(true)
             setRun(true)
             api.start({
                 backgroundColor: props.colorNew,
                 ...props.transition,
-                delay: 1000
+                delay: 1000,
             })
         }
     })
@@ -74,9 +77,8 @@ const Animation = (props: { children: React.ReactNode, play: boolean, colorOld: 
     )
 }
 
-const Cell = (props: { play: boolean, color: string, numArray: any, sorted: boolean }) => {
+const Cell = (props: { play: boolean, color: string, numArray: any, sorted: boolean, counter: number, side: string }) => {
     let numArray = props.numArray
-    let unSorted = props.numArray
 
     return (
         <div style={{ flexDirection: "row", display: 'flex' }}>
@@ -87,7 +89,7 @@ const Cell = (props: { play: boolean, color: string, numArray: any, sorted: bool
                             play={props.play}
                             colorOld={props.color}
                             colorNew={props.color}
-                            transition={transitionValue({ array: numArray[1], correctArray: sort(unSorted[1]), index: i })}
+                            transition={transitionValue({ counter: props.counter, index: i, side: props.side })}
                         >
                             <Button style={{ backgroundColor: props.color, fontWeight: 'bolder', color: 'black' }} disabled={true} variant="outlined"> {element}</Button>
                         </Animation>
@@ -109,9 +111,15 @@ const ArrayComp = (props: { numArray: Array<Array<Array<number>>>, counter: numb
     let counter = props.counter
     let values = props.values
 
+    console.log(counter)
+
+    let stackedArrays = values.map((element: any) => {
+        return numArray[element][1]
+    })
+
     store.dispatch({
-        type: 'addCounter',
-        payload: counter
+        type: 'addArrays',
+        payload: stackedArrays
     })
 
     //for determining if it should be sorted or not based on the level its at vs the counter position
@@ -130,49 +138,55 @@ const ArrayComp = (props: { numArray: Array<Array<Array<number>>>, counter: numb
     }
 
     let arrComp = [
-        <Cell play={false} color='#ff5b5b' numArray={numArray[values[0]]} sorted={flipSorted(1)} />,
-        <ArrayHolder>
-            <Cell play={flipSorted(2) && counter === 2} color='#ff5b5b' numArray={numArray[values[1]]} sorted={flipSorted(2)} />
-            <Animation
-                play={flipSorted(2) && counter === 2}
-                colorOld='#ff5b5b'
-                colorNew='#ff5b5b'
-                transition={transitionValue({ array: numArray[2][1], correctArray: sort(numArray[2][1]), index: 0 })}
-            >
-                <Button style={{ backgroundColor: '#ff5b5b', fontWeight: 'bolder', color: 'black' }} disabled={true} variant="outlined"> {numArray[values[2]][1][0]}</Button>
-            </Animation>
-            <Animation
-                play={flipSorted(2) && counter === 2}
-                colorOld='#ff5b5b'
-                colorNew='lightblue'
-                transition={transitionValue({ array: numArray[values[2]][1], correctArray: sort(numArray[values[2]][1]), index: 1 })}
-            >
-                <Button style={{ backgroundColor: 'lightblue', fontWeight: 'bolder', color: 'black' }} disabled={true} variant="outlined"> {numArray[values[2]][1][1]}</Button>
-            </Animation>
+        <Cell key={0} side='right' counter={counter} play={false} color='#ff5b5b' numArray={numArray[values[0]]} sorted={flipSorted(1)} />,
+        <ArrayHolder key={1}>
+            <Cell key={2} side='left' counter={counter} play={flipSorted(2) && counter === 2} color='#ff5b5b' numArray={numArray[values[1]]} sorted={flipSorted(2)} />
+            <Cell key={3} side='right' counter={counter} play={flipSorted(2) && counter === 2} color='#ff5b5b' numArray={numArray[values[2]]} sorted={flipSorted(2)} />
         </ArrayHolder >
         ,
-        <ArrayHolder>
-            <ArrayHolder>
-                <Cell play={flipSorted(3) && (counter === 3)} color='#ff5b5b' numArray={numArray[values[3]]} sorted={flipSorted(3)} />
-                <Cell play={flipSorted(3) && (counter === 3)} color='lightblue' numArray={numArray[values[4]]} sorted={false} />
+        <ArrayHolder key={4}>
+            <ArrayHolder key={5}>
+                <Cell key={6} side='left' counter={counter} play={flipSorted(3) && (counter === 3)} color='#ff5b5b' numArray={numArray[values[3]]} sorted={flipSorted(3)} />
+                <Cell key={7} side='right' counter={counter} play={flipSorted(3) && (counter === 3)} color='lightblue' numArray={numArray[values[4]]} sorted={true} />
+
             </ArrayHolder>
-        </ArrayHolder>,
-        <ArrayHolder>
             <Animation
-                play={counter === 4}
+                key={8}
+                play={flipSorted(3) && counter === 3}
                 colorOld='#ff5b5b'
                 colorNew='#ff5b5b'
-                transition={transitionValue({ array: numArray[values[5]][1], correctArray: sort(numArray[values[5]][1]), index: 0})}
+                transition={(numArray[values[2]][1][0] <= numArray[values[2]][1][1]) ? ({ x: -10, y: -46.5 }) : ({ x: 54, y: -46.5 })}
             >
-                <Button style={{ fontWeight: 'bolder', color: 'black', backgroundColor: "#ff5b5b" }} disabled={true} variant="outlined"> {numArray[values[5]][1][0]}</Button>
+                <Button key={9} style={{ backgroundColor: '#ff5b5b', fontWeight: 'bolder', color: 'black' }} disabled={true} variant="outlined"> {numArray[values[2]][1][0]}</Button>
             </Animation>
             <Animation
+                key={10}
+                play={flipSorted(3) && counter === 3}
+                colorOld='lightblue'
+                colorNew='#ff5b5b'
+                transition={(numArray[values[2]][1][0] <= numArray[values[2]][1][1]) ? ({ x: -20, y: -46.5 }) : ({ x: -84, y: -46.5 })}
+            >
+                <Button key={11} style={{ fontWeight: 'bolder', color: 'black' }} disabled={true} variant="outlined"> {numArray[values[2]][1][1]}</Button>
+            </Animation>
+        </ArrayHolder>,
+        <ArrayHolder key={12} >
+            <Animation
+                key={13}
                 play={counter === 4}
                 colorOld='#ff5b5b'
                 colorNew='#ff5b5b'
-                transition={transitionValue({ array: numArray[values[5]][1], correctArray: sort(numArray[values[5]][1]), index: 1 })}
+                transition={(numArray[values[5]][1][0] <= numArray[values[6]][1][0]) ? ({ x: 0, y: -46 }) : ({ x: 64, y: -46 })}
             >
-                <Button style={{ fontWeight: 'bolder', color: 'black', backgroundColor: "lightblue" }} disabled={true} variant="outlined"> {numArray[values[6]][1][0]}</Button>
+                <Button key={16} style={{ fontWeight: 'bolder', color: 'black', backgroundColor: "#ff5b5b" }} disabled={true} variant="outlined"> {numArray[values[5]][1][0]}</Button>
+            </Animation>
+            <Animation
+                key={14}
+                play={counter === 4}
+                colorOld="lightblue"
+                colorNew='#ff5b5b'
+                transition={(numArray[values[5]][1][0] <= numArray[values[6]][1][0]) ? ({ x: -10, y: -46 }) : ({ x: -74, y: -46 })}
+            >
+                <Button key={15} style={{ fontWeight: 'bolder', color: 'black' }} disabled={true} variant="outlined"> {numArray[values[6]][1][0]}</Button>
             </Animation>
         </ArrayHolder>
     ]
@@ -189,6 +203,10 @@ const ArrayComp = (props: { numArray: Array<Array<Array<number>>>, counter: numb
 const IncrementButton = (props: { increaseCounter: () => void }) => {
     //@ts-ignore
     const { isAnimating } = useContext(WalkThroughContext);
+
+    useEffect(() => {
+        console.log(isAnimating)
+    })
 
     return (
         <Button
@@ -302,7 +320,7 @@ export default class WalkThrough extends React.Component<WalkThroughProps, WalkT
                         alignItems: 'center',
                         justifyContent: 'center'
                     }}>
-                        <Cell play={false} numArray={this.state.numArray[0]} color='' sorted={this.state.doneSorting} />
+                        <Cell side='right' counter={0} play={true} numArray={this.state.numArray[0]} color='' sorted={this.state.doneSorting} />
                     </div>
 
                     {(this.state.doneSorting) ? (

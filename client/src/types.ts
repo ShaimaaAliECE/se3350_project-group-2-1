@@ -1,11 +1,3 @@
-import { NumberLiteralType } from "typescript"
-
-type TransitionComponents = {
-    correctArray: Array<number>
-    array: Array<number>
-    index: number
-}
-
 type WalkThroughProps = {
     numArray: Array<Array<Array<number>>>
     changeLevel: (name: string) => void
@@ -31,6 +23,7 @@ type WalkThroughState = {
     changeLevel: (name: string) => void
 }
 
+
 type Transition = {
     x: number
     y: number
@@ -39,6 +32,5 @@ type Transition = {
 export type {
     WalkThroughProps,
     WalkThroughState,
-    Transition,
-    TransitionComponents
+    Transition
 }
