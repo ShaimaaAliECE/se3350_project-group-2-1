@@ -28,13 +28,32 @@ const getSide = (val: any, side: string) => {
 const transitionValue = (props: { counter: number, index: number, side: string }): Transition => {
     let state = store.getState()
 
+    if(props.counter === 3){
+        if (props.side === 'right') {
+            console.log("correct")
+            console.log(state.positionValues.level2.right[0])
+            return state.positionValues.level2.right[0]
+        }
+        else{
+            console.log(state.positionValues.level2.left[props.index])
+            return state.positionValues.level2.left[props.index]
+        }
+    }
+
+
     if (props.counter === 2) {
         console.log(getSide(state.positionValues.level1, props.side)[props.index])
         return getSide(state.positionValues.level1, props.side)[props.index]
     }
     if (props.counter === 3) {
         if (props.side === 'right') {
+            console.log("correct")
+            console.log(state.positionValues.level2.right[0])
             return state.positionValues.level2.right[0]
+        }
+        else{
+            console.log(state.positionValues.level2.left[props.index])
+            return state.positionValues.level2.left[props.index]
         }
     }
 
@@ -88,10 +107,10 @@ const Cell = (props: { play: boolean, color: string, numArray: any, sorted: bool
                         <Animation
                             play={props.play}
                             colorOld={props.color}
-                            colorNew={props.color}
+                            colorNew='#ff5b5b'
                             transition={transitionValue({ counter: props.counter, index: i, side: props.side })}
                         >
-                            <Button style={{ backgroundColor: props.color, fontWeight: 'bolder', color: 'black' }} disabled={true} variant="outlined"> {element}</Button>
+                            <Button style={{ fontWeight: 'bolder', color: 'black' }} disabled={true} variant="outlined"> {element}</Button>
                         </Animation>
                     )
                 })
@@ -105,7 +124,7 @@ const Cell = (props: { play: boolean, color: string, numArray: any, sorted: bool
 }
 
 
-const ArrayComp = (props: { numArray: Array<Array<Array<number>>>, counter: number, values: Array<number>, sorted: boolean }) => {
+const ArrayComp = (props: { numArray: Array<Array<Array<number>>>, counter: number, runCalc: boolean, values: Array<number>, sorted: boolean }) => {
     //not actually a react component it just returns an array
     let numArray = props.numArray
     let counter = props.counter
@@ -113,7 +132,7 @@ const ArrayComp = (props: { numArray: Array<Array<Array<number>>>, counter: numb
 
     const [hasCalc, setCalc] = useState(false)
 
-    if (!hasCalc) {
+    if (!hasCalc && props.runCalc) {
         let organized = values.map((element: any) => {
             return numArray[element][1]
         })
@@ -347,6 +366,7 @@ export default class WalkThrough extends React.Component<WalkThroughProps, WalkT
                                         sorted={(this.state.sorted || this.state.side === 'right')}
                                         counter={this.state.counter['left']}
                                         values={[2, 3, 10, 4, 8, 5, 6]}
+                                        runCalc={('left' === this.state.side)}
                                     />
                                 </div>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -355,6 +375,7 @@ export default class WalkThrough extends React.Component<WalkThroughProps, WalkT
                                         sorted={this.state.sorted && this.state.side !== 'left'}
                                         counter={this.state.counter['right']}
                                         values={[15, 16, 23, 17, 21, 18, 19]}
+                                        runCalc = {('right'=== this.state.side)}
                                     />
 
                                 </div>

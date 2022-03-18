@@ -12,7 +12,7 @@ type PostionValues = {
     level3: Level
 }
 
-const y = -1 * (36.5 + 10)
+const y = -46.5
 
 const initialState = {
     positionValues: {
@@ -31,105 +31,97 @@ const initialState = {
     }
 };
 
-const sort = (rootArray: Array<number>) : Array<number> =>{
+const sort = (rootArray: Array<number>): Array<number> => {
     // @ts-ignore
     return [].concat(rootArray).sort((a, b) => (a > b) ? 1 : -1)
 }
 
-const distance = (arr1: Array<number>, root: Array<number>, index: number) : number => {
+const distance = (arr1: Array<number>, root: Array<number>, index: number): number => {
     let value = arr1[index]
     var arr2Index = 0;
 
-    for(let i = 0; i < root.length; i ++){
-        if(root[i]=== value){
+    for (let i = 0; i < root.length; i++) {
+        if (root[i] === value) {
             arr2Index = i
         }
     }
-    
+
     return arr2Index
 }
 
+const shiftArrayLevelTwo = (array: Array<Transition>, i: number) : Array<Transition> => {
+    for(let j = 1; j <= i; j++){
+        let end = array!.pop()!
+        
+        if(end.x * -1 <= 0){
+            end.x = end.x * -1
+        }
+
+        end.x = end.x + (-64 * j)
+        
+        console.log(end.x)
+
+        array.unshift(end)
+    }
+    return array
+}
 
 const getLevelTwo = (rootArray: Array<number>, leftArray: Array<number>, rightArray: Array<number>): Level => {
     let rightVal = rightArray[0]
-    let sortedRoot = sort(rootArray)
-    let left = new Array()
+    let sortedRoot = sort(rootArray)  
+    let leftArraySorted = sort(leftArray)
+    let distanceR = 0
+    
+    for (let i = 0; i < sortedRoot.length; i++) {
+        if (rightVal === sortedRoot[i]) {
+            distanceR = i
+        }
+    }
+    let distanceL = []
+
+    for (let i = 0; i < leftArraySorted.length; i++) {
+        distanceL.push(distance(leftArraySorted, sortedRoot, i))
+    }
+
+    let getLeftVec = (index: number) : Array<Transition> => {
+        if(index === 0){
+            return [{ x: 0, y: y }, { x: 64, y: y }, { x: 128, y: y }]
+        }
+        else{
+            return shiftArrayLevelTwo([{ x: 0, y: y }, { x: 64, y: y }, { x: 128, y: y }], index)
+        }
+    }
+    
+    let rightVec = [{ x: (-74 - 64), y: -46.5 }, { x: -74, y: -46.5 }, { x: -10, y: -46.5 }]
 
     console.log(sortedRoot)
-    console.log(rightArray)
-    let distanceR = distance(rightArray, sortedRoot, 0)
-    
-    let right = [{ x: (-74 - 64), y: -46.5 }, { x: -74, y: -46.5 }, { x: -10, y: -46.5 } ]
+    console.log(leftArraySorted)
+    console.log(distanceL)
 
     return {
-        left: left,
-        right: [right[distanceR]]
+        left: distanceL.map((element: number, i: number) : Transition => {
+            return getLeftVec(i)[element]
+        }),
+        right: [rightVec[distanceR]]
     }
 }
 
 const getLevelOne = (rootArray: Array<number>, leftArray: Array<number>, rightArray: Array<number>): Level => {
+    let sortedRoot = sort(rootArray)  
+    let leftArraySorted = sort(leftArray)
+    let rightArraySorted = sort(rightArray)
     
-    let sortedRoot = sort(rootArray)
-    let left = new Array<Transition>()
-    let right = new Array<Transition>()
+    let rightVec
 
-    let x = -10
-    for (let k = 0; k < leftArray.length; k++) {
-        let rootI = 0
 
-        for (let i = 0; i < sortedRoot.length; i++) {
-            if (sortedRoot[i] === leftArray[k]) {
-                rootI = i
-            }
-        }
+    let newArray = rootArray.map(()=> {
+        return {x: 0, y: 0}
+    })
 
-        let multi = 1
-        let invert = 1
-
-        if (rootI > k) {
-            multi = rootI - k
-            invert = -1
-        }
-
-        if (rootI < k) {
-            multi = k - rootI
-        }
-        if (rootI === k) {
-            invert = 0
-        }
-
-        left.push({
-            y: y,
-            x: x * invert * multi
-        })
-    }
-
-    for (let i = 0; i < rootArray.length; i++) {
-        for (let j = 0; j < rightArray.length; j++) {
-            if (sortedRoot[i] === rightArray[j]) {
-                let multi = 1
-                let invert = 1
-
-                if (i > j) {
-                    multi = i - j
-                    invert = -1
-                }
-
-                if (i < j) {
-                    multi = j - i
-                }
-
-                right.push({
-                    y: y,
-                    x: x * i * multi
-                })
-            }
-        }
-    }
 
     return {
-        left: left,
-        right: right
+        left: newArray,
+        right: newArray
     }
 }
 
