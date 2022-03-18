@@ -36,31 +36,34 @@ const sort = (rootArray: Array<number>) : Array<number> =>{
     return [].concat(rootArray).sort((a, b) => (a > b) ? 1 : -1)
 }
 
+const distance = (arr1: Array<number>, root: Array<number>, index: number) : number => {
+    let value = arr1[index]
+    var arr2Index = 0;
+
+    for(let i = 0; i < root.length; i ++){
+        if(root[i]=== value){
+            arr2Index = i
+        }
+    }
+    
+    return arr2Index
+}
+
+
 const getLevelTwo = (rootArray: Array<number>, leftArray: Array<number>, rightArray: Array<number>): Level => {
     let rightVal = rightArray[0]
     let sortedRoot = sort(rootArray)
     let left = new Array()
 
-    console.log(rootArray)
+    console.log(sortedRoot)
+    console.log(rightArray)
+    let distanceR = distance(rightArray, sortedRoot, 0)
     
-    for(let i = 0; i < sortedRoot.length; i ++){
-        if(rightVal === sortedRoot[i]){
-            let x = -10
-            x += (i * -64)
-            left.push({
-                x: x,
-                y: y
-            })
-            break;
-        }
-    }
-    for(let i = 0; i < sortedRoot.length; i ++){
-        
-    }
-    
+    let right = [{ x: (-74 - 64), y: -46.5 }, { x: -74, y: -46.5 }, { x: -10, y: -46.5 } ]
+
     return {
         left: left,
-        right: [{ x: (-74 - 64), y: -46.5 }]
+        right: [right[distanceR]]
     }
 }
 
@@ -99,10 +102,6 @@ const getLevelOne = (rootArray: Array<number>, leftArray: Array<number>, rightAr
             y: y,
             x: x * invert * multi
         })
-        console.log(rootArray)
-        console.log(leftArray)
-        console.log(left)
-
     }
 
     for (let i = 0; i < rootArray.length; i++) {

@@ -33,7 +33,7 @@ const transitionValue = (props: { counter: number, index: number, side: string }
         return getSide(state.positionValues.level1, props.side)[props.index]
     }
     if (props.counter === 3) {
-        if(props.side === 'right'){
+        if (props.side === 'right') {
             return state.positionValues.level2.right[0]
         }
     }
@@ -111,16 +111,19 @@ const ArrayComp = (props: { numArray: Array<Array<Array<number>>>, counter: numb
     let counter = props.counter
     let values = props.values
 
-    console.log(counter)
+    const [hasCalc, setCalc] = useState(false)
 
-    let stackedArrays = values.map((element: any) => {
-        return numArray[element][1]
-    })
+    if (!hasCalc) {
+        let organized = values.map((element: any) => {
+            return numArray[element][1]
+        })
 
-    store.dispatch({
-        type: 'addArrays',
-        payload: stackedArrays
-    })
+        store.dispatch({
+            type: 'addArrays',
+            payload: organized
+        })
+        setCalc(true)
+    }
 
     //for determining if it should be sorted or not based on the level its at vs the counter position
     const flipSorted = (level: any) => {
@@ -148,7 +151,6 @@ const ArrayComp = (props: { numArray: Array<Array<Array<number>>>, counter: numb
             <ArrayHolder key={5}>
                 <Cell key={6} side='left' counter={counter} play={flipSorted(3) && (counter === 3)} color='#ff5b5b' numArray={numArray[values[3]]} sorted={flipSorted(3)} />
                 <Cell key={7} side='right' counter={counter} play={flipSorted(3) && (counter === 3)} color='lightblue' numArray={numArray[values[4]]} sorted={true} />
-
             </ArrayHolder>
             <Animation
                 key={8}
