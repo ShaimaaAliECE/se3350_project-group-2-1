@@ -132,6 +132,18 @@ export default function Game(props) {
         }
     }
 
+    function hasDuplicates(array) {
+        return (new Set(array)).size !== array.length;
+    }
+
+    const fetchNumArray = () => {
+        let numArray = [[0,[2,2]]]
+        while(hasDuplicates(numArray[0][1])){
+            numArray = MergeSort(10, 20);
+        }
+        return numArray
+    }
+
     return (
         ((!quitGame) ? (
             <div id="sorting-game">
@@ -259,9 +271,10 @@ export default function Game(props) {
                         ) : (gameMode === "walkthrough") ? (
                             //if gamemode is anything else load the walkthrough
                             <WalkThrough
-                                numArray={gameArray}
+                                numArray={fetchNumArray()}
                                 changeLevel={incrLevel}
                             />
+                            
                         ) : (gameMode === "animation") ? (
                             //else for nothing if game isnt running
                             <ArrayGroup

@@ -38,10 +38,13 @@ const transitionValue = (props: { counter: number, index: number, side: string }
             console.log(state.positionValues.level2.right[0])
             return state.positionValues.level2.right[0]
         }
-        else{
+        else {
             console.log(state.positionValues.level2.left[props.index])
             return state.positionValues.level2.left[props.index]
         }
+    }
+    if (props.counter === 1) {
+        return getSide(state.positionValues.level0, props.side)[props.index]
     }
 
     return { x: 1, y: 1 }
@@ -111,7 +114,7 @@ const Cell = (props: { play: boolean, color: string, numArray: any, sorted: bool
 }
 
 
-const ArrayComp = (props: { numArray: Array<Array<Array<number>>>, counter: number, runCalc: boolean, values: Array<number>, sorted: boolean }) => {
+const ArrayComp = (props: { playRoot: boolean, side: string, numArray: Array<Array<Array<number>>>, counter: number, runCalc: boolean, values: Array<number>, sorted: boolean }) => {
     //not actually a react component it just returns an array
     let numArray = props.numArray
     let counter = props.counter
@@ -147,7 +150,7 @@ const ArrayComp = (props: { numArray: Array<Array<Array<number>>>, counter: numb
     }
 
     let arrComp = [
-        <Cell key={0} side='right' counter={counter} play={false} color='#ff5b5b' numArray={numArray[values[0]]} sorted={flipSorted(1)} />,
+        <Cell key={0} side={props.side} counter={counter} play={props.playRoot} color='#ff5b5b' numArray={numArray[values[0]]} sorted={flipSorted(1)} />,
         <ArrayHolder key={1}>
             <Cell key={2} side='left' counter={counter} play={flipSorted(2) && counter === 2} color='#ff5b5b' numArray={numArray[values[1]]} sorted={flipSorted(2)} />
             <Cell key={3} side='right' counter={counter} play={flipSorted(2) && counter === 2} color='#ff5b5b' numArray={numArray[values[2]]} sorted={flipSorted(2)} />
@@ -228,6 +231,13 @@ const IncrementButton = (props: { increaseCounter: () => void }) => {
 export default class WalkThrough extends React.Component<WalkThroughProps, WalkThroughState> {
     constructor(props: WalkThroughProps) {
         super(props)
+
+        console.log(props.numArray)
+
+        store.dispatch({
+            type: 'addRoot',
+            payload: [props.numArray[0][1], props.numArray[2][1], props.numArray[15][1]]
+        })
 
         this.state = {
             numArray: props.numArray,
@@ -316,6 +326,10 @@ export default class WalkThrough extends React.Component<WalkThroughProps, WalkT
         }
     }
 
+    startWalkThrough = () => {
+
+    }
+
     render() {
         return (
             <WalkThroughProvider>
@@ -354,24 +368,30 @@ export default class WalkThrough extends React.Component<WalkThroughProps, WalkT
                                         counter={this.state.counter['left']}
                                         values={[2, 3, 10, 4, 8, 5, 6]}
                                         runCalc={('left' === this.state.side)}
+                                        side='left'
+                                        playRoot={this.state.leftSideSorted && this.state.counter['right'] === 1 && this.state.sorted === true}
                                     />
                                 </div>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                     <ArrayComp
+                                        side='right'
                                         numArray={this.state.numArray}
                                         sorted={this.state.sorted && this.state.side !== 'left'}
                                         counter={this.state.counter['right']}
                                         values={[15, 16, 23, 17, 21, 18, 19]}
-                                        runCalc = {('right'=== this.state.side)}
+                                        runCalc={('right' === this.state.side)}
+                                        playRoot={this.state.leftSideSorted && this.state.counter['right'] === 1 && this.state.sorted === true}
                                     />
 
                                 </div>
                             </div>
-                            <div className="infoText" style={{ display: "flex", flexDirection: 'column', outline: "solid", textAlign: 'center' }}>
-                                <div><strong>Current Side: </strong> {(this.state.counter["right"] === 0 && this.state.counter["left"] === 0) ? 'Parent' : this.state.side}</div>
-                                <div><strong>Current Action: </strong>{this.state.infoMsg}</div>
-                                <div><strong>Status: </strong> In Progress</div>
-                            </div>
+                            <animated.div>
+                                <div className="infoText" style={{ display: "flex", flexDirection: 'column', outline: "solid", textAlign: 'center' }}>
+                                    <div><strong>Current Side: </strong> {(this.state.counter["right"] === 0 && this.state.counter["left"] === 0) ? 'Parent' : this.state.side}</div>
+                                    <div><strong>Current Action: </strong>{this.state.infoMsg}</div>
+                                    <div><strong>Status: </strong> In Progress</div>
+                                </div>
+                            </animated.div>
                             <IncrementButton
                                 increaseCounter={this.increaseCounter}
                             />

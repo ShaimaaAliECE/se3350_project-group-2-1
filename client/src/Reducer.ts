@@ -7,6 +7,7 @@ type Level = {
 }
 
 type PostionValues = {
+    level0: Level
     level1: Level
     level2: Level
 }
@@ -14,7 +15,12 @@ type PostionValues = {
 const y = -46.5
 
 const initialState = {
+    rootArray: new Array<Array<number>>(),
     positionValues: {
+        level0: {
+            right: new Array<Transition>(),
+            left: new Array<Transition>()
+        },
         level1: {
             right: new Array<Transition>(),
             left: new Array<Transition>()
@@ -77,9 +83,9 @@ const shiftArrayLevelOne = (array: Array<Transition>, i: number): Array<Transiti
 
         array.unshift(end)
     }
+
     return array
 }
-
 
 const getLevelTwo = (rootArray: Array<number>, leftArray: Array<number>, rightArray: Array<number>): Level => {
     let rightVal = rightArray[0]
@@ -125,22 +131,13 @@ const getLevelOne = (rootArray: Array<number>, leftArray: Array<number>, rightAr
 
     let startX = -202
     let rightVec = new Array<Transition>()
+    let leftVec = [{ x: 0, y: y },{ x: 64, y: y }, { x: 128, y: y }, { x: 192, y: y }, { x: 256, y: y }]
 
-    let emptyArray:any[] = []
-
-    console.log(emptyArray)
-
-    emptyArray.forEach(()=> {
-        return 0
+    /*
+    emptyArray.forEach((element)=> {
+        console.log('element: ' + element)
     })
-
-    console.log(emptyArray)
-
-    for (let i = 0; i < 5; i++) {
-        emptyArray.push({ x: 64 * i, y: y })
-        console.log(64* i)
-        console.log(emptyArray)
-    }
+    */
 
     for (let i = 0; i < 5; i++) {
         rightVec.push({ x: (startX + (64 * i)), y: y })
@@ -171,11 +168,12 @@ const getLevelOne = (rootArray: Array<number>, leftArray: Array<number>, rightAr
         }
     }
 
-    console.log(emptyArray)
+    console.log(leftVec)
 
     return {
         left: distanceL.map((element: number, i: number): Transition => {
-            return getVec(i, emptyArray, 'left')[element]
+            //@ts-ignore
+            return getVec(i, [].concat(leftVec), 'left')[element]
         }),
         right: distanceR.map((element: number, i: number): Transition => {
             return getVec(i, rightVec, 'right')[element]
@@ -183,8 +181,75 @@ const getLevelOne = (rootArray: Array<number>, leftArray: Array<number>, rightAr
     }
 }
 
-const getPositions = (arrays: Array<Array<number>>): PostionValues => {
+const getRoot = (rootArray: Array<number>, leftArray: Array<number>, rightArray: Array<number>): Level => {
+    let sortedRoot = sort(rootArray)
+    let leftArraySorted = sort(leftArray)
+    let rightArraySorted = sort(rightArray)
+
+    let startX = -325
+    let rightVec = new Array<Transition>()
+    let leftVec = new Array<Transition>()
+
+    /*
+    emptyArray.forEach((element)=> {
+        console.log('element: ' + element)
+    })
+    */
+    for(let i = 0; i < 10; i ++){
+        leftVec.push({x: (i * 64) + 5, y: y})
+    }
+
+    for (let i = 0; i < 5; i++) {
+        rightVec.push({ x: (startX + (64 * i)), y: y })
+    }
+    for(let i = 1; i <= 5 ; i ++){
+        rightVec.push({ x: (64 * i), y: y })
+    }
+
+    let distanceR = []
+    let distanceL = []
+
+    for (let i = 0; i < rightArraySorted.length; i++) {
+        distanceR.push(distance(rightArraySorted, sortedRoot, i))
+    }
+
+    for (let i = 0; i < leftArraySorted.length; i++) {
+        distanceL.push(distance(leftArraySorted, sortedRoot, i))
+    }
+
+    let getVec = (index: number, vector: any, side: string): Array<Transition> => {
+        if (index === 0) {
+            return vector
+        }
+        else {
+            if (side === 'right') {
+                return shiftArrayLevelTwo(vector, index)
+            }
+            else {
+                return shiftArrayLevelOne(vector, index)
+            }
+        }
+    }
+
+    console.log(leftVec)
+
     return {
+        left: distanceL.map((element: number, i: number): Transition => {
+            //@ts-ignore
+            return getVec(i, [].concat(leftVec), 'left')[element]
+        }),
+        right: distanceR.map((element: number, i: number): Transition => {
+            //@ts-ignore
+            return getVec(i,  [].concat(rightVec), 'right')[element]
+        })
+    }
+}
+
+
+const getPositions = (root: Array<Array<number>>, arrays: Array<Array<number>>): PostionValues => {
+    console.log(arrays)
+    return {
+        level0: getRoot(root[0], root[1], root[2]),
         level1: getLevelOne(arrays[0], arrays[1], arrays[2]),
         level2: getLevelTwo(arrays[1], arrays[3], arrays[4])
     }
@@ -192,9 +257,14 @@ const getPositions = (arrays: Array<Array<number>>): PostionValues => {
 
 const reducer = (state = initialState, action: { type: string, payload: Array<Array<number>> }) => {
     switch (action.type) {
-        case 'addArrays':
-            state.positionValues = getPositions(action.payload)
+        case 'addRoot':
+            state.rootArray = action.payload
             return state
+
+        case 'addArrays':
+            state.positionValues = getPositions(state.rootArray, action.payload) 
+            return state
+
         default:
             return state
     }
