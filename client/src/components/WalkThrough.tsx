@@ -21,33 +21,18 @@ function ArrayHolder(props: { children: React.ReactNode }) {
     )
 }
 
-const getSide = (val: any, side: string) => {
-    return (side === 'right') ? (val.right) : (val.left)
-}
-
-const transitionValue = (props: { counter: number, index: number, side: string }): Transition => {
+const transitionValue = (counter: number, index: number, side: string): Transition => {
     let state = store.getState()
-
-    if (props.counter === 2) {
-        console.log(getSide(state.positionValues.level1, props.side)[props.index])
-        return getSide(state.positionValues.level1, props.side)[props.index]
+    try {
+        return state.positionValues[counter - 1][side][index]
     }
-    if (props.counter === 3) {
-        if (props.side === 'right') {
-            console.log("correct")
-            console.log(state.positionValues.level2.right[0])
-            return state.positionValues.level2.right[0]
-        }
-        else {
-            console.log(state.positionValues.level2.left[props.index])
-            return state.positionValues.level2.left[props.index]
-        }
+    catch(e){
+        console.log(e)
+    }   
+    return {
+        x: 1,
+        y: 1
     }
-    if (props.counter === 1) {
-        return getSide(state.positionValues.level0, props.side)[props.index]
-    }
-
-    return { x: 1, y: 1 }
 }
 
 const Animation = (props: { children: React.ReactNode, play: boolean, colorOld: string, transition: Transition, colorNew: string }) => {
@@ -98,7 +83,7 @@ const Cell = (props: { play: boolean, color: string, numArray: any, sorted: bool
                             play={props.play}
                             colorOld={props.color}
                             colorNew='#ff5b5b'
-                            transition={transitionValue({ counter: props.counter, index: i, side: props.side })}
+                            transition={transitionValue(props.counter, i, props.side)}
                         >
                             <Button style={{ fontWeight: 'bolder', color: 'black' }} disabled={true} variant="outlined"> {element}</Button>
                         </Animation>
@@ -159,7 +144,7 @@ const ArrayComp = (props: { playRoot: boolean, side: string, numArray: Array<Arr
         <ArrayHolder key={4}>
             <ArrayHolder key={5}>
                 <Cell key={6} side='left' counter={counter} play={flipSorted(3) && (counter === 3)} color='#ff5b5b' numArray={numArray[values[3]]} sorted={flipSorted(3)} />
-                <Cell key={7} side='right' counter={counter} play={flipSorted(3) && (counter === 3)} color='lightblue' numArray={numArray[values[4]]} sorted={true} />
+                <Cell key={7} side='right' counter={counter} play={flipSorted(3) && (counter === 3)} color='lightblue' numArray={numArray[values[4]]} sorted={flipSorted(3)} />
             </ArrayHolder>
             <Animation
                 key={8}

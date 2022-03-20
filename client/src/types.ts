@@ -23,6 +23,21 @@ type WalkThroughState = {
     changeLevel: (name: string) => void
 }
 
+type LevelADT = {
+    left: Array<Transition>
+    right: Array<Transition>
+}
+
+interface Level extends LevelADT {
+    [key: string]: Array<Transition>
+}
+
+type PositionValues = Array<Level>
+
+type TransitionVectors = {
+    leftVec: Array<Transition>
+    rightVec: Array<Transition>
+}
 
 type Transition = {
     x: number
@@ -32,5 +47,8 @@ type Transition = {
 export type {
     WalkThroughProps,
     WalkThroughState,
-    Transition
+    Transition,
+    Level,
+    PositionValues,
+    TransitionVectors
 }
