@@ -101,6 +101,7 @@ export default function ArrayGroup(props) {
                     playFail();
                     soundPlayed.current = true;
                 }
+                props.disableRest();
             }
         }
         // Update the parent state appropriately
@@ -271,10 +272,10 @@ export default function ArrayGroup(props) {
         if (arrayState !== ArrayStates.MERGED) {
             children = <Grid container>
                 <Grid item xs={6}>
-                    <ArrayGroup level={props.level} parentState={arrayState} mistakeCount={props.mistakeCount} setParentState={setArrayState} label="Left Array" depth={props.depth + 1} key={0} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.leftArray} />
+                    <ArrayGroup level={props.level} parentState={arrayState} mistakeCount={props.mistakeCount} disableRest={props.disableRest} setParentState={setArrayState} label="Left Array" depth={props.depth + 1} key={0} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.leftArray} />
                 </Grid>
                 <Grid item xs={6}>
-                    <ArrayGroup level={props.level} parentState={arrayState} mistakeCount={props.mistakeCount} setParentState={setArrayState} label="Right Array" depth={props.depth + 1} key={1} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.rightArray} />
+                    <ArrayGroup level={props.level} parentState={arrayState} mistakeCount={props.mistakeCount} disableRest={props.disableRest} setParentState={setArrayState} label="Right Array" depth={props.depth + 1} key={1} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.rightArray} />
                 </Grid>
             </Grid>
         }
