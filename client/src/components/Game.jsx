@@ -48,6 +48,7 @@ export default function Game(props) {
     const [gameLevel, setGameLevel] = useState(props.startLevel || 0); // To store level selected for play by user
     const [mistake, setMistake] = useState(3);
     const [quitGame, setGame] = useState(false);
+    const [disableRestart, setDisable] = useState(false);
 
     //size, range state -> array params
     const [range, setRange] = useState(20);
@@ -60,6 +61,10 @@ export default function Game(props) {
     const restart = () => {
         setGameArray([]);
         isRunning.current = false;
+    }
+
+    const disableResBtn = () => {
+        setDisable(true);
     }
 
     //increaseing the level, only increase once for each comp, definetley a better way to do it but...
@@ -241,7 +246,7 @@ export default function Game(props) {
                                             setGameArray([]);
                                             isRunning.current = false;
                                         }}
-                                        style={{ width: 160, height: 50, fontSize: 15, }}
+                                        style={{ width: 160, height: 50, fontSize: 15, display: !disableRestart ? 'show' : 'none' }}
                                         variant="contained">
                                         Restart Game
                                     </Button>
@@ -267,6 +272,7 @@ export default function Game(props) {
                                 numArray={gameArray[0][1]}
                                 changeLevel={incrLevel}
                                 mistakeCount={mistakeCounter}
+                                disableRest={disableResBtn}
                             />
                         ) : (gameMode === "walkthrough") ? (
                             //if gamemode is anything else load the walkthrough
