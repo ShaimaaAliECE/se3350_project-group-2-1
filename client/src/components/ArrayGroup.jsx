@@ -124,9 +124,6 @@ export default function ArrayGroup(props) {
     let mergedArrayLabel; // Shows the values currently in the merged array (when applicable)
     let nextButton, mistakeBtn;
 
-    //console.log(level); 
-
-
     if (arrayState === ArrayStates.UNSORTED) {
         if (props.depth === 0 && gameTime === undefined) {
             setGameTime(new Date().getTime());
@@ -161,7 +158,7 @@ export default function ArrayGroup(props) {
             arrayBlocks.push([
                 <Button disabled={false} variant="outlined" color="error" key={elementKey} value={mergedArray[i]}>{mergedArray[i]}</Button>
             ]);
-            mistakeBtn = <Button onClick={() => props.mistakeCount()} variant="outlined">You have made a mistake! Restart Level</Button>
+            mistakeBtn = <Button onClick={() => props.mistakeCount()} variant="contained">You have made a mistake! Restart Level</Button>
         }
     } else if (arrayState === ArrayStates.MERGING) {
 
@@ -269,14 +266,25 @@ export default function ArrayGroup(props) {
     // Render child arrays if not in merged state
     if (childArrays !== undefined) {
         if (arrayState !== ArrayStates.MERGED) {
+            if (props.numArray.length >= 50) {
             children = <Grid container>
+                <Grid item xs={12}>
+                    <ArrayGroup level={props.level} parentState={arrayState} mistakeCount={props.mistakeCount} disableRest={props.disableRest} setParentState={setArrayState} label="Left Array" depth={props.depth + 1} key={0} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.leftArray} />
+                </Grid>
+                <Grid item xs={12}>
+                    <ArrayGroup level={props.level} parentState={arrayState} mistakeCount={props.mistakeCount} disableRest={props.disableRest} setParentState={setArrayState} label="Right Array" depth={props.depth + 1} key={1} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.rightArray} />
+                </Grid>
+            </Grid>
+            } else {
+                children = <Grid container>
                 <Grid item xs={6}>
                     <ArrayGroup level={props.level} parentState={arrayState} mistakeCount={props.mistakeCount} setParentState={setArrayState} label="Left Array" depth={props.depth + 1} key={0} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.leftArray} />
                 </Grid>
                 <Grid item xs={6}>
                     <ArrayGroup level={props.level} parentState={arrayState} mistakeCount={props.mistakeCount} setParentState={setArrayState} label="Right Array" depth={props.depth + 1} key={1} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.rightArray} />
                 </Grid>
-            </Grid>
+            </Grid> 
+            }
         }
     }
 
