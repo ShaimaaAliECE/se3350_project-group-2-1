@@ -137,8 +137,8 @@ export default function Game(props) {
     }
 
     const fetchNumArray = () => {
-        let numArray = [[0,[2,2]]]
-        while(hasDuplicates(numArray[0][1])){
+        let numArray = [[0, [2, 2]]]
+        while (hasDuplicates(numArray[0][1])) {
             numArray = MergeSort(10, 20);
         }
         return numArray
@@ -274,7 +274,7 @@ export default function Game(props) {
                                 numArray={fetchNumArray()}
                                 changeLevel={incrLevel}
                             />
-                            
+
                         ) : (gameMode === "animation") ? (
                             //else for nothing if game isnt running
                             <ArrayGroup

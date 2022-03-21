@@ -26,7 +26,6 @@ const findIndex = (arr1: Array<number>, root: Array<number>, index: number): num
     return arr2Index
 }
 
-
 const distance = (childArray: Array<number>, root: Array<number>) : Array<number> => {
     let distance = []
 
@@ -69,11 +68,10 @@ const rootVector = (): TransitionVectors => {
     for (let i = 0; i <= 5; i++) {
         rightVec.push({ x: (startX + (64 * i)), y: y })
     }
-    console.log(rightVec)
+
     for (let i = 1; i < 5; i++) {
         rightVec.push({ x: (64 * i), y: y })
     }
-    console.log(rightVec)
 
     return {
         rightVec,

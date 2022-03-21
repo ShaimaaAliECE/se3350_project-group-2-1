@@ -21,6 +21,7 @@ type WalkThroughState = {
     doneSorting: boolean
     infoMsg: string
     changeLevel: (name: string) => void
+    barIsAnimating: boolean
 }
 
 type LevelADT = {
