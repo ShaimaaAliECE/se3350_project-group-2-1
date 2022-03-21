@@ -60,6 +60,7 @@ export default function Game(props) {
 
     const restart = () => {
         setGameArray([]);
+        setDisable(false);
         isRunning.current = false;
     }
 
