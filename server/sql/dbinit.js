@@ -9,4 +9,4 @@ let connection = mysql.createConnection(
     }
 );
 
-modules.export = connection;
+module.exports = connection;

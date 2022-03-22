@@ -43,4 +43,4 @@ function createTables(){
     sqlConnection.end();   
 }
 
-modules.export = createTables;
+module.exports = createTables;

@@ -26,4 +26,4 @@ function insertLevelData(data, level, callback){
     connection.end();
 }
 
-modules.export = [getLevelData, insertLevelData];
+module.exports = [getLevelData, insertLevelData];
