@@ -294,7 +294,9 @@ export default function Game(props) {
                                 mergedArray={mergedArray}
                                 pushToMerged={setMerged}
                                 numArray={gameArray[0][1]}
+                                mistakeCount={mistakeCounter}
                                 changeLevel={incrLevel}
+                                disableRest={disableResBtn}
                             />
                         ) : (
                             <></>
