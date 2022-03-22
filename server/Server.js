@@ -1,11 +1,12 @@
 const express = require('express');
 const Connection = require('mysql/lib/Connection');
 const path = require('path')
+const [getLevelData, insertLevelData] = require('./sql/levels/sqlFunctions');
+const createTables = require('./sql/levels/createTables')
 var bodyParser = require('body-parser')
 var jsonParser = bodyParser.json()
 
 const app = express()
-const sqlConnection = require('./sql/dbinit');
 
 app.use(
     (request, response, next) => {
@@ -35,44 +36,40 @@ app.get('/admin', (req, res) => {
 
 //sql calls
 //get data
-app.get('/getData', (req, res) => {
-    sqlConnection.connect()
-    sqlConnection.query(
-        'SELECT * FROM mergeSortData',
-        (err, result, fields) => {
-            if (err) res.send(err);
-            res.send(result);
-        }
-    );
-    connection.end();
+let levelMapping = {
+    2:'level2Data',
+    3:'level3Data',
+    4:'level4Data',
+    5:'level5Data',
+    custom: 'levelCustomData'
+}
+
+app.get('/getData', (req, res) =>{
+    let level = levelMapping[req.body.level];
+    getLevelData(level, returnData);
+
+    //callback
+    function returnData(data){
+        res.send(data);
+    }
 });
 
-//get data
-app.post('/postData', jsonParser, (req, res) => {
-    let var1 = req.body.time;
-    let var2 = req.body.mistakeCount;
-    sqlConnection.connect()
-    sqlConnection.query(
-        `INSERT INTO mergeSortData (var1, var2) VALUES (${va1}, ${var2})`,
-        (err, result, fields) => {
-            if (err) res.send(err);
-            res.send(result);
-        }
-    );
-    connection.end();
+app.get('/createTables', (req, res) =>{
+    createTables();
 });
 
-const createTable = () => {
-    sqlConnection.connect()
-    sqlConnection.query(
-        '"CREATE TABLE mergeSortData ()"',
-        (err, result, fields) => {
-            if (err) console.log(err);
-            console.log(result);
-        }
-    );
-    sqlConnection.end();
-};
+//insert data
+app.post('/postData', jsonParser, (req, res) =>{
+    let level = levelMapping[req.body.level];
+    let time = req.body.time;
+    insertLevelData(time, level, returnData);
+
+    //callback
+    function returnData(data){
+        res.send(data);
+    }
+});
+
 
 
 app.listen(8080);
