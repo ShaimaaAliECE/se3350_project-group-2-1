@@ -37,14 +37,14 @@ app.get('/admin', (req, res) => {
 //sql calls
 //get data
 let levelMapping = {
-    2:'level2Data',
-    3:'level3Data',
-    4:'level4Data',
-    5:'level5Data',
-    custom: 'levelCustomData'
+    '2':'level2Data',
+    '3':'level3Data',
+    '4':'level4Data',
+    '5':'level5Data',
+    'custom': 'levelCustomData'
 }
 
-app.get('/getData', (req, res) =>{
+app.get('/getData', jsonParser, (req, res) =>{
     let level = levelMapping[req.body.level];
     getLevelData(level, returnData);
 
