@@ -13,7 +13,7 @@ app.use(
         response.set({
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type *'
+            'Access-Control-Allow-Headers': '*'
         })
 
         if (request.method === 'OPTIONS') {
@@ -33,43 +33,43 @@ app.get('/admin', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../admin', 'index.html'));
 });
 
-
 //sql calls
 //get data
 let levelMapping = {
-    '2':'level2Data',
-    '3':'level3Data',
-    '4':'level4Data',
-    '5':'level5Data',
+    '2': 'level2Data',
+    '3': 'level3Data',
+    '4': 'level4Data',
+    '5': 'level5Data',
     'custom': 'levelCustomData'
 }
 
-app.get('/getData', jsonParser, (req, res) =>{
-    let level = levelMapping[req.body.level];
-    getLevelData(level, returnData);
+app.get('/getData', (req, res) => {
+    let level = levelMapping[req.query.level];
 
-    //callback
-    function returnData(data){
+    getLevelData(level, (data) => {
         res.send(data);
-    }
+    })
 });
 
-app.get('/createTables', (req, res) =>{
+app.get('/createTables', (req, res) => {
     createTables();
 });
 
 //insert data
-app.post('/postData', jsonParser, (req, res) =>{
+app.post('/postData', jsonParser, (req, res) => {
+    console.log(req.body)
     let level = levelMapping[req.body.level];
     let time = req.body.time;
     insertLevelData(time, level, returnData);
 
     //callback
-    function returnData(data){
+    function returnData(data) {
         res.send(data);
     }
 });
 
 
 
-app.listen(8080);
+app.listen(8080, () => {
+    console.log("listenining on: " + 8080)
+});

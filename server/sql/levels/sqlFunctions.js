@@ -2,6 +2,7 @@ const sqlConnection = require('../dbinit');
 
 //get data from level
 function getLevelData(level, callback){
+    /*
     sqlConnection.connect()
     sqlConnection.query(
         `SELECT * FROM ${level}`,
@@ -10,7 +11,8 @@ function getLevelData(level, callback){
             callback(result);
         }
     );
-    connection.end();
+    sqlConnection.end();
+    */
 }
 
 //insert data into level
@@ -23,7 +25,7 @@ function insertLevelData(data, level, callback){
             callback(result);
         }
     );
-    connection.end();
+    sqlConnection.end();
 }
 
 module.exports = [getLevelData, insertLevelData];

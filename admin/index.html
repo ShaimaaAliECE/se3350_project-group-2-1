@@ -9,9 +9,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js">
+        integrity = "sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin = "anonymous" ></script>
     <script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
     <script src="./select/js/dataTables.select.min.js"></script>
 </head>
@@ -28,7 +28,6 @@
                 <div class="navbar-nav">
                     <a class="nav-link active" aria-current="page" href="?">Home</a>
                     <a class="nav-link">Levels: </a>
-                    <a class="nav-link" href='?table=Level 1'>1</a>
                     <a class="nav-link" href="?table=Level 2">2</a>
                     <a class="nav-link" href="?table=Level 3">3</a>
                     <a class="nav-link" href="?table=Level 4">4</a>
@@ -37,7 +36,7 @@
             </div>
         </div>
     </nav>
-    <h1 style="margin: 20px; font-size: 20px;" id="header">Home</h1>
+    <h1 style="margin: 20px; font-size: 20px;" id="header">level 2</h1>
     <div style=" margin: 20px;">
         <table id="table">
             <thead>
@@ -51,14 +50,22 @@
     </div>
 </body>
 <script>
-    function setTable(level) {
-        $('#table').DataTable({
-            ajax: '/get-forums',
-            searching: false,
-            ordering: false,
-            select: true
-        });
-    }
+        function setTable(level) {
+            let num = level.split(" ")
+            console.log(num[1])
+            $('#table').DataTable({
+                proccessing: true,
+                serverSide: true,
+                ajax: {
+                    "url": "http://localhost:8080/getData?level="+num[1],
+                    "contentType": "application/json;",
+                    "type": "get",
+                },
+                searching: false,
+                ordering: false,
+                select: true
+            });
+        }
 
     function getUrlParameter(sParam) {
         var sPageURL = window.location.search.substring(1), sURLVariables = sPageURL.split('&'), sParameterName, i;
@@ -78,7 +85,7 @@
         console.log(params)
 
         if (!params) {
-            setTable('home')
+            setTable('level 2')
         }
         else {
             $('#header').text(params)
