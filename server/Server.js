@@ -49,8 +49,8 @@ app.get('/getData', (req, res) => {
 
 //get data
 app.post('/postData', jsonParser, (req, res) => {
-    let var1 = req.body.var1;
-    let var2 = req.body.var2;
+    let var1 = req.body.time;
+    let var2 = req.body.mistakeCount;
     sqlConnection.connect()
     sqlConnection.query(
         `INSERT INTO mergeSortData (var1, var2) VALUES (${va1}, ${var2})`,
