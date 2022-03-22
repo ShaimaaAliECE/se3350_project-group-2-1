@@ -21,31 +21,6 @@ app.use(
         else {
             next()
         }
-    },
-    (request, response, next) => {
-        if (request.method === 'POST') {
-            let type = request.headers['content-type']
-            let bodyStream = '';
-
-            request.on('data', chunk => {
-                bodyStream += chunk.toString()
-            })
-
-            request.on('end', () => {
-                if (type === 'json') {
-                    request.body = JSON.parse(bodyStream)
-                    next()
-                }
-
-                if (type === 'xml') {
-                    console.log(request.body)
-                    next()
-                }
-            })
-        }
-        else {
-            next();
-        }
     }
 )
 
