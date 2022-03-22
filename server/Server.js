@@ -1,9 +1,10 @@
 const express = require('express');
 const Connection = require('mysql/lib/Connection');
 const path = require('path')
+const [getLevelData, insertLevelData] = require('./sql/levels/sqlFunctions');
+const createTables = require('./sql/levels/createTables')
 
 const app = express()
-const sqlConnection = require('./sql/dbinit');
 
 
 app.use(express.static(path.join(__dirname, '../client/build')))
@@ -19,44 +20,40 @@ app.get('/admin', (req, res) => {
 
 //sql calls
 //get data
+let levelMapping = {
+    2:'level2Data',
+    3:'level3Data',
+    4:'level4Data',
+    5:'level5Data',
+    custom: 'levelCustomData'
+}
+
 app.get('/getData', (req, res) =>{
-    sqlConnection.connect()
-    sqlConnection.query(
-        'SELECT * FROM mergeSortData',
-        (err, result, fields) => {
-            if (err) res.send(err);
-            res.send(result);
-        }
-    );
-    connection.end();
+    let level = levelMapping[req.body.level];
+    getLevelData(level, returnData);
+
+    //callback
+    function returnData(data){
+        res.send(data);
+    }
 });
 
-//get data
+app.get('/createTables', (req, res) =>{
+    createTables();
+});
+
+//insert data
 app.post('/postData', (req, res) =>{
-    let var1 = req.body.var1;
-    let var2 = req.body.var2;
-    sqlConnection.connect()
-    sqlConnection.query(
-        `INSERT INTO mergeSortData (var1, var2) VALUES (${va1}, ${var2})`,
-        (err, result, fields) => {
-            if (err) res.send(err);
-            res.send(result);
-        }
-    );
-    connection.end();
+    let level = levelMapping[req.body.level];
+    let time = req.body.time;
+    insertLevelData(time, level, returnData);
+
+    //callback
+    function returnData(data){
+        res.send(data);
+    }
 });
 
-const createTable = () => {
-    sqlConnection.connect()
-    sqlConnection.query(
-        '"CREATE TABLE mergeSortData ()"',
-        (err, result, fields) => {
-            if (err) console.log(err);
-            console.log(result);
-        }
-    );
-    sqlConnection.end();
-};
 
 
 app.listen(8080);
