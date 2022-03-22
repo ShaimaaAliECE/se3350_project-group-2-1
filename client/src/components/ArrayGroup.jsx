@@ -5,6 +5,16 @@ import useSound from 'use-sound';
 import checkSound from '../checkAudio.mp3'
 import wrongSound from '../wrongAudio.mp3'
 import Draggable from "react-draggable";
+import axios from "axios";
+
+const postData = async (data) => {
+    let res = await axios.post('http://127.0.0.1:8080/postData', {
+        ...data
+    }).catch(function (error) {
+        console.log(error);
+    });
+    console.log(res.data)
+}
 
 /**
  * Renders one group of array elements
@@ -226,8 +236,6 @@ export default function ArrayGroup(props) {
         );
     }
 
-
-
     ////////////////////////////////////////////////
 
     /*
@@ -247,6 +255,11 @@ export default function ArrayGroup(props) {
         let msg = 'Correct!';
         let typeOfFinishAlert = 'success';
 
+        postData({
+            time: timeDelta,
+            mistakeCount: props.mistakeCount
+        })
+        
         timeAlert = <Snackbar open={open} autoHideDuration={1200} onClose={handleClose}>
             <Alert onClose={handleClose} severity={typeOfFinishAlert} sx={{ width: '100%' }}>
                 {(props.depth === 0 ? timeDelta : '') + msg}
@@ -261,7 +274,6 @@ export default function ArrayGroup(props) {
                 {msg}
             </Alert>
         </Snackbar> // green popup on
-
     }
 
     // Render child arrays if not in merged state

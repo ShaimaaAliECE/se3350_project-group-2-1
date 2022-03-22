@@ -1,12 +1,53 @@
 const express = require('express');
 const Connection = require('mysql/lib/Connection');
 const path = require('path')
+var bodyParser = require('body-parser')
+var jsonParser = bodyParser.json()
 
 const app = express()
 const sqlConnection = require('./sql/dbinit');
 
+app.use(
+    (request, response, next) => {
+        response.set({
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type *'
+        })
 
-app.use(express.static(path.join(__dirname, '../client/build')))
+        if (request.method === 'OPTIONS') {
+            response.sendStatus(200)
+        }
+        else {
+            next()
+        }
+    },
+    (request, response, next) => {
+        if (request.method === 'POST') {
+            let type = request.headers['content-type']
+            let bodyStream = '';
+
+            request.on('data', chunk => {
+                bodyStream += chunk.toString()
+            })
+
+            request.on('end', () => {
+                if (type === 'json') {
+                    request.body = JSON.parse(bodyStream)
+                    next()
+                }
+
+                if (type === 'xml') {
+                    console.log(request.body)
+                    next()
+                }
+            })
+        }
+        else {
+            next();
+        }
+    }
+)
 
 app.get('/', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
@@ -19,7 +60,7 @@ app.get('/admin', (req, res) => {
 
 //sql calls
 //get data
-app.get('/getData', (req, res) =>{
+app.get('/getData', (req, res) => {
     sqlConnection.connect()
     sqlConnection.query(
         'SELECT * FROM mergeSortData',
@@ -32,7 +73,7 @@ app.get('/getData', (req, res) =>{
 });
 
 //get data
-app.post('/postData', (req, res) =>{
+app.post('/postData', jsonParser, (req, res) => {
     let var1 = req.body.var1;
     let var2 = req.body.var2;
     sqlConnection.connect()
