@@ -80,6 +80,10 @@ export default function Game(props) {
         setMistake(mistake - 1);
         restart();
     }
+    
+    if(props.testMistakes){
+        mistakeCounter();
+    }
 
     const restartGame = () => {
         setLevel(0);
@@ -188,6 +192,7 @@ export default function Game(props) {
                                 <>
                                     <div>
                                         <Button
+                                            id='level-1-btn'
                                             onClick={() => startGame("walkthrough", 1)}
                                             variant="contained"
                                             style={{ width: 140, height: 50, marginLeft: 20 }}
@@ -237,6 +242,7 @@ export default function Game(props) {
                             ) : (
                                 <>
                                     <Button
+                                        id='mistakesCountB'
                                         variant="outlined"
                                         style={{ width: 140, height: 50, marginRight: 20 }}
                                     >
