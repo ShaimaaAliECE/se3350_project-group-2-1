@@ -2,7 +2,7 @@
 import Game from '../components/Game.jsx';
 import {render, fireEvent, waitFor, screen, queryByAttribute} from '@testing-library/react'
 
-test('check if level 1 is rendering on open', () => {
+test('check if mistakes left is accurate for level 1', () => {
    let dom = render(<Game></Game>);
    const getById = queryByAttribute.bind(null, 'id');
    fireEvent.click(screen.getByText('Level 1'));
