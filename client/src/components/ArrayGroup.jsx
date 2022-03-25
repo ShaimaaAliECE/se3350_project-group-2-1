@@ -144,7 +144,7 @@ export default function ArrayGroup(props) {
         if (props.parentState === ArrayStates.LEFT_SORTING && props.label === "Right Array") {
             splitArrayDisabled = true;
         }
-        splitArrayButton = (<Button disabled={splitArrayDisabled} onClick={splitArray} variant="contained">Split</Button>);
+        splitArrayButton = (<Button className="split-array-btn" disabled={splitArrayDisabled} onClick={splitArray} variant="contained">Split</Button>);
 
         for (let i = 0; i < props.numArray.length; i++) {
             let elementKey = `${props.index}-${i}`; // Unique identifier structure: {array key} - {element index}
@@ -202,6 +202,7 @@ export default function ArrayGroup(props) {
                 onClose={closeDialogue}
                 PaperComponent={PaperComponent}
                 aria-labelledby="draggable-dialog-title"
+                id="level-2-instructions"
             >
                 <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
                     Welcome to Level 2!
