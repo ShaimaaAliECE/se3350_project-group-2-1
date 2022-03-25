@@ -16,10 +16,9 @@ export default function ArrayGroup(props) {
      * Updates the merged list with a new value selected from child array
      * @param {number} value 
      */
-    function pushToMerged(value) {
+    function pushToMerged(value){
         setMergedArray([...mergedArray, value]);
     }
-    
     /**
      * Handle "Split Array" button click event
      */
