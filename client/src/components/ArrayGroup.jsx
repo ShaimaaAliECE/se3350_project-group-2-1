@@ -71,6 +71,7 @@ export default function ArrayGroup(props) {
      * Callback function to handle array element button onclick event
      * @param {number} value 
      */
+    /*
     function selectValue(el) {
         let value = parseInt(el.target.getAttribute("value"), 10);
         props.pushToMerged(value);
@@ -89,6 +90,27 @@ export default function ArrayGroup(props) {
             return true
         }
     }
+
+    */
+   
+    function selectValue(el){
+        let value = parseInt(el.target.getAttribute("value"), 10);
+        props.pushToMerged(value);
+        el.target.style.display = "none";
+    }
+    function validateArray() {
+        if (mergedArray.length > 1) {
+            for (let i = 0; i < mergedArray.length - 1; i++) {
+                if (mergedArray[i] > mergedArray[i + 1]) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return true
+        }
+    }
+
 
     /**
      * When the component is re-rendered (due to a change in state), check to see if the array has been successfully merged
@@ -198,6 +220,7 @@ export default function ArrayGroup(props) {
         const closeDialogue = () => {
             setOpenDialogue(false);
         };
+
         return (<div>
             <Dialog
                 open={openDialogue}
@@ -253,6 +276,7 @@ export default function ArrayGroup(props) {
 
         setOpen(false);
     };
+
     if (arrayState === ArrayStates.MERGED && props.numArray.length > 1) {
         let timeDelta = (new Date().getTime() - gameTime) / 1000 + ' seconds to complete! '; // Total time to complete level only displayed if ArrayGroup depth == 0
         let msg = 'Correct!';
