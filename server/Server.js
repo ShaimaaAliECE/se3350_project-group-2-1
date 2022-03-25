@@ -25,6 +25,8 @@ app.use(
     }
 )
 
+app.use(express.static(path.join(__dirname, '../client/build')))
+
 app.get('/', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
 });
@@ -58,6 +60,7 @@ app.get('/createTables', (req, res) => {
 //insert data
 app.post('/postData', jsonParser, (req, res) => {
     console.log(req.body)
+    /*
     let level = levelMapping[req.body.level];
     let time = req.body.time;
     insertLevelData(time, level, returnData);
@@ -66,9 +69,9 @@ app.post('/postData', jsonParser, (req, res) => {
     function returnData(data) {
         res.send(data);
     }
+    */
+    res.send("ok")
 });
-
-
 
 app.listen(8080, () => {
     console.log("listenining on: " + 8080)

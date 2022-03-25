@@ -161,7 +161,9 @@ export default function ArrayGroup(props) {
                 <Button disabled={props.parentState !== ArrayStates.MERGING} key={elementKey} value={mergedArray[i]} onClick={selectValue} variant="outlined">{mergedArray[i]}</Button>
             ]);
         }
-        nextButton = (props.depth === 0) ? (<Button onClick={() => props.changeLevel()}>Next Level</Button>) : (<></>)
+        let timeDelta = (new Date().getTime() - gameTime) / 1000
+
+        nextButton = (props.depth === 0) ? (<Button onClick={() => {props.changeLevel(); postData({level: props.level, timeDelta: timeDelta })}}>Next Level</Button>) : (<></>)
 
     } else if (arrayState === ArrayStates.FAILED_MERGE) {
         for (let i = 0; i < mergedArray.length; i++) {
@@ -254,11 +256,6 @@ export default function ArrayGroup(props) {
         let timeDelta = (new Date().getTime() - gameTime) / 1000 + ' seconds to complete! '; // Total time to complete level only displayed if ArrayGroup depth == 0
         let msg = 'Correct!';
         let typeOfFinishAlert = 'success';
-
-        postData({
-            time: timeDelta,
-            mistakeCount: props.mistakeCount
-        })
         
         timeAlert = <Snackbar open={open} autoHideDuration={1200} onClose={handleClose}>
             <Alert onClose={handleClose} severity={typeOfFinishAlert} sx={{ width: '100%' }}>

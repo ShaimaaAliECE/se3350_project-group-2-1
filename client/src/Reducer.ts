@@ -5,7 +5,7 @@ const y = -46.5
 
 const initialState = {
     rootArray: new Array<Array<number>>(),
-    positionValues: new Array<Level>()
+    positionValues: new Array<Level>(),
 };
 
 const sort = (rootArray: Array<number>): Array<number> => {
