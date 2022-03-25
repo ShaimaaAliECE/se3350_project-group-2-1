@@ -7,6 +7,48 @@ import wrongSound from '../wrongAudio.mp3'
 import Draggable from "react-draggable";
 import axios from "axios";
 
+/*
+function postData(url){
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        setLoading(true);
+        axios
+        .get(url)
+        .then((response) => {
+            setError(err);
+        })
+        .finally(() => {
+            setLoading(false);
+        });
+    }, [url]);
+
+    const refetch = () => {
+        setLoading(true);
+        axios
+        .get(url)
+        .then((response) => {
+            setData(reponse.data);
+        })
+        .catch((err) => {
+            setError(err);
+        })
+        .finally(() => {
+            setLoading(false);
+        });
+    };
+
+    return { data, loading, error, refetch };
+}
+
+export default postData;
+
+
+
+
+
 const postData = async (data) => {
     let res = await axios.post('http://127.0.0.1:8080/postData', {
         ...data
@@ -15,6 +57,7 @@ const postData = async (data) => {
     });
     console.log(res.data)
 }
+*/
 
 /**
  * Renders one group of array elements
@@ -32,6 +75,8 @@ const postData = async (data) => {
  *  parentState: {ArrayStates} State of parent array
  *  setParentState: {Function} Updates the parent's state
  */
+
+
 export default function ArrayGroup(props) {
     // State initialization
     const [arrayState, setArrayState] = useState(props.numArray.length === 1 ? ArrayStates.MERGED : ArrayStates.UNSORTED);
@@ -71,28 +116,7 @@ export default function ArrayGroup(props) {
      * Callback function to handle array element button onclick event
      * @param {number} value 
      */
-    /*
-    function selectValue(el) {
-        let value = parseInt(el.target.getAttribute("value"), 10);
-        props.pushToMerged(value);
-        el.target.style.display = "none";
-    }
 
-    function validateArray() {
-        if (mergedArray.length > 1) {
-            for (let i = 0; i < mergedArray.length - 1; i++) {
-                if (mergedArray[i] > mergedArray[i + 1]) {
-                    return false;
-                }
-            }
-            return true;
-        } else {
-            return true
-        }
-    }
-
-    */
-   
     function selectValue(el){
         let value = parseInt(el.target.getAttribute("value"), 10);
         props.pushToMerged(value);
