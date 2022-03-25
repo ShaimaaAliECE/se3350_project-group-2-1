@@ -3,7 +3,8 @@ const Connection = require('mysql/lib/Connection');
 const path = require('path')
 const [getLevelData, insertLevelData] = require('./sql/levels/sqlFunctions');
 const createTables = require('./sql/levels/createTables')
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
+const { rmSync } = require('fs');
 var jsonParser = bodyParser.json()
 
 const app = express()
@@ -49,28 +50,35 @@ app.get('/getData', (req, res) => {
     let level = levelMapping[req.query.level];
 
     getLevelData(level, (data) => {
-        res.send(data);
+        console.log(data)
+        res.json(data);
     })
 });
 
+/*
 app.get('/createTables', (req, res) => {
     createTables();
 });
 
+app.get('/testDB', (req, res) => {
+    function returnData(data) {
+        res.send(data)
+    }
+
+    getLevelData(2, returnData);
+})
+*/
+
 //insert data
 app.post('/postData', jsonParser, (req, res) => {
     console.log(req.body)
-    /*
-    let level = levelMapping[req.body.level];
-    let time = req.body.time;
-    insertLevelData(time, level, returnData);
 
-    //callback
-    function returnData(data) {
+    let level = levelMapping[req.body.level];
+    let time = req.body.timeDelta;
+
+    insertLevelData(time, level, (data) => {
         res.send(data);
-    }
-    */
-    res.send("ok")
+    });
 });
 
 app.listen(8080, () => {
