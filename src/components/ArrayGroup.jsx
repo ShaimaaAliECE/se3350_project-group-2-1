@@ -39,16 +39,18 @@ export default function ArrayGroup(props) {
      * @param {number} value 
      */
     function selectValue(el) {
-        let value = parseInt(el.target.getAttribute("value"), 10);
+        let value = parseInt(el.target.getAttribute("value"), 10); 
         props.pushToMerged(value);
-        el.target.style.display = "none";
+        el.target.style.display = "none"; 
     }
 
-    function delay(time) {
-        return new Promise(res => {
-          setTimeout(res,time)
+    // setting delay time
+    function delay (time){
+        return new Promise (res => {
+            setTimeout(res,time)   
         })
-      }
+    }
+
 
     /**
      * When the component is re-rendered (due to a change in state), check to see if the array has been successfully merged
@@ -153,13 +155,11 @@ export default function ArrayGroup(props) {
             if  (prevElementValue > elementValue) {
                 return(false);
             }
-
         }        
-
         return(true);
-
     }
     
+    // array is merged
     if (arrayState === ArrayStates.MERGED) {
         if (props.depth === 0) {
             let timeDelta = (new Date().getTime() - gameTime) / 1000; // from the time level 0 is presented till full sort
