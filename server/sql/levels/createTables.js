@@ -5,7 +5,7 @@ function createTables(){
     sqlConnection.connect()
     //queries
     sqlConnection.query(
-        '"CREATE TABLE level2Data (time)"',
+        '"CREATE TABLE level2Data (time VARCHAR(20))"',
         (err, result, fields) => {
             if (err) console.log(err);
             console.log(result);
@@ -19,21 +19,21 @@ function createTables(){
         }
     );
     sqlConnection.query(
-        '"CREATE TABLE level4Data (time)"',
+        '"CREATE TABLE level4Data (time VARCHAR(20))"',
         (err, result, fields) => {
             if (err) console.log(err);
             console.log(result);
         }
     );
     sqlConnection.query(
-        '"CREATE TABLE level5Data (time)"',
+        '"CREATE TABLE level5Data (time VARCHAR(20))"',
         (err, result, fields) => {
             if (err) console.log(err);
             console.log(result);
         }
     );
     sqlConnection.query(
-        '"CREATE TABLE levelCustomData (time)"',
+        '"CREATE TABLE levelCustomData (time VARCHAR(20))"',
         (err, result, fields) => {
             if (err) console.log(err);
             console.log(result);
