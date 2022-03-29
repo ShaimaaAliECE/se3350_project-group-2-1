@@ -51,7 +51,6 @@
         function setTable(level) {
             let num = level;
             let url = '/getData?level='+num;
-            console.log(num)
             let table = $('#table').DataTable( 
             {
                 ajax: url,
@@ -75,7 +74,6 @@
 
     $(function () {
         let params = getUrlParameter('table')
-        console.log(params)
 
         if (!params) {
             setTable('2')

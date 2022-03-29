@@ -45,7 +45,6 @@ let levelMapping = {
 
 app.get('/getData', (req, res) => {
     let level = levelMapping[req.query.level];
-    console.log(level)
 
     getLevelData(level, (result) => {
         const data = [];
@@ -54,7 +53,6 @@ app.get('/getData', (req, res) => {
             row.push(result[time]["time"]);
             data.push(row)
         }
-        console.log(data)
         res.send({data:data})
     })
 });
