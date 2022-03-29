@@ -247,16 +247,17 @@ export default function Game(props) {
                                             style={{ width: 140, height: 50, display: ((level >= 5) ? 'show' : 'none'), marginLeft: 20 }}
                                         >Custom</Button>
                                         <div style={{ display: ((!mistake) ? 'show' : 'none') }}>
-                                            <h2>You have made the maximum number of mistakes.</h2>
-                                            <h3>You can now either: </h3>
-                                            <ul>
-                                                <li style={{ padding: '5px' }}>
+                                            <br />
+                                            <h2 class='quitPage' style={{fontSize: '2em'}}>You have made the maximum number of mistakes.</h2>
+                                            <h3 class='quitPage' style={{fontSize: '1.5em', letterSpacing: 1.5, color: '#2054b3'}}>You can now either: </h3>
+                                            <ul style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
+                                                <li style={{ padding: '10px'}}>
                                                     <Button variant='contained' onClick={() => restartGame()}>Restart Game from Level 1</Button>
                                                 </li>
-                                                <li style={{ padding: '5px' }}>
-                                                    <h3>Go back to a previous level</h3>
+                                                <li style={{ padding: '10px' }}>
+                                                    <h3 class='quitPage' style={{ fontSize: '1.2em', letterSpacing: 1, color: '#2054b3', marginBottom: 0}}>Go back to a previous level</h3>
                                                 </li>
-                                                <li style={{ padding: '5px' }}>
+                                                <li style={{ padding: '10px' }}>
                                                     <Button variant='contained' onClick={() => setGame(true)}>Quit Game</Button>
                                                 </li>
                                             </ul>
@@ -342,10 +343,14 @@ export default function Game(props) {
                 </div>
             </div >
         ) : (
+            <div class="wrapper-1">
+            <div class="wrapper-2">
             <div style={{ textAlign: 'center' }}>
-                <h1 >Thank you for playing!</h1>
-                <h2>If you'd like to play again, click here!</h2>
-                <Button variant='contained' style={{ fontSize: '20px' }} onClick={() => restartGame()}>New Game</Button>
+                <h1 class='quitPage'>Thank you for playing!</h1>
+                <h2 class='quitPageh2'>If you'd like to play again, click here!</h2>
+                <Button class='newGameBtn' style={{ fontSize: '20px' }} onClick={() => restartGame()}>New Game</Button>
+            </div>
+            </div>
             </div>
         ))
     )
