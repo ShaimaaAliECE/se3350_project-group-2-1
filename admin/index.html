@@ -13,7 +13,6 @@
         integrity = "sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin = "anonymous" ></script>
     <script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-    <script src="./select/js/dataTables.select.min.js"></script>
 </head>
 
 <body>
@@ -41,9 +40,7 @@
         <table id="table">
             <thead>
                 <tr>
-                    <th>Forum Name</th>
-                    <th>Forum Description</th>
-                    <th>Forum Creater</th>
+                    <th>Time</th>
                 </tr>
             </thead>
         </table>
@@ -54,12 +51,9 @@
             let num = level.split(" ")
             console.log(num[1])
             $('#table').DataTable({
-                proccessing: true,
-                serverSide: true,
-                ajax: {
-                    "url": "http://localhost:8080/getData?level="+num[1],
-                    "contentType": "application/json;",
-                    "type": "get",
+                ajax: { 
+                    url: "/getData?level=2",
+                    dataSrc:''
                 },
                 searching: false,
                 ordering: false,

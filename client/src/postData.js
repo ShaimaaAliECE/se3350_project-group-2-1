@@ -5,5 +5,3 @@ function PostData(url, data) {
         console.log(response.data)
     })
 }
-
-export default PostData;

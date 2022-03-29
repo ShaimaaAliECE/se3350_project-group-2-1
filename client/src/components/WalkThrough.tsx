@@ -51,8 +51,17 @@ const AnimationElement = (props: { children: React.ReactNode, play: boolean, col
     }))
 
 
-//
-
+    useLayoutEffect(() => {
+        if (props.play && !hasRun) {
+            setAnimating(true)
+            setRun(true)
+            api.start({
+                backgroundColor: props.colorNew,
+                ...props.transition,
+                delay: 500,
+            })
+        }
+    })
 
     return (
         <animated.div style={{ ...animateProps, flexDirection: "row" }}>
