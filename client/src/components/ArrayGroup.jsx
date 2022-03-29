@@ -5,7 +5,7 @@ import useSound from 'use-sound';
 import checkSound from '../checkAudio.mp3'
 import wrongSound from '../wrongAudio.mp3'
 import Draggable from "react-draggable";
-import axios from "axios";
+//import axios from "axios";
 
 /*
 function postData(url){
@@ -209,7 +209,7 @@ export default function ArrayGroup(props) {
         }
         let timeDelta = (new Date().getTime() - gameTime) / 1000
 
-        nextButton = (props.depth === 0) ? (<Button onClick={() => {props.changeLevel(); postData({level: props.level, timeDelta: timeDelta })}}>Next Level</Button>) : (<></>)
+       // nextButton = (props.depth === 0) ? (<Button onClick={() => {props.changeLevel(); postData({level: props.level, timeDelta: timeDelta })}}>Next Level</Button>) : (<></>)
 
     } else if (arrayState === ArrayStates.FAILED_MERGE) {
         for (let i = 0; i < mergedArray.length; i++) {
