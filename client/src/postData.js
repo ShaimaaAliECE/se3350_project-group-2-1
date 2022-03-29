@@ -2,15 +2,12 @@ const http = require('http');
 const url = require('url');
 const fs = require('fs');
 const path = require('path');
-//const port = process.argv[2] || 9000;
-
-
 
 const server = http.createServer(function(request, response) {
-    //console.dir(request.param)
 
+  // post request data coming into system
     if  (request.method == 'POST') {
-        //console.log('POST')
+      // taking data from form
         var body = ''
         request.on('data', function(data) {
             body += data
@@ -18,14 +15,19 @@ const server = http.createServer(function(request, response) {
         request.on('end', function() {
             console.log('Body: ' + body);
             body += '\n';
+            // writing html text header 
             response.writeHead(200, {'Content-Type': 'text/html'});
-            response.writeHead(200, {'Access-Control-Allow-Origin': '*'});            
+            // allow origin if running from another server
+            response.writeHead(200, {'Access-Control-Allow-Origin': '*'});  
+            // writing post received with data          
             response.end('post received with data: ' + body);
             
+            // appending to existing file
             if  (fs.existsSync('GameStats.txt')) {
                 fs.appendFileSync('GameStats.txt', body);
                 console.log("The GameStats.txt file was apended to!");
             }
+            // otherwise writing new file
             else {
                 fs.writeFile("GameStats.txt", body, function(err) {
                     if  (err) {
@@ -36,6 +38,10 @@ const server = http.createServer(function(request, response) {
             }
         })
     } 
+
+    // GET - building HTML 
+    // POST to server
+    // generating HTML page
     else {
         console.log('GET')
         var html = `
@@ -81,6 +87,7 @@ const server = http.createServer(function(request, response) {
         response.end(html)
     }
 });
+
 
 const port = 3000
 const host = '127.0.0.1'
