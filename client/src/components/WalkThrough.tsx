@@ -50,6 +50,7 @@ const AnimationElement = (props: { children: React.ReactNode, play: boolean, col
         },
     }))
 
+
     useLayoutEffect(() => {
         if (props.play && !hasRun) {
             setAnimating(true)
@@ -61,7 +62,7 @@ const AnimationElement = (props: { children: React.ReactNode, play: boolean, col
             })
         }
     })
-    
+
     return (
         <animated.div style={{ ...animateProps, flexDirection: "row" }}>
             {props.children}

@@ -5,19 +5,7 @@ import useSound from 'use-sound';
 import checkSound from '../checkAudio.mp3'
 import wrongSound from '../wrongAudio.mp3'
 import Draggable from "react-draggable";
-//import axios from "axios";
-
-/*
-
-const postData = async (data) => {
-    let res = await axios.post('http://127.0.0.1:8080/postData', {
-        ...data
-    }).catch(function (error) {
-        console.log(error);
-    });
-    console.log(res.data)
-}
-*/
+import PostData from "../postData"
 
 /**
  * Renders one group of array elements
@@ -35,7 +23,6 @@ const postData = async (data) => {
  *  parentState: {ArrayStates} State of parent array
  *  setParentState: {Function} Updates the parent's state
  */
-
 
 export default function ArrayGroup(props) {
     // State initialization
@@ -204,7 +191,7 @@ export default function ArrayGroup(props) {
         }
         let timeDelta = (new Date().getTime() - gameTime) / 1000
 
-       nextButton = (props.depth === 0) ? (<Button onClick={() => {props.changeLevel() }}>Next Level</Button>) : (<></>)
+       nextButton = (props.depth === 0) ? (<Button onClick={() => {props.changeLevel(); PostData("http://127.0.0.1:8080/postData" ,{level: props.level, timeDelta: timeDelta })}}>Next Level</Button>) : (<></>)
 
     } else if (arrayState === ArrayStates.FAILED_MERGE) {
         for (let i = 0; i < mergedArray.length; i++) {
