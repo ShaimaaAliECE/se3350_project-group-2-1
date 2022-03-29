@@ -16,25 +16,33 @@ const server = http.createServer(function(request, response) {
         request.on('end', function() {
             console.log('Body: ' + body);
             body += '\n';
-            // writing HTML text editor
+
             response.writeHead(200, {'Content-Type': 'text/html'});
-            // allow origin if from another server
-            response.writeHead(200, {'Access-Control-Allow-Origin': '*'});  
+            response.setHeader('Access-Control-Allow-Origin', '*');
+            response.setHeader('Access-Control-Request-Method', '*');
+            response.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST');
+            response.setHeader('Access-Control-Allow-Headers', '*');
+
+            if  (response.method === 'OPTIONS' ) {
+                response.writeHead(200);
+                response.end();
+            }            
+
             // writing post recevied with data           
             response.end('post received with data: ' + body);
-            
+
             // appending to existing file
-            if  (fs.existsSync('GameStats.txt')) {
-                fs.appendFileSync('GameStats.txt', body);
-                console.log("The GameStats.txt file was apended to!");
+            if  (fs.existsSync('GameStats.csv')) {
+                fs.appendFileSync('GameStats.csv', body);
+                console.log("The GameStats.csv file was apended to!");
             }
             // otherwise writing new file
             else {
-                fs.writeFile("GameStats.txt", body, function(err) {
+                fs.writeFile("GameStats.csv", body, function(err) {
                     if  (err) {
                         return console.log(err);
                     }
-                    console.log("The GameStats.txt file was created!");
+                    console.log("The GameStats.csv file was created!");
                 }); 
             }
         })
@@ -87,7 +95,7 @@ const server = http.createServer(function(request, response) {
     }
 });
 
-const port = 3000
+const port = 3001
 const host = '127.0.0.1'
 server.listen(port, host)
 console.log(`Listening at http://${host}:${port}`)

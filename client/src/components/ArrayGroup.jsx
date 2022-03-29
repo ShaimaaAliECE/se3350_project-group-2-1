@@ -95,6 +95,40 @@ export default function ArrayGroup(props) {
         }
     }
 
+    // logging the player's score to the server
+    function logScoreStatsToServer(parmGameTime) {
+        let JSONCall = "";
+        let JSONString = "";
+        let xmlhttp = new XMLHttpRequest();
+
+        var currentdate = new Date(); 
+        var currDate = currentdate.getFullYear() + "-" + (currentdate.getMonth()+1) + "-" + currentdate.getDate();
+        var currTime = currentdate.getHours() + ":"  + currentdate.getMinutes() + ":" + currentdate.getSeconds();
+
+        JSONCall += "http://localhost:3001";
+
+        JSONString += currDate + "," + currTime + "," + parmGameTime;
+
+        xmlhttp.open("POST", JSONCall, false);
+
+        xmlhttp.setRequestHeader("Content-Type", "text/html");
+
+        try {
+            xmlhttp.send(JSONString);	            
+        }
+        catch (err) {
+            console.log("<br>Could not connect to the service.");
+            return("");
+        }
+        
+        if  (xmlhttp.status != 200 || xmlhttp.responseText == "") {
+            console.log("No Response Provided from Server" + xmlhttp.statusText);
+            return("");
+        }               
+
+        return(xmlhttp.responseText)
+    }
+
 
     /**
      * When the component is re-rendered (due to a change in state), check to see if the array has been successfully merged
@@ -108,6 +142,7 @@ export default function ArrayGroup(props) {
                 if (!soundPlayed.current) {
                     playSuccess();
                     soundPlayed.current = true;
+                    logScoreStatsToServer(gameTime);
                 }
                 isMerged = true;
 
