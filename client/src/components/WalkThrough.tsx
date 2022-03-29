@@ -21,6 +21,7 @@ function ArrayHolder(props: { children: React.ReactNode }) {
     )
 }
 
+
 const transitionValue = (counter: number, index: number, side: string): Transition => {
     let state = store.getState()
     try {
@@ -49,18 +50,7 @@ const AnimationElement = (props: { children: React.ReactNode, play: boolean, col
         },
     }))
 
-    useLayoutEffect(() => {
-        if (props.play && !hasRun) {
-            setAnimating(true)
-            setRun(true)
-            api.start({
-                backgroundColor: props.colorNew,
-                ...props.transition,
-                delay: 500,
-            })
-        }
-    })
-
+    
     return (
         <animated.div style={{ ...animateProps, flexDirection: "row" }}>
             {props.children}
