@@ -42,6 +42,7 @@ const server = http.createServer(function(request, response) {
     // GET - building HTML 
     // POST to server
     // generating HTML page
+    
     else {
         console.log('GET')
         var html = `
