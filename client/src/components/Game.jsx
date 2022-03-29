@@ -4,7 +4,7 @@ import MergeSort from "../utils/sorting/MergeSort.js";
 import ArrayGroup from "./ArrayGroup.jsx";
 import Githubicon from "../images/Githubicon.js";
 import WalkThrough from "./WalkThrough.tsx";
-
+import QuickSort from "../utils/sorting/QuickSort.js";
 
 import {
     Grid,
@@ -49,6 +49,7 @@ export default function Game(props) {
     const [mistake, setMistake] = useState(3);
     const [quitGame, setGame] = useState(false);
     const [disableRestart, setDisable] = useState(false);
+    const [sort, setSort] = useState('MergeSort');
 
     //size, range state -> array params
     const [range, setRange] = useState(20);
@@ -154,11 +155,34 @@ export default function Game(props) {
         return numArray
     }
 
+    const handleSortBtnClick = (sort) => {
+        switch(sort) {
+            case 'MergeSort':
+                setSort('MergeSort');
+                restart()
+                break;
+            case 'QuickSort':
+                setSort('QuickSort');
+                restart()
+                break;
+            case 'CustomSort':
+                setSort('CustomSort');
+                alert('We are working on getting you this feature! At the moment, it is currently unavailable.')
+                setSort('MergeSort');
+                break;
+        }
+    }
+
     return (
         ((!quitGame) ? (
             <div id="sorting-game">
                 <NavBar />
                 <div id="game-menu" style={{ marginTop: 25, marginLeft: 20, display: 'flex', flexDirection: 'row' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            <Button variant={(sort === 'MergeSort') ? 'contained' : 'outlined'} style={{ marginBottom: 25, }} onClick={() => {handleSortBtnClick('MergeSort'); }}>MergeSort</Button>
+                            <Button variant={(sort === 'QuickSort') ? 'contained' : 'outlined'} style={{ marginBottom: 25, }} onClick={() => {handleSortBtnClick('QuickSort'); <QuickSort />}}>QuickSort</Button>
+                            <Button variant={(sort === 'CustomSort') ? 'contained' : 'outlined'} style={{ marginBottom: 25, }} onClick={() => {handleSortBtnClick('CustomSort'); }}>Add Sort</Button>
+                            </div>
                     <Grid container style={{ marginLeft: 40 }}>
                         <Grid item xs={1} style={{ display: 'flex', flexDirection: 'column' }}>
                             <FormLabel id="demo-controlled-radio-buttons-group">Array content</FormLabel>
@@ -187,7 +211,7 @@ export default function Game(props) {
                         </Grid>
                         <div style={{ marginLeft: 70, marginTop: 50 }}>
                             {/* this section is for button display, either clear game or the start game options are shown*/}
-                            {(!isRunning.current) ? (
+                            {(!isRunning.current && (sort === 'MergeSort')) ? (
                                 //buttons for starting or doing the walkthough, need to be styled
                                 <>
                                     <div>
@@ -258,6 +282,11 @@ export default function Game(props) {
                                         Restart Game
                                     </Button>
                                 </>
+                            )}
+                            {(sort === 'QuickSort') ? (
+                                <QuickSort />
+                            ) : (
+                                <></>
                             )}
                         </div>
                     </Grid>
