@@ -8,46 +8,6 @@ import Draggable from "react-draggable";
 //import axios from "axios";
 
 /*
-function postData(url){
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-
-    useEffect(() => {
-        setLoading(true);
-        axios
-        .get(url)
-        .then((response) => {
-            setError(err);
-        })
-        .finally(() => {
-            setLoading(false);
-        });
-    }, [url]);
-
-    const refetch = () => {
-        setLoading(true);
-        axios
-        .get(url)
-        .then((response) => {
-            setData(reponse.data);
-        })
-        .catch((err) => {
-            setError(err);
-        })
-        .finally(() => {
-            setLoading(false);
-        });
-    };
-
-    return { data, loading, error, refetch };
-}
-
-export default postData;
-
-
-
-
 
 const postData = async (data) => {
     let res = await axios.post('http://127.0.0.1:8080/postData', {
