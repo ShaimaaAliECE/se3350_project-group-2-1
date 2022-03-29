@@ -166,6 +166,8 @@ export default function ArrayGroup(props) {
                 <Button disabled={props.parentState !== ArrayStates.MERGING} key={elementKey} value={mergedArray[i]} onClick={selectValue} variant="outlined">{mergedArray[i]}</Button>
             ]);
         }
+        nextButton = (props.depth === 0) ? (<Button onClick={() => { props.changeLevel(); logScoreStatsToServer() }}>Next Level</Button>) : (<></>)
+    
 
     } else if (arrayState === ArrayStates.FAILED_MERGE) {
         for (let i = 0; i < mergedArray.length; i++) {
@@ -187,9 +189,10 @@ export default function ArrayGroup(props) {
         }
     } else if ((arrayState === ArrayStates.LEFT_SORTING || arrayState === ArrayStates.RIGHT_SORTING) && props.level < 3) {
         mergedArrayLabel = <Button disabled={true} variant="outlined">Sort Child Arrays</Button>
+    
     }
 
-    nextButton = (props.depth === 0) ? (<Button onClick={() => { props.changeLevel(); logScoreStatsToServer() }}>Next Level</Button>) : (<></>)
+    
     
     ////////////////////////////////////////////////////
     //level 2 prompt text for more details on merge sort
