@@ -1,5 +1,6 @@
+
 //get data from level
-function getLevelData(level, callback) {
+function getLevelData(level, callback){
     const sqlConnection = require('../dbinit');
     sqlConnection.query(
         `SELECT * FROM ${level}`,
@@ -19,7 +20,7 @@ function getLevelData(level, callback) {
 }
 
 //insert data into level
-function insertLevelData(data, level, callback) {
+function insertLevelData(data, level, callback){
     const sqlConnection = require('../dbinit');
     sqlConnection.query(
         `INSERT INTO ${level} (time) VALUES (${data})`,

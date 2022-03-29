@@ -46,10 +46,14 @@ let levelMapping = {
 
 app.get('/getData', (req, res) => {
     let level = levelMapping[req.query.level];
-
-    getLevelData(level, (data) => {
-        console.log(data)
-        res.json(data);
+    getLevelData(level, (result) => {
+        const data = [];
+        for(let time in result){
+            let row = []
+            row.push(result[time]["time"]);
+            data.push(row)
+        }
+        res.send({data:data})
     })
 });
 
@@ -124,6 +128,7 @@ app.post('/postData', jsonParser, (req, res) => {
     });
 });
 
-app.listen(8080, () => {
-    console.log("listenining on: " + 8080)
+
+app.listen(8000, () => {
+    console.log("listenining on: " + 8000)
 });
