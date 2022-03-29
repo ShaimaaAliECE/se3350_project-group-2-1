@@ -1,10 +1,8 @@
 const express = require('express');
-const Connection = require('mysql/lib/Connection');
 const path = require('path')
 const [getLevelData, insertLevelData] = require('./sql/levels/sqlFunctions');
 const createTables = require('./sql/levels/createTables')
 var bodyParser = require('body-parser');
-const { rmSync } = require('fs');
 var jsonParser = bodyParser.json()
 
 const app = express()
@@ -112,7 +110,7 @@ app.get('/testDB', (req, res) => {
 
     getLevelData(2, returnData);
 })
-*/
+
 
 //insert data
 app.post('/postData', jsonParser, (req, res) => {

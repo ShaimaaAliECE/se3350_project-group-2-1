@@ -64,7 +64,7 @@ export default function ArrayGroup(props) {
      * @param {number} value 
      */
 
-    function selectValue(el){
+    function selectValue(el) {
         let value = parseInt(el.target.getAttribute("value"), 10);
         props.pushToMerged(value);
         el.target.style.display = "none";
@@ -83,37 +83,15 @@ export default function ArrayGroup(props) {
     }
 
     // logging the player's score to the server
-    function logScoreStatsToServer(parmGameTime) {
-        let JSONCall = "";
+    function logScoreStatsToServer() {
         let JSONString = "";
-        let xmlhttp = new XMLHttpRequest();
+        var currentdate = new Date();
+        var currDate = currentdate.getFullYear() + "-" + (currentdate.getMonth() + 1) + "-" + currentdate.getDate();
+        var currTime = currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
 
-        var currentdate = new Date(); 
-        var currDate = currentdate.getFullYear() + "-" + (currentdate.getMonth()+1) + "-" + currentdate.getDate();
-        var currTime = currentdate.getHours() + ":"  + currentdate.getMinutes() + ":" + currentdate.getSeconds();
+        JSONString += currDate + "," + currTime;
 
-        JSONCall += "http://localhost:3001";
-
-        JSONString += currDate + "," + currTime + "," + parmGameTime;
-
-        xmlhttp.open("POST", JSONCall, false);
-
-        xmlhttp.setRequestHeader("Content-Type", "text/html");
-
-        try {
-            xmlhttp.send(JSONString);	            
-        }
-        catch (err) {
-            console.log("<br>Could not connect to the service.");
-            return("");
-        }
-        
-        if  (xmlhttp.status != 200 || xmlhttp.responseText == "") {
-            console.log("No Response Provided from Server" + xmlhttp.statusText);
-            return("");
-        }               
-
-        return(xmlhttp.responseText)
+        PostData("http://127.0.0.1:8080/postData", { level: props.level, timeDelta: JSONString })
     }
 
 
@@ -129,7 +107,6 @@ export default function ArrayGroup(props) {
                 if (!soundPlayed.current) {
                     playSuccess();
                     soundPlayed.current = true;
-                    logScoreStatsToServer(gameTime);
                 }
                 isMerged = true;
 
@@ -179,8 +156,8 @@ export default function ArrayGroup(props) {
             arrayBlocks.push([
                 <Button disabled={arrayState !== ArrayStates.MERGED} key={elementKey} value={props.numArray[i]} onClick={selectValue} variant="outlined">{props.numArray[i]}</Button>
             ]);
-
         }
+
     } else if (arrayState === ArrayStates.MERGED) {
         // If merge was successful, display buttons and make them clickable
         for (let i = 0; i < mergedArray.length; i++) {
@@ -189,9 +166,6 @@ export default function ArrayGroup(props) {
                 <Button disabled={props.parentState !== ArrayStates.MERGING} key={elementKey} value={mergedArray[i]} onClick={selectValue} variant="outlined">{mergedArray[i]}</Button>
             ]);
         }
-        let timeDelta = (new Date().getTime() - gameTime) / 1000
-
-       nextButton = (props.depth === 0) ? (<Button onClick={() => {props.changeLevel(); PostData("http://127.0.0.1:8080/postData" ,{level: props.level, timeDelta: timeDelta })}}>Next Level</Button>) : (<></>)
 
     } else if (arrayState === ArrayStates.FAILED_MERGE) {
         for (let i = 0; i < mergedArray.length; i++) {
@@ -215,6 +189,8 @@ export default function ArrayGroup(props) {
         mergedArrayLabel = <Button disabled={true} variant="outlined">Sort Child Arrays</Button>
     }
 
+    nextButton = (props.depth === 0) ? (<Button onClick={() => { props.changeLevel(); logScoreStatsToServer() }}>Next Level</Button>) : (<></>)
+    
     ////////////////////////////////////////////////////
     //level 2 prompt text for more details on merge sort
     let infoPromptlvl2;
@@ -287,7 +263,7 @@ export default function ArrayGroup(props) {
         let timeDelta = (new Date().getTime() - gameTime) / 1000 + ' seconds to complete! '; // Total time to complete level only displayed if ArrayGroup depth == 0
         let msg = 'Correct!';
         let typeOfFinishAlert = 'success';
-        
+
         timeAlert = <Snackbar open={open} autoHideDuration={1200} onClose={handleClose}>
             <Alert onClose={handleClose} severity={typeOfFinishAlert} sx={{ width: '100%' }}>
                 {(props.depth === 0 ? timeDelta : '') + msg}
@@ -308,23 +284,23 @@ export default function ArrayGroup(props) {
     if (childArrays !== undefined) {
         if (arrayState !== ArrayStates.MERGED) {
             if (props.numArray.length >= 50) {
-            children = <Grid container>
-                <Grid item xs={12}>
-                    <ArrayGroup level={props.level} parentState={arrayState} mistakeCount={props.mistakeCount} disableRest={props.disableRest} setParentState={setArrayState} label="Left Array" depth={props.depth + 1} key={0} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.leftArray} />
+                children = <Grid container>
+                    <Grid item xs={12}>
+                        <ArrayGroup level={props.level} parentState={arrayState} mistakeCount={props.mistakeCount} disableRest={props.disableRest} setParentState={setArrayState} label="Left Array" depth={props.depth + 1} key={0} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.leftArray} />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <ArrayGroup level={props.level} parentState={arrayState} mistakeCount={props.mistakeCount} disableRest={props.disableRest} setParentState={setArrayState} label="Right Array" depth={props.depth + 1} key={1} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.rightArray} />
+                    </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                    <ArrayGroup level={props.level} parentState={arrayState} mistakeCount={props.mistakeCount} disableRest={props.disableRest} setParentState={setArrayState} label="Right Array" depth={props.depth + 1} key={1} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.rightArray} />
-                </Grid>
-            </Grid>
             } else {
                 children = <Grid container>
-                <Grid item xs={6}>
-                    <ArrayGroup level={props.level} parentState={arrayState} mistakeCount={props.mistakeCount} disableRest={props.disableRest} setParentState={setArrayState} label="Left Array" depth={props.depth + 1} key={0} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.leftArray} />
+                    <Grid item xs={6}>
+                        <ArrayGroup level={props.level} parentState={arrayState} mistakeCount={props.mistakeCount} disableRest={props.disableRest} setParentState={setArrayState} label="Left Array" depth={props.depth + 1} key={0} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.leftArray} />
+                    </Grid>
+                    <Grid item xs={6}>
+                        <ArrayGroup level={props.level} parentState={arrayState} mistakeCount={props.mistakeCount} disableRest={props.disableRest} setParentState={setArrayState} label="Right Array" depth={props.depth + 1} key={1} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.rightArray} />
+                    </Grid>
                 </Grid>
-                <Grid item xs={6}>
-                    <ArrayGroup level={props.level} parentState={arrayState} mistakeCount={props.mistakeCount} disableRest={props.disableRest} setParentState={setArrayState} label="Right Array" depth={props.depth + 1} key={1} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.rightArray} />
-                </Grid>
-            </Grid> 
             }
         }
     }
