@@ -6,10 +6,10 @@ import { WalkThroughProvider, WalkThroughContext } from './WalkThroughProvider';
 import { store } from '../Reducer';
 
 const messages = {
-    split: "The parent array is being split into two child arrays.",
-    start: "The starting unsorted array is split into two children arrays, starting with the left side.",
-    sortMerge: "The child arrays are sorted and merged back into the parent array. \nThe two child arrays elements are compared one by one, adding the smallest element to the parent. ",
-    complete: "The array has been succesfully merged and sorted."
+    split: "The parent array is split into two child arrays",
+    start: "The starting unsorted array is split into two child arrays, starting with the Leftmost array",
+    sortMerge:  "The two child arrays are individually compared, with the smallest added back to the leftmost side of the parent",
+    complete: "The array is now successfully merged and sorted"
 }
 
 //contains a holder for the group, for styling purposes, should probably be fixed up
