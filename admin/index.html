@@ -28,22 +28,20 @@
                 <div class="navbar-nav">
                     <a class="nav-link active" aria-current="page" href="?">Home</a>
                     <a class="nav-link">Levels: </a>
-                    <a class="nav-link" href="?table=Level 2">2</a>
-                    <a class="nav-link" href="?table=Level 3">3</a>
-                    <a class="nav-link" href="?table=Level 4">4</a>
-                    <a class="nav-link" href="?table=Level 5">5</a>
+                    <a class="nav-link" href="?table=2">2</a>
+                    <a class="nav-link" href="?table=3">3</a>
+                    <a class="nav-link" href="?table=4">4</a>
+                    <a class="nav-link" href="?table=5">5</a>
                 </div>
             </div>
         </div>
     </nav>
-    <h1 style="margin: 20px; font-size: 20px;" id="header">level 2</h1>
-    <div style=" margin: 20px;">
+    <h1 id="header">Level 2</h1>
+    <div>
         <table id="table">
             <thead>
                 <tr>
-                    <th>Forum Name</th>
-                    <th>Forum Description</th>
-                    <th>Forum Creater</th>
+                    <th>Time</th>
                 </tr>
             </thead>
         </table>
@@ -51,19 +49,14 @@
 </body>
 <script>
         function setTable(level) {
-            let num = level.split(" ")
-            console.log(num[1])
-            $('#table').DataTable({
-                proccessing: true,
-                serverSide: true,
-                ajax: {
-                    "url": "http://localhost:8080/getData?level="+num[1],
-                    "contentType": "application/json;",
-                    "type": "get",
-                },
-                searching: false,
-                ordering: false,
-                select: true
+            let num = level;
+            let url = '/getData?level='+num;
+            console.log(num)
+            let table = $('#table').DataTable( 
+            {
+                ajax: url,
+                dataSrc:'',
+                select:true
             });
         }
 
@@ -85,7 +78,7 @@
         console.log(params)
 
         if (!params) {
-            setTable('level 2')
+            setTable('2')
         }
         else {
             $('#header').text(params)
