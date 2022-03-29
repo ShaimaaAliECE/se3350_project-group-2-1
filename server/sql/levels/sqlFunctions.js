@@ -5,8 +5,16 @@ function getLevelData(level, callback){
     sqlConnection.query(
         `SELECT * FROM ${level}`,
         (err, result, fields) => {
-            if (err) callback(err);
-            callback(result);
+            if (err) { 
+                console.log(err)
+                callback("error")
+            }
+            else {
+                callback(result.map((element) => {
+                    let obj = JSON.parse(JSON.stringify(element))
+                    return obj
+                }));
+            }
         }
     );
 }
@@ -17,8 +25,13 @@ function insertLevelData(data, level, callback){
     sqlConnection.query(
         `INSERT INTO ${level} (time) VALUES (${data})`,
         (err, result, fields) => {
-            if (err) callback(err);
-            callback(result);
+            if (err) { 
+                console.log(err)
+                callback("error")
+            }
+            else {
+                callback(result);
+            }
         }
     );
 }

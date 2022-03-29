@@ -5,16 +5,7 @@ import useSound from 'use-sound';
 import checkSound from '../checkAudio.mp3'
 import wrongSound from '../wrongAudio.mp3'
 import Draggable from "react-draggable";
-import axios from "axios";
-
-const postData = async (data) => {
-    let res = await axios.post('http://127.0.0.1:8080/postData', {
-        ...data
-    }).catch(function (error) {
-        console.log(error);
-    });
-    console.log(res.data)
-}
+import PostData from "../postData"
 
 /**
  * Renders one group of array elements
@@ -32,6 +23,7 @@ const postData = async (data) => {
  *  parentState: {ArrayStates} State of parent array
  *  setParentState: {Function} Updates the parent's state
  */
+
 export default function ArrayGroup(props) {
     // State initialization
     const [arrayState, setArrayState] = useState(props.numArray.length === 1 ? ArrayStates.MERGED : ArrayStates.UNSORTED);
@@ -71,12 +63,12 @@ export default function ArrayGroup(props) {
      * Callback function to handle array element button onclick event
      * @param {number} value 
      */
+
     function selectValue(el) {
         let value = parseInt(el.target.getAttribute("value"), 10);
         props.pushToMerged(value);
         el.target.style.display = "none";
     }
-
     function validateArray() {
         if (mergedArray.length > 1) {
             for (let i = 0; i < mergedArray.length - 1; i++) {
@@ -89,6 +81,19 @@ export default function ArrayGroup(props) {
             return true
         }
     }
+
+    // logging the player's score to the server
+    function logScoreStatsToServer() {
+        let JSONString = "";
+        var currentdate = new Date();
+        var currDate = currentdate.getFullYear() + "-" + (currentdate.getMonth() + 1) + "-" + currentdate.getDate();
+        var currTime = currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
+
+        JSONString += currDate + "," + currTime;
+
+        PostData("http://127.0.0.1:8080/postData", { level: props.level, timeDelta: JSONString })
+    }
+
 
     /**
      * When the component is re-rendered (due to a change in state), check to see if the array has been successfully merged
@@ -144,15 +149,15 @@ export default function ArrayGroup(props) {
         if (props.parentState === ArrayStates.LEFT_SORTING && props.label === "Right Array") {
             splitArrayDisabled = true;
         }
-        splitArrayButton = (<Button disabled={splitArrayDisabled} onClick={splitArray} variant="contained">Split</Button>);
+        splitArrayButton = (<Button className="split-array-btn" disabled={splitArrayDisabled} onClick={splitArray} variant="contained">Split</Button>);
 
         for (let i = 0; i < props.numArray.length; i++) {
             let elementKey = `${props.index}-${i}`; // Unique identifier structure: {array key} - {element index}
             arrayBlocks.push([
                 <Button disabled={arrayState !== ArrayStates.MERGED} key={elementKey} value={props.numArray[i]} onClick={selectValue} variant="outlined">{props.numArray[i]}</Button>
             ]);
-
         }
+
     } else if (arrayState === ArrayStates.MERGED) {
         // If merge was successful, display buttons and make them clickable
         for (let i = 0; i < mergedArray.length; i++) {
@@ -161,7 +166,8 @@ export default function ArrayGroup(props) {
                 <Button disabled={props.parentState !== ArrayStates.MERGING} key={elementKey} value={mergedArray[i]} onClick={selectValue} variant="outlined">{mergedArray[i]}</Button>
             ]);
         }
-        nextButton = (props.depth === 0) ? (<Button onClick={() => props.changeLevel()}>Next Level</Button>) : (<></>)
+        nextButton = (props.depth === 0) ? (<Button onClick={() => { props.changeLevel(); logScoreStatsToServer() }}>Next Level</Button>) : (<></>)
+    
 
     } else if (arrayState === ArrayStates.FAILED_MERGE) {
         for (let i = 0; i < mergedArray.length; i++) {
@@ -183,8 +189,11 @@ export default function ArrayGroup(props) {
         }
     } else if ((arrayState === ArrayStates.LEFT_SORTING || arrayState === ArrayStates.RIGHT_SORTING) && props.level < 3) {
         mergedArrayLabel = <Button disabled={true} variant="outlined">Sort Child Arrays</Button>
+    
     }
 
+    
+    
     ////////////////////////////////////////////////////
     //level 2 prompt text for more details on merge sort
     let infoPromptlvl2;
@@ -196,12 +205,14 @@ export default function ArrayGroup(props) {
         const closeDialogue = () => {
             setOpenDialogue(false);
         };
+
         return (<div>
             <Dialog
                 open={openDialogue}
                 onClose={closeDialogue}
                 PaperComponent={PaperComponent}
                 aria-labelledby="draggable-dialog-title"
+                id="level-2-instructions"
             >
                 <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
                     Welcome to Level 2!
@@ -250,16 +261,12 @@ export default function ArrayGroup(props) {
 
         setOpen(false);
     };
+
     if (arrayState === ArrayStates.MERGED && props.numArray.length > 1) {
         let timeDelta = (new Date().getTime() - gameTime) / 1000 + ' seconds to complete! '; // Total time to complete level only displayed if ArrayGroup depth == 0
         let msg = 'Correct!';
         let typeOfFinishAlert = 'success';
 
-        postData({
-            time: timeDelta,
-            mistakeCount: props.mistakeCount
-        })
-        
         timeAlert = <Snackbar open={open} autoHideDuration={1200} onClose={handleClose}>
             <Alert onClose={handleClose} severity={typeOfFinishAlert} sx={{ width: '100%' }}>
                 {(props.depth === 0 ? timeDelta : '') + msg}
@@ -280,23 +287,23 @@ export default function ArrayGroup(props) {
     if (childArrays !== undefined) {
         if (arrayState !== ArrayStates.MERGED) {
             if (props.numArray.length >= 50) {
-            children = <Grid container>
-                <Grid item xs={12}>
-                    <ArrayGroup level={props.level} parentState={arrayState} mistakeCount={props.mistakeCount} disableRest={props.disableRest} setParentState={setArrayState} label="Left Array" depth={props.depth + 1} key={0} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.leftArray} />
+                children = <Grid container>
+                    <Grid item xs={12}>
+                        <ArrayGroup level={props.level} parentState={arrayState} mistakeCount={props.mistakeCount} disableRest={props.disableRest} setParentState={setArrayState} label="Left Array" depth={props.depth + 1} key={0} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.leftArray} />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <ArrayGroup level={props.level} parentState={arrayState} mistakeCount={props.mistakeCount} disableRest={props.disableRest} setParentState={setArrayState} label="Right Array" depth={props.depth + 1} key={1} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.rightArray} />
+                    </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                    <ArrayGroup level={props.level} parentState={arrayState} mistakeCount={props.mistakeCount} disableRest={props.disableRest} setParentState={setArrayState} label="Right Array" depth={props.depth + 1} key={1} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.rightArray} />
-                </Grid>
-            </Grid>
             } else {
                 children = <Grid container>
-                <Grid item xs={6}>
-                    <ArrayGroup level={props.level} parentState={arrayState} mistakeCount={props.mistakeCount} disableRest={props.disableRest} setParentState={setArrayState} label="Left Array" depth={props.depth + 1} key={0} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.leftArray} />
+                    <Grid item xs={6}>
+                        <ArrayGroup level={props.level} parentState={arrayState} mistakeCount={props.mistakeCount} disableRest={props.disableRest} setParentState={setArrayState} label="Left Array" depth={props.depth + 1} key={0} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.leftArray} />
+                    </Grid>
+                    <Grid item xs={6}>
+                        <ArrayGroup level={props.level} parentState={arrayState} mistakeCount={props.mistakeCount} disableRest={props.disableRest} setParentState={setArrayState} label="Right Array" depth={props.depth + 1} key={1} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.rightArray} />
+                    </Grid>
                 </Grid>
-                <Grid item xs={6}>
-                    <ArrayGroup level={props.level} parentState={arrayState} mistakeCount={props.mistakeCount} disableRest={props.disableRest} setParentState={setArrayState} label="Right Array" depth={props.depth + 1} key={1} mergedArray={mergedArray} pushToMerged={pushToMerged} numArray={childArrays.rightArray} />
-                </Grid>
-            </Grid> 
             }
         }
     }
