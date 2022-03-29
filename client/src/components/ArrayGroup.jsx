@@ -7,13 +7,14 @@ import wrongSound from '../wrongAudio.mp3'
 import Draggable from "react-draggable";
 import axios from "axios";
 
-const postData = async (data) => {
+
+async function postData(data) {
     let res = await axios.post('http://127.0.0.1:8080/postData', {
         ...data
     }).catch(function (error) {
         console.log(error);
     });
-    console.log(res.data)
+    console.log(res.data);
 }
 
 /**

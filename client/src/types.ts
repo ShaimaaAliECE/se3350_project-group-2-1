@@ -14,14 +14,7 @@ interface Counter extends CounterADT {
 
 type WalkThroughState = {
     numArray: Array<Array<Array<number>>>
-    counter: Counter
-    side: string
-    sorted: boolean
-    leftSideSorted: boolean
-    doneSorting: boolean
-    infoMsg: string
     changeLevel: (name: string) => void
-    barIsAnimating: boolean
 }
 
 type LevelADT = {
