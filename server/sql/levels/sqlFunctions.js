@@ -22,7 +22,7 @@ function getLevelData(level, callback) {
 function insertLevelData(data, level, callback) {
     const sqlConnection = require('../dbinit');
     sqlConnection.query(
-        `INSERT INTO ${level} (time) VALUES (${data})`,
+        `INSERT INTO ${level} (time) VALUES ('${data}')`,
         (err, result, fields) => {
             if (err) { 
                 console.log(err)

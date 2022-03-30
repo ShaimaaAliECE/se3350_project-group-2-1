@@ -107,7 +107,6 @@ app.get('/testDB', (req, res) => {
     function returnData(data) {
         res.send(data)
     }
-
     getLevelData(2, returnData);
 })
 
