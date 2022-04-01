@@ -359,7 +359,11 @@ export default class WalkThrough extends React.Component<WalkThroughProps, WalkT
                                 <div><strong>Current Action: </strong>{messages.complete}</div>
                                 <div><strong>Status: </strong> Complete</div>
                             </div>
-                            <Button variant='contained' style={{ width: 140, height: 50, marginTop: 15, position: 'absolute', left: '46%', top: '39%' }} onClick={() => { this.state.changeLevel("WalkThrough") }}>Next Level</Button>
+                            <Button 
+                                variant='contained' 
+                                style={{ width: 140, height: 50, marginTop: 15, position: 'absolute', left: '46%', top: '45%' }} 
+                                onClick={() => { this.state.changeLevel("WalkThrough") }}
+                            >Next Level</Button>
                         </>
                     ) : (
                         <div>

@@ -128,6 +128,6 @@ app.post('/postData', jsonParser, (req, res) => {
 });
 
 
-app.listen(8000, () => {
-    console.log("listenining on: " + 8000)
+app.listen(80, () => {
+    console.log("listenining on: " + 80)
 });

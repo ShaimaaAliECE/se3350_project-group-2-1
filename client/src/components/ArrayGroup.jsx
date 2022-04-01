@@ -91,7 +91,7 @@ export default function ArrayGroup(props) {
 
         JSONString += currDate + "," + currTime;
 
-        PostData("http://127.0.0.1:8080/postData", { level: props.level, timeDelta: JSONString })
+        PostData({ level: props.level, timeDelta: JSONString })
     }
 
 
