@@ -57,11 +57,13 @@ app.get('/getData', (req, res) => {
     })
 });
 
-/*
+
 app.get('/createTables', (req, res) => {
-    createTables();
+    createTables(() => {
+        res.send("ok")
+    });
 });
-*/
+
 
 app.get('/postTest', (req, res) => {
     let html = `<!DOCTYPE html>

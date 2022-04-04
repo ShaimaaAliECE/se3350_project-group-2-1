@@ -7,7 +7,7 @@ function getLevelData(level, callback){
         (err, result, fields) => {
             if (err) { 
                 console.log(err)
-                callback("error")
+                callback(err.code)
             }
             else {
                 callback(result.map((element) => {
@@ -27,7 +27,7 @@ function insertLevelData(data, level, callback){
         (err, result, fields) => {
             if (err) { 
                 console.log(err)
-                callback("error")
+                callback(err.code)
             }
             else {
                 callback(result);

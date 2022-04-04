@@ -36,6 +36,8 @@ export default function ArrayGroup(props) {
     const [playFail] = useSound(wrongSound);
     const soundPlayed = useRef(props.numArray > 1);
 
+    console.log(props.gameLevel)
+
     /**
      * Updates the merged list with a new value selected from child array
      * @param {number} value 
@@ -83,15 +85,14 @@ export default function ArrayGroup(props) {
     }
 
     // logging the player's score to the server
-    function logScoreStatsToServer() {
+    function logScoreStatsToServer(time) {
         let JSONString = "";
         var currentdate = new Date();
         var currDate = currentdate.getFullYear() + "-" + (currentdate.getMonth() + 1) + "-" + currentdate.getDate();
-        var currTime = currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
 
-        JSONString += currDate + "," + currTime;
-
-        PostData({ level: props.level, timeDelta: JSONString })
+        JSONString += currDate + " , " + time;
+        console.log("posting with " + props.gameLevel)
+        PostData({ level: props.gameLevel, timeDelta: JSONString })
     }
 
 
@@ -166,7 +167,7 @@ export default function ArrayGroup(props) {
                 <Button disabled={props.parentState !== ArrayStates.MERGING} key={elementKey} value={mergedArray[i]} onClick={selectValue} variant="outlined">{mergedArray[i]}</Button>
             ]);
         }
-        nextButton = (props.depth === 0) ? (<Button onClick={() => { props.changeLevel(); logScoreStatsToServer() }}>Next Level</Button>) : (<></>)
+        nextButton = (props.depth === 0) ? (<Button onClick={() => { props.changeLevel(); logScoreStatsToServer(new Date().getTime() - gameTime) }}>Next Level</Button>) : (<></>)
     
 
     } else if (arrayState === ArrayStates.FAILED_MERGE) {

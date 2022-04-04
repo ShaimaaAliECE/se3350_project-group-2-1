@@ -1,6 +1,6 @@
 const sqlConnection = require('../dbinit');
 
-function createTables(){
+function createTables(callback){
     //conncet to db
     sqlConnection.connect()
     //queries
@@ -44,6 +44,7 @@ function createTables(){
     );
         //end connection
     sqlConnection.end();   
+    callback()
 }
 
 module.exports = createTables;

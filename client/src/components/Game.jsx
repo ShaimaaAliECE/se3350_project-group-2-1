@@ -310,6 +310,7 @@ export default function Game(props) {
                                 changeLevel={incrLevel}
                                 mistakeCount={mistakeCounter}
                                 disableRest={disableResBtn}
+                                gameLevel={gameLevel}
                             />
                         ) : (gameMode === "walkthrough") ? (
                             //if gamemode is anything else load the walkthrough
@@ -333,6 +334,7 @@ export default function Game(props) {
                                 mistakeCount={mistakeCounter}
                                 changeLevel={incrLevel}
                                 disableRest={disableResBtn}
+                                gameLevel={gameLevel}
                             />
                         ) : (
                             <></>

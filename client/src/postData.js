@@ -1,7 +1,7 @@
 import axios from "axios"
 
 function PostData(data) {
-    axios.post('http://34.122.82.157:80/postData', { ...data }).then((response) => {
+    axios.post('http://35.208.35.172:80/postData', { ...data }).then((response) => {
         console.log(response.data)
     })
 }
