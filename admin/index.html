@@ -5,7 +5,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="//cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="./select/css/select.dataTables.min.css">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -50,12 +49,10 @@
         function setTable(level) {
             let num = level;
             let url = '/getData?level='+num;
-            let table = $('#table').DataTable( 
-            {
+            let table = $('#table').DataTable({
                 ajax: url,
-                dataSrc:'',
-                select:true
-            });
+                dataSrc:''
+            })
         }
 
     function getUrlParameter(sParam) {
